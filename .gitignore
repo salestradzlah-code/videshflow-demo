@@ -6,5 +6,5 @@ dist/
 .env
 .env.*
 *.log
-deploy-log*.txt
+deploy-log.txt
 .DS_Store
