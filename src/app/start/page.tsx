@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { StartPathClient } from "./StartPathClient";
+import { ExecutiveDemoHome } from "@/components/demo/ExecutiveDemoHome";
 
 export const metadata: Metadata = {
-  title: "Start Your Relocation Path",
-  description: "Choose destination, move reason, and family profile to get the right VideshFlow relocation path.",
+  title: "Plan Your Global Relocation Route",
+  description: "Choose moving from, moving to, move reason, and family profile to get a VideshFlow route plan.",
 };
 
 export default function StartPage() {
-  return <StartPathClient />;
+  return <ExecutiveDemoHome />;
 }

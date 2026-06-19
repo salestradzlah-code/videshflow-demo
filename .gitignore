@@ -8,3 +8,6 @@ dist/
 *.log
 deploy-log.txt
 .DS_Store
+
+deploy-videshflow.ps1
+*.zip

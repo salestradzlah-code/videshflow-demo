@@ -1,215 +1,230 @@
-import { Bot, Building2, Car, FileCheck2, Globe2, GraduationCap, HeartHandshake, Home, Luggage, Plane, ShieldCheck, ShoppingBag, Smartphone, UsersRound } from "lucide-react";
+import { BadgeCheck, Bot, Building2, Car, FileCheck2, FileText, Globe2, GraduationCap, HeartHandshake, Home, Landmark, Luggage, MapPin, Plane, PlugZap, ShieldCheck, ShoppingBag, Smartphone, Sofa, UsersRound, Wifi, Wrench } from "lucide-react";
 
-export type DestinationKey = "singapore" | "uk" | "usa" | "canada" | "uae" | "australia" | "germany" | "gulf";
-export type MoveReasonKey = "job" | "transfer" | "student" | "family" | "pr" | "business" | "assignment" | "landed";
-export type ProfileKey = "solo" | "couple" | "familyChild" | "familyChildren" | "student" | "parents";
-export type TimelinePhase = "Before flying" | "Days 1 to 7" | "Days 8 to 30" | "Days 31 to 90";
+export type DestinationKey =
+  | "india"
+  | "singapore"
+  | "united-kingdom"
+  | "united-states"
+  | "canada"
+  | "australia"
+  | "united-arab-emirates"
+  | "germany-eu"
+  | "saudi-gulf"
+  | "other";
 
-export type Destination = {
-  key: DestinationKey;
-  label: string;
-  route: string;
-  climate: string;
-  starterPath?: string;
-  headline: string;
-  focus: string[];
-  serviceLinks: string[];
-};
+export type MoveReasonKey =
+  | "job"
+  | "corporate"
+  | "student"
+  | "family"
+  | "pr"
+  | "business"
+  | "short"
+  | "returning"
+  | "landed";
 
-export type MoveReason = {
-  key: MoveReasonKey;
-  label: string;
-  focus: string[];
-};
+export type ProfileKey = "solo" | "couple" | "familyChild" | "familyChildren" | "student" | "seniors";
 
-export type Profile = {
-  key: ProfileKey;
-  label: string;
-  focus: string[];
-};
+export type TimelinePhase = "Before you move" | "Days 1 to 7" | "Days 8 to 30" | "Days 31 to 90";
 
 export type TimelineTask = {
   id: string;
   phase: TimelinePhase;
-  day: string;
   title: string;
   description: string;
-  owner: string;
-  category: "Documents" | "Housing" | "Money" | "Travel" | "Family" | "Daily life" | "Services" | "AI";
-  priority: "Critical" | "High" | "Normal";
-  tools: string[];
+  timing: string;
+  priority: "High" | "Medium" | "Low";
+  category: string;
 };
 
-export type Story = {
-  name: string;
-  route: string;
-  profile: string;
-  lesson: string;
-  stress: string;
-  outcome: string;
-};
-
-export const destinations: Destination[] = [
+export const destinations = [
+  {
+    key: "india",
+    label: "India",
+    route: "Global to India",
+    starterPath: undefined,
+    headline: "Returning to India or relocating within India with documents, housing, schooling, banking, and family logistics in order.",
+    climate: "City-specific. Plan around monsoon, heat, winter, pollution and local commute realities.",
+    essentials: ["Aadhaar/PAN/NRI paperwork", "Banking and tax residency review", "Rental or family home setup", "School or college transfer", "Local SIM and UPI setup"],
+    services: ["Temporary stay", "Domestic movers", "Document notarisation", "Banking and tax professionals", "School admission research"],
+  },
   {
     key: "singapore",
     label: "Singapore",
-    route: "India to Singapore",
-    climate: "Humid, rainy, tropical. Plan breathable office wear, rainwear, comfortable shoes, and indoor routines.",
+    route: "Global to Singapore",
     starterPath: "/countries/singapore",
-    headline: "Best for Indian tech professionals and families who need cost, rent, school, SIM, OTP, and house setup clarity.",
-    focus: ["Salary versus rent reality", "MRT commute and rental areas", "School and childcare planning", "Indian SIM and OTP continuity", "Groceries, temples, vegetarian food"],
-    serviceLinks: ["MOM and ICA official sources", "Rental portals to research", "SIM and broadband providers", "Indian grocery and community references"],
+    headline: "Fast, organised and expensive. The big wins are housing research, pass rules, schooling, food, banking and first-month setup.",
+    climate: "Hot, humid and rainy across the year. Pack light office wear, umbrellas, breathable clothes and medicines.",
+    essentials: ["Work or student pass status", "Temporary stay before rental", "Local SIM and banking", "School or childcare plan", "Indian grocery and community map"],
+    services: ["Serviced apartment", "Rental portals", "Movers", "SIM and broadband", "Indian groceries"],
   },
   {
-    key: "uk",
+    key: "united-kingdom",
     label: "United Kingdom",
-    route: "India to UK",
-    climate: "Cooler, wet, short winter days. Plan layers, heating costs, school calendar, NHS registration, and rental proofs.",
+    route: "Global to UK",
     starterPath: "/countries/united-kingdom",
-    headline: "Best for skilled workers, students, and families preparing for rent, NHS, banking, schools, and first winter.",
-    focus: ["Rent and council tax awareness", "NHS and GP registration", "School catchment planning", "Weather and winter clothing", "Banking and proof of address"],
-    serviceLinks: ["GOV.UK official sources", "UCAS or university portals", "Temporary stay options", "Community groups and Indian stores"],
+    headline: "Plan around visa status, NHS access, rental deposits, school catchments, weather, transport and high initial setup costs.",
+    climate: "Cooler and wetter than most Indian cities. Layered clothing, rainwear and winter preparation matter.",
+    essentials: ["Visa and BRP/eVisa checks", "NHS and GP registration", "Rental deposit planning", "Council tax awareness", "School catchment research"],
+    services: ["Temporary stay", "Rental search", "Banking", "Furniture and appliances", "School research"],
   },
   {
-    key: "usa",
+    key: "united-states",
     label: "United States",
-    route: "India to US",
-    climate: "Highly state and city dependent. Plan for car dependency, credit history, healthcare, and school district variation.",
+    route: "Global to USA",
     starterPath: "/countries/united-states",
-    headline: "Best for tech, students, and families who need state-specific caution, SSN, credit, leasing, and healthcare orientation.",
-    focus: ["State-specific setup", "SSN and credit history", "Car and driving realities", "Health insurance", "School district research"],
-    serviceLinks: ["USCIS and Travel.State.Gov", "University portals", "Rental and utility platforms", "DMV state resources"],
+    headline: "A large, state-by-state relocation. Focus on visa category, credit history, health insurance, driving, school districts and city-specific costs.",
+    climate: "Highly regional. Weather and clothing needs vary sharply between cities and states.",
+    essentials: ["Visa category and dependants", "Health insurance reality", "Credit and banking setup", "Driving licence path", "School district research"],
+    services: ["Temporary stay", "Car rental", "Health insurance research", "Furniture", "Local services by state"],
   },
   {
     key: "canada",
     label: "Canada",
-    route: "India to Canada",
-    climate: "Cold winters in many provinces. Plan winter clothing, housing deposits, transit, healthcare wait periods, and settlement services.",
+    route: "Global to Canada",
     starterPath: undefined,
-    headline: "Useful for students, PR families, and work permit holders preparing for province-specific settlement.",
-    focus: ["Province-specific official sources", "Proof of funds and initial budget", "Winter prep", "Rental and credit checks", "Settlement services"],
-    serviceLinks: ["IRCC official sources", "EduCanada", "Rental platforms", "Settlement service directories"],
-  },
-  {
-    key: "uae",
-    label: "UAE",
-    route: "India to UAE",
-    climate: "Hot desert climate. Plan housing deposits, school fees, employer coverage, driving, AC costs, and community networks.",
-    starterPath: "/countries/united-arab-emirates",
-    headline: "Best for Dubai and Abu Dhabi movers who need visa sequence, rent, school, Emirates ID, insurance, and family logistics.",
-    focus: ["Employer and family sponsorship sequence", "Rent and school fee reality", "Medical insurance", "Driving and commute", "Indian community and groceries"],
-    serviceLinks: ["UAE official portals", "GDRFA or ICP references", "Temporary stay and rental portals", "Movers and attestation services"],
+    headline: "A long-term settlement move where weather, housing, school, banking, healthcare registration and province-specific rules matter.",
+    climate: "Cold winters in many provinces. Winter clothing and arrival month planning are important.",
+    essentials: ["PR, work or student pathway", "Province and city selection", "Temporary stay", "Banking and SIN", "Healthcare registration"],
+    services: ["Temporary stay", "Rental search", "Winter clothing", "Banking", "Settlement services"],
   },
   {
     key: "australia",
     label: "Australia",
-    route: "India to Australia",
-    climate: "City dependent, with strong seasonal differences. Plan suburbs, school zones, healthcare eligibility, and car or transit needs.",
+    route: "Global to Australia",
     starterPath: "/countries/australia",
-    headline: "Best for PR holders, students, and skilled migrants preparing for suburbs, rent, schools, healthcare, and first job timeline.",
-    focus: ["Suburb and commute planning", "Medicare or insurance checks", "School zone research", "TFN and banking", "Job search buffer"],
-    serviceLinks: ["Home Affairs official sources", "Study Australia", "Services Australia", "Rental and moving providers"],
+    headline: "Plan around visa class, city choice, rental competition, schooling, Medicare/insurance, banking and long-distance logistics.",
+    climate: "Season and climate vary by state. Sydney, Melbourne, Brisbane and Perth need different preparation.",
+    essentials: ["Visa and dependant status", "City cost comparison", "Rental inspection readiness", "School zones", "Banking and Medicare/insurance"],
+    services: ["Temporary stay", "Rental search", "Movers", "Furniture", "School research"],
   },
   {
-    key: "germany",
+    key: "united-arab-emirates",
+    label: "UAE",
+    route: "Global to UAE",
+    starterPath: "/countries/united-arab-emirates",
+    headline: "A fast setup market. The key areas are residence visa, Emirates ID, housing, school fees, car/transport, banking and insurance.",
+    climate: "Very hot summers. Arrival timing, clothing and car/transport planning are important.",
+    essentials: ["Residence visa and Emirates ID", "Employer or sponsor process", "School fee planning", "Rental deposits", "Medical insurance"],
+    services: ["Temporary stay", "Real estate platforms", "Car rental", "School search", "Furniture and appliances"],
+  },
+  {
+    key: "germany-eu",
     label: "Germany / EU",
-    route: "India to Germany / EU",
-    climate: "Cold winters and language-dependent administration. Plan city registration, insurance, documents, appointments, and language basics.",
+    route: "Global to Germany / EU",
     starterPath: "/countries/germany-eu",
-    headline: "Best for professionals and students who need bureaucracy, appointments, language, insurance, and city-specific guidance.",
-    focus: ["City registration", "Insurance and appointments", "German language basics", "Rental proofs", "Document translation"],
-    serviceLinks: ["Official city portals", "Embassy sources", "Language tools", "Housing and community resources"],
+    headline: "Plan country-by-country. Registration, rental paperwork, health insurance, language, school and appointment systems need early preparation.",
+    climate: "Cooler climate with proper winter needs. Local language support and documents are important.",
+    essentials: ["Visa or residence route", "City registration", "Health insurance", "Rental documents", "Language and appointments"],
+    services: ["Temporary stay", "Rental search", "Translation", "Notary and apostille", "Health insurance research"],
   },
   {
-    key: "gulf",
+    key: "saudi-gulf",
     label: "Saudi Arabia / Gulf",
-    route: "India to Saudi Arabia / Gulf",
-    climate: "Hot climate, employer-led paperwork, family sponsorship, accommodation norms, driving, and cultural expectations matter.",
+    route: "Global to Saudi Arabia / Gulf",
     starterPath: undefined,
-    headline: "Useful for Gulf job, family, and assignment movers who need employer process clarity and daily life setup planning.",
-    focus: ["Employer process", "Family sponsorship planning", "Accommodation and transport", "Medical and insurance", "Cultural expectations"],
-    serviceLinks: ["Official government sources", "Employer portals", "Temporary stay options", "Movers and attestation services"],
+    headline: "Gulf moves need employer coordination, residence documents, family status, housing, school, transport, medical and local cultural preparation.",
+    climate: "Hot and dry in many cities. Plan clothing, air-conditioning, transport and family comfort early.",
+    essentials: ["Employer visa process", "Family eligibility", "Housing compound or apartment", "School research", "Medical and insurance"],
+    services: ["Temporary stay", "Relocation support", "School search", "Car rental", "Furniture and appliances"],
   },
-];
+  {
+    key: "other",
+    label: "Other",
+    route: "Custom global route",
+    starterPath: undefined,
+    headline: "Use the generic route checklist until a country-specific starter kit is created.",
+    climate: "Check official climate, health, safety and settlement sources for the selected city.",
+    essentials: ["Official visa source", "Temporary stay", "Banking", "Health cover", "Housing research"],
+    services: ["Official sources", "Temporary stay", "Movers", "Banking", "Community research"],
+  },
+] as const;
 
-export const moveReasons: MoveReason[] = [
+export const moveReasons = [
   { key: "job", label: "Job offer", focus: ["Salary and cost reality", "Rental research", "Commute", "Office clothing", "Banking", "First 90 days"] },
-  { key: "transfer", label: "Corporate transfer", focus: ["Employer relocation package", "Temporary stay", "Movers", "School planning", "Spouse setup", "Benefits check"] },
+  { key: "corporate", label: "Corporate transfer", focus: ["Employer relocation package", "Temporary stay", "Movers", "School planning", "Spouse setup"] },
   { key: "student", label: "Student move", focus: ["University documents", "Accommodation", "Local SIM", "Banking", "Student budget", "Local transport"] },
   { key: "family", label: "Family move", focus: ["Schooling", "Childcare", "Rental house", "Groceries", "Healthcare", "Safety", "Community"] },
   { key: "pr", label: "PR / migration", focus: ["Long-term settlement", "Documents", "Shipping", "Housing", "Children", "Banking", "Community"] },
-  { key: "business", label: "Business / startup", focus: ["Business setup links", "Banking", "Local network", "Office setup", "Tax caution", "Professional support"] },
-  { key: "assignment", label: "Short assignment", focus: ["Temporary stay", "Light packing", "Local SIM", "Transport", "Food", "Expense tracking"] },
+  { key: "business", label: "Business / startup", focus: ["Business setup links", "Banking", "Local network", "Office setup", "Tax caution"] },
+  { key: "short", label: "Short assignment", focus: ["Temporary stay", "Light packing", "Local SIM", "Transport", "Food", "Expense tracking"] },
+  { key: "returning", label: "Returning home", focus: ["Reverse relocation", "NRI paperwork", "Banking", "Home setup", "School transfer", "Tax caution"] },
   { key: "landed", label: "Already landed", focus: ["First 7 days", "Local SIM", "Bank", "House search", "WiFi", "Groceries", "Emergency contacts"] },
-];
+] as const;
 
-export const profiles: Profile[] = [
-  { key: "solo", label: "Solo", focus: ["Cost control", "Temporary stay", "Transport", "Banking", "SIM", "Community"] },
-  { key: "couple", label: "Couple", focus: ["Housing", "Spouse setup", "Budget", "Groceries", "Community", "Healthcare"] },
+export const profiles = [
+  { key: "solo", label: "Solo", focus: ["Cost", "Temporary stay", "Transport", "Banking", "SIM"] },
+  { key: "couple", label: "Couple", focus: ["Housing", "Spouse setup", "Budget", "Groceries", "Community"] },
   { key: "familyChild", label: "Family with child", focus: ["School", "Childcare", "Healthcare", "Larger rental", "Safety", "Commute", "Playgroups"] },
-  { key: "familyChildren", label: "Family with children", focus: ["School timing", "Childcare", "Family budget", "House setup", "Playgroups", "Medical", "Community"] },
-  { key: "student", label: "Student", focus: ["Accommodation", "Budget", "Documents", "Local SIM", "Student life", "Transport"] },
-  { key: "parents", label: "With parents / seniors", focus: ["Medical", "Accessibility", "Transport", "Medicines", "Comfort", "Emergency contacts"] },
-];
+  { key: "familyChildren", label: "Family with children", focus: ["School zones", "Childcare", "Healthcare", "Larger rental", "Safety", "Commute", "Playgroups"] },
+  { key: "student", label: "Student", focus: ["Accommodation", "Budget", "Documents", "Local SIM", "Student life"] },
+  { key: "seniors", label: "With parents / seniors", focus: ["Medical", "Accessibility", "Transport", "Medicines", "Comfort", "Emergency contacts"] },
+] as const;
 
 export const platformStats = [
-  { label: "90 day plan", value: "4 phases", icon: Globe2 },
-  { label: "Document readiness", value: "Mock OCR", icon: FileCheck2 },
-  { label: "AI layer", value: "API-ready", icon: Bot },
-  { label: "Service routing", value: "Research only", icon: ShieldCheck },
+  { label: "Route paths", value: "100+", icon: Globe2 },
+  { label: "90-day tasks", value: "Adaptive", icon: FileCheck2 },
+  { label: "Service categories", value: "25+", icon: Wrench },
+  { label: "Demo mode", value: "No login", icon: ShieldCheck },
 ];
 
 export const documentCategories = [
-  { id: "passport", label: "Passport and visa / pass letters", requiredFor: ["all"], icon: FileCheck2 },
-  { id: "offer", label: "Offer letter, employment contract, or university offer", requiredFor: ["job", "transfer", "student"], icon: Building2 },
-  { id: "family", label: "Marriage, birth, and school records", requiredFor: ["family", "familyChild", "familyChildren", "parents"], icon: UsersRound },
-  { id: "medical", label: "Medical history, prescriptions, vaccination records", requiredFor: ["all"], icon: HeartHandshake },
-  { id: "finance", label: "Banking, remittance, forex and proof of funds", requiredFor: ["all"], icon: ShieldCheck },
-  { id: "housing", label: "Temporary stay, rental shortlist, mover quote", requiredFor: ["all"], icon: Home },
-  { id: "driving", label: "Driving licence, IDP, cab or rental car notes", requiredFor: ["job", "transfer", "family", "pr"], icon: Car },
-  { id: "packing", label: "Packing list, luggage weights, customs caution", requiredFor: ["all"], icon: Luggage },
+  { title: "Identity and travel", icon: FileText, items: ["Passport", "Visa / pass approval", "Birth certificates", "Marriage certificate"], requiredFor: ["job", "corporate", "student", "family", "pr", "business", "short", "returning", "landed"] },
+  { title: "Education and work", icon: GraduationCap, items: ["Degree certificates", "Transcripts", "Employment letter", "Offer letter"], requiredFor: ["job", "corporate", "student", "pr", "business"] },
+  { title: "Family and school", icon: UsersRound, items: ["School records", "Vaccination records", "Child medical notes", "Dependent documents"], requiredFor: ["family", "corporate", "pr", "familyChild", "familyChildren", "seniors"] },
+  { title: "Money and setup", icon: Landmark, items: ["Bank statements", "Tax residency notes", "Insurance policy", "Rental documents"], requiredFor: ["job", "corporate", "family", "pr", "business", "returning", "landed"] },
 ];
 
 export const serviceCategories = [
-  { label: "Flights and temporary stay", icon: Plane },
-  { label: "Movers and baggage", icon: Luggage },
-  { label: "Rental and home setup", icon: Home },
-  { label: "SIM, roaming and broadband", icon: Smartphone },
-  { label: "Schools and childcare", icon: GraduationCap },
-  { label: "Groceries and community", icon: ShoppingBag },
+  { title: "International movers", icon: Luggage, note: "Provider options to research for packing, shipping, customs, insurance and destination delivery." },
+  { title: "Temporary stay", icon: Home, note: "Hotels, serviced apartments and Airbnb-style stays to compare before signing a long rental." },
+  { title: "Furniture", icon: Sofa, note: "Research local furniture options for first-month home setup and delivery timing." },
+  { title: "Electrical appliances", icon: PlugZap, note: "Compare voltage, warranty, delivery and installation before buying appliances." },
+  { title: "SIM and internet", icon: Wifi, note: "Research local SIM, eSIM, roaming and home broadband options before arrival." },
+  { title: "Banking and remittance", icon: Smartphone, note: "Compare bank accounts, international transfers, FX spreads and fees directly." },
+  { title: "Schooling and childcare", icon: GraduationCap, note: "Research official school portals, childcare options, catchments and admission dates." },
+  { title: "Healthcare and insurance", icon: HeartHandshake, note: "Research GP, clinics, insurance, medicine rules and emergency numbers." },
+  { title: "Notary and attestation", icon: BadgeCheck, note: "Research apostille, notarisation, translation and embassy-specific requirements." },
+  { title: "Transport and driving", icon: Car, note: "Research airport transfer, taxi apps, public transport cards, IDP and driving licence rules." },
+  { title: "Groceries and community", icon: ShoppingBag, note: "Find Indian groceries, temples, mandals, community groups and local support networks." },
+  { title: "Official links", icon: MapPin, note: "Always verify visa, tax, healthcare, school and residency rules from official sources." },
 ];
 
-export const realStories: Story[] = [
+export const realStories = [
   {
-    name: "Rahul S.",
+    name: "DevOps lead",
     route: "India to Singapore",
-    profile: "DevOps lead, family with child",
-    stress: "Rent and school timing looked simple on paper but became the biggest first-month pressure.",
-    lesson: "Shortlist neighbourhoods using office commute, school route, groceries, and MRT access together, not separately.",
-    outcome: "Moved from panic browsing to a realistic area shortlist before signing a lease.",
+    profile: "Job offer · Family with child",
+    stress: "Rental deposits, school timing and first-month cashflow felt bigger than the visa process.",
+    lesson: "Temporary stay and school research should start before the final joining date is confirmed.",
+    outcome: "Settled faster after converting the move into a 90-day project plan.",
   },
   {
-    name: "Priya M.",
-    route: "India to UK",
-    profile: "Nurse, spouse joining later",
-    stress: "Proof of address and bank setup delayed everything else.",
-    lesson: "Keep temporary stay, employer letters, and appointment documents accessible in one physical folder and one cloud folder.",
-    outcome: "Avoided repeated document searches during the first two weeks.",
+    name: "Corporate transfer",
+    route: "Singapore to Australia",
+    profile: "Corporate transfer · Family with children",
+    stress: "The family underestimated rental inspections, school zones and furniture delivery times.",
+    lesson: "Employer relocation benefits need to be translated into practical week-by-week tasks.",
+    outcome: "A route checklist helped separate company-covered tasks from family-owned tasks.",
   },
   {
-    name: "Aman K.",
-    route: "India to Canada",
-    profile: "Student move",
-    stress: "Packing too much and still missing winter basics.",
-    lesson: "Ship less, carry essentials, and buy bulky winter items locally after checking weather and campus support groups.",
-    outcome: "Reduced baggage cost and avoided buying duplicate electronics.",
+    name: "Returning founder",
+    route: "USA to India",
+    profile: "Returning home · Couple",
+    stress: "Banking, tax residency, home setup and reverse culture adjustment were more complex than expected.",
+    lesson: "Returning home is also a relocation project, not just a flight back.",
+    outcome: "Document and money checklists reduced last-minute confusion.",
   },
   {
-    name: "Neha R.",
-    route: "India to UAE",
-    profile: "Corporate transfer, family",
-    stress: "School fees and housing deposits came together.",
-    lesson: "Ask the employer what is paid upfront, reimbursed later, and not covered at all.",
-    outcome: "Created a separate first-60-days cash buffer before flying.",
+    name: "Student move",
+    route: "UK to UAE",
+    profile: "Student move · Solo",
+    stress: "Accommodation, SIM, transport and document deadlines were scattered across many portals.",
+    lesson: "A single timeline with official links and reminders reduces anxiety.",
+    outcome: "The student knew what to do before travel, on arrival week and in the first month.",
   },
 ];
+
+export type Destination = (typeof destinations)[number];
+export type MoveReason = (typeof moveReasons)[number];
+export type Profile = (typeof profiles)[number];

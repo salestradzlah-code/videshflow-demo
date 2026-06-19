@@ -2,7 +2,7 @@ import Link from "next/link";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 
 const exploreLinks = [
-  { href: "/start", label: "Start Your Path" },
+  { href: "/#route-selector", label: "Plan Your Route" },
   { href: "/countries", label: "Countries" },
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/get-help", label: "Get Help" },
@@ -12,7 +12,7 @@ const exploreLinks = [
 ];
 
 const planningLinks = [
-  { href: "/before-you-fly", label: "Before You Fly" },
+  { href: "/before-you-fly", label: "Before You Move" },
   { href: "/home-setup", label: "Home Setup" },
   { href: "/partner-with-us", label: "Partner With Us" },
   { href: "/privacy", label: "Privacy Policy" },
@@ -29,7 +29,7 @@ export function Footer() {
             <p className="text-lg font-semibold">VideshFlow</p>
           </div>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70">
-            AI-assisted relocation starter kits for Indian professionals and families moving abroad, built from real stories, public sources, service categories, and first 7, 30, and 90 day checklists.
+            AI-assisted route planning for global Indian families and professionals moving across countries, cities and life stages, built from practical checklists, public sources, service categories and real stories.
           </p>
           <p className="mt-4 max-w-2xl text-xs leading-5 text-white/55">{DISCLAIMER_SHORT}</p>
           <p className="mt-3 max-w-2xl text-xs leading-5 text-white/55">

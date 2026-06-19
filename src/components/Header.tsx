@@ -2,12 +2,10 @@ import Link from "next/link";
 import { Globe2, Route } from "lucide-react";
 
 const navItems = [
-  { href: "/start", label: "Start" },
   { href: "/countries", label: "Countries" },
   { href: "/ai-assistant", label: "AI Assistant" },
-  { href: "/get-help", label: "Get Help" },
   { href: "/services", label: "Services" },
-  { href: "/share-story", label: "Share Story" },
+  { href: "/share-story", label: "Stories" },
   { href: "/about", label: "About" },
   { href: "/disclaimer", label: "Disclaimer" },
 ];
@@ -23,7 +21,7 @@ export function Header() {
           </span>
           <span className="leading-none">
             <span className="block text-lg font-bold tracking-tight">VideshFlow</span>
-            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9a6a20] sm:block">Move with clarity</span>
+            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9a6a20] sm:block">Global route clarity</span>
           </span>
         </Link>
         <nav className="hidden items-center gap-5 text-sm font-medium text-slate-700 lg:flex">
@@ -34,10 +32,10 @@ export function Header() {
           ))}
         </nav>
         <Link
-          href="/start"
+          href="/#route-selector"
           className="rounded-full bg-[#123638] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0c2829]"
         >
-          Start
+          Plan route
         </Link>
       </div>
     </header>

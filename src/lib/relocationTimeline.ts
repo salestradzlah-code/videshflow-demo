@@ -1,198 +1,212 @@
-import { destinations, moveReasons, profiles, type DestinationKey, type MoveReasonKey, type ProfileKey, type TimelineTask, type TimelinePhase } from "@/data/demoPlatform";
+import { destinations, moveReasons, profiles, type DestinationKey, type MoveReasonKey, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 
-const baseTimeline: TimelineTask[] = [
+const baseTasks: TimelineTask[] = [
   {
-    id: "docs-master-folder",
-    phase: "Before flying",
-    day: "T-60 to T-30",
-    title: "Build the master document folder",
-    description: "Collect passports, offer or admission letter, family documents, medical records, prescriptions, school records, and digital backups.",
-    owner: "Mover",
+    id: "official-route-check",
+    phase: "Before you move",
+    title: "Verify official route requirements",
+    description: "Check official government, school, employer or immigration sources for the selected origin and destination before relying on any third-party advice.",
+    timing: "T-60 to T-30",
+    priority: "High",
+    category: "Official sources",
+  },
+  {
+    id: "document-folder",
+    phase: "Before you move",
+    title: "Create one relocation document folder",
+    description: "Organise passports, approvals, certificates, medical records, school papers, employment documents and digital backups.",
+    timing: "T-45",
+    priority: "High",
     category: "Documents",
-    priority: "Critical",
-    tools: ["Document vault", "Cloud backup", "Printed folder"],
   },
   {
-    id: "budget-reality-check",
-    phase: "Before flying",
-    day: "T-45 to T-21",
-    title: "Run cost and salary reality check",
-    description: "Compare rent, school, groceries, utilities, commute, first-month deposits, and emergency buffer for the selected destination.",
-    owner: "Family lead",
+    id: "temporary-stay",
+    phase: "Before you move",
+    title: "Book temporary stay before long rental",
+    description: "Use hotels, serviced apartments or short stays until you understand commute, school, budget and neighbourhood reality.",
+    timing: "T-30",
+    priority: "High",
+    category: "Housing",
+  },
+  {
+    id: "budget-buffer",
+    phase: "Before you move",
+    title: "Build first 60-day cash buffer",
+    description: "Plan for deposits, transport, food, furniture, school, SIM, broadband, document charges and emergency costs.",
+    timing: "T-30",
+    priority: "High",
     category: "Money",
-    priority: "High",
-    tools: ["Cost worksheet", "Rental research", "Official links"],
-  },
-  {
-    id: "packing-customs-baggage",
-    phase: "Before flying",
-    day: "T-30 to T-7",
-    title: "Finalise packing, baggage and customs caution",
-    description: "Use a luggage scale, list medicines with prescriptions, check restricted food items, and decide what to ship versus buy locally.",
-    owner: "Family",
-    category: "Travel",
-    priority: "High",
-    tools: ["Baggage planner", "Customs reminder", "Mover quote"],
   },
   {
     id: "arrival-connectivity",
     phase: "Days 1 to 7",
-    day: "Day 1",
-    title: "Get connected without losing Indian OTPs",
-    description: "Activate local SIM or roaming backup, keep Indian SIM active, install transport and map apps, and save emergency contacts.",
-    owner: "Mover",
-    category: "Daily life",
-    priority: "Critical",
-    tools: ["SIM checklist", "OTP plan", "Transport apps"],
+    title: "Get connected on arrival",
+    description: "Set up local SIM or eSIM, internet access, maps, emergency numbers, local transport app and family communication plan.",
+    timing: "Day 1",
+    priority: "High",
+    category: "Connectivity",
   },
   {
-    id: "temporary-stay-area-shortlist",
+    id: "banking-first-week",
     phase: "Days 1 to 7",
-    day: "Day 2 to 5",
-    title: "Convert temporary stay into area shortlist",
-    description: "Test commute to office, nearby groceries, clinics, school route, and late-night comfort before committing to a rental.",
-    owner: "Family lead",
+    title: "Start banking and payments setup",
+    description: "Research local banking, payment apps, remittance, cards and salary account steps. Verify requirements with the bank directly.",
+    timing: "Day 2 to 7",
+    priority: "High",
+    category: "Banking",
+  },
+  {
+    id: "commute-test",
+    phase: "Days 1 to 7",
+    title: "Test commute and neighbourhood reality",
+    description: "Do a real commute test to work, school or university before locking housing decisions.",
+    timing: "Day 3 to 7",
+    priority: "Medium",
+    category: "Transport",
+  },
+  {
+    id: "rental-search",
+    phase: "Days 8 to 30",
+    title: "Shortlist long-term housing",
+    description: "Compare rent, commute, deposits, safety, school access, groceries and local rules before signing.",
+    timing: "Week 2 to 4",
+    priority: "High",
     category: "Housing",
-    priority: "High",
-    tools: ["Neighbourhood checklist", "Map notes", "Safety check"],
   },
   {
-    id: "rental-inspection",
+    id: "home-setup",
     phase: "Days 8 to 30",
-    day: "Week 2 to 4",
-    title: "Secure rental and inspect before move-in",
-    description: "Verify agent or landlord, inspect condition, take photos, record meter readings, confirm key collection and delivery slots.",
-    owner: "Family lead",
-    category: "Housing",
-    priority: "Critical",
-    tools: ["Rental viewing checklist", "Photo log", "Meter reading notes"],
+    title: "Set up home basics",
+    description: "Plan furniture, appliances, mattress, kitchen basics, WiFi, utilities, cleaning, repairs and delivery windows.",
+    timing: "Week 2 to 4",
+    priority: "Medium",
+    category: "Home setup",
   },
   {
-    id: "home-setup-week",
+    id: "local-health",
     phase: "Days 8 to 30",
-    day: "Week 3 to 4",
-    title: "Set up home basics first",
-    description: "Prioritise mattress, WiFi request, electricity, local SIM, groceries, kitchen basics, furniture delivery, and kids route testing.",
-    owner: "Family",
-    category: "Daily life",
-    priority: "High",
-    tools: ["Home setup list", "Delivery tracker", "Grocery list"],
+    title: "Set healthcare and emergency basics",
+    description: "Research clinics, insurance, prescriptions, emergency numbers and nearby pharmacies. Verify medical requirements directly.",
+    timing: "Week 2 to 4",
+    priority: "Medium",
+    category: "Healthcare",
   },
   {
-    id: "services-to-research",
-    phase: "Days 8 to 30",
-    day: "Week 4",
-    title: "Research services without assuming endorsement",
-    description: "Compare movers, insurance, remittance, dental, rental, school, helper, cleaning, and community options directly before engaging.",
-    owner: "Mover",
-    category: "Services",
-    priority: "Normal",
-    tools: ["Services directory", "Reference links", "Provider notes"],
-  },
-  {
-    id: "routine-stabilisation",
+    id: "community-map",
     phase: "Days 31 to 90",
-    day: "Month 2",
-    title: "Stabilise routine and monthly budget",
-    description: "Review real costs, commute, school or childcare rhythm, groceries, medical access, community, and Indian banking dependencies.",
-    owner: "Family",
-    category: "Family",
-    priority: "High",
-    tools: ["Budget tracker", "Community checklist", "Banking reminders"],
+    title: "Build community and routine",
+    description: "Find local communities, temples, mandals, parent groups, professional circles, groceries and weekend routines.",
+    timing: "Month 2",
+    priority: "Medium",
+    category: "Community",
   },
   {
-    id: "long-term-admin-review",
+    id: "review-costs",
     phase: "Days 31 to 90",
-    day: "Month 3",
-    title: "Review long-term admin with qualified sources",
-    description: "Check tax residency, NRE / NRO, insurance, school, driving, and local official requirements with official sources or professionals.",
-    owner: "Family lead",
-    category: "Documents",
-    priority: "Normal",
-    tools: ["Official-source router", "Professional advice reminder", "Document audit"],
+    title: "Review real cost versus assumptions",
+    description: "Compare actual rent, food, transport, school, insurance and setup spending against the original move budget.",
+    timing: "Month 2 to 3",
+    priority: "Medium",
+    category: "Money",
   },
 ];
 
 const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
   job: [
-    { id: "job-office-clothing", phase: "Before flying", day: "T-21", title: "Prepare office and interview clothing", description: "Buy formal shirts, business suits, ties, shoes, rainwear or winter wear where cheaper in India and suitable for the destination.", owner: "Mover", category: "Daily life", priority: "Normal", tools: ["Before you fly checklist"] },
+    { id: "job-offer-reality", phase: "Before you move", title: "Check salary against real setup costs", description: "Compare salary, rent, tax direction, transport, school, insurance and deposits before finalising the move plan.", timing: "T-45", priority: "High", category: "Offer decision" },
+    { id: "office-readiness", phase: "Before you move", title: "Prepare office clothing and work basics", description: "Plan formal wear, shoes, laptop accessories, commute, first-week office expectations and local business etiquette.", timing: "T-20", priority: "Medium", category: "Work" },
   ],
-  transfer: [
-    { id: "transfer-package-review", phase: "Before flying", day: "T-45", title: "Decode employer relocation package", description: "Check flights, temporary stay, movers, family support, school allowance, insurance, reimbursable items, and receipts needed.", owner: "Mover", category: "Money", priority: "High", tools: ["Package checklist", "HR questions"] },
+  corporate: [
+    { id: "relocation-package", phase: "Before you move", title: "Decode employer relocation package", description: "Separate employer-covered items from family-owned tasks: flights, hotel, movers, school search, spouse support and deposits.", timing: "T-45", priority: "High", category: "Employer" },
+    { id: "mover-survey", phase: "Before you move", title: "Request mover survey and written quote", description: "Compare packing, customs, insurance, storage, destination delivery, stairs, lift and hidden charges.", timing: "T-35", priority: "High", category: "Movers" },
   ],
   student: [
-    { id: "student-campus-ready", phase: "Before flying", day: "T-30", title: "Prepare student arrival pack", description: "Keep admission, accommodation, insurance, funds, transcripts, laptop, local transport, and university orientation details ready.", owner: "Student", category: "Documents", priority: "High", tools: ["Student move kit"] },
+    { id: "student-docs", phase: "Before you move", title: "Lock university and student documents", description: "Organise admission letter, financial proof, transcripts, accommodation, insurance, visa or pass steps and emergency contacts.", timing: "T-45", priority: "High", category: "Student" },
+    { id: "student-budget", phase: "Days 1 to 7", title: "Set student budget and transport routine", description: "Track rent, food, transport, mobile, study material, health cover and one-time setup costs from week one.", timing: "Day 1 to 7", priority: "Medium", category: "Budget" },
   ],
   family: [
-    { id: "family-school-health", phase: "Before flying", day: "T-45", title: "Prepare school and family health records", description: "Collect school transcripts, vaccination records, prescriptions, dental checks, and childcare or school shortlist before flying.", owner: "Family", category: "Family", priority: "High", tools: ["Family checklist", "School records"] },
+    { id: "family-schooling", phase: "Before you move", title: "Start school and childcare research", description: "Check school calendars, records, vaccination notes, catchments, transport and childcare waitlists before arrival.", timing: "T-60", priority: "High", category: "Schooling" },
+    { id: "family-groceries", phase: "Days 1 to 7", title: "Map groceries, clinic and family basics", description: "Find nearest supermarket, Indian groceries, clinic, pharmacy, playground and safe transport routine.", timing: "Day 1 to 7", priority: "Medium", category: "Family" },
   ],
   pr: [
-    { id: "pr-settlement-buffer", phase: "Before flying", day: "T-30", title: "Plan long-term settlement buffer", description: "Prepare a longer cash buffer, shipping plan, job search timeline, school research, and banking or remittance notes.", owner: "Family lead", category: "Money", priority: "High", tools: ["Settlement plan"] },
+    { id: "long-term-docs", phase: "Before you move", title: "Plan long-term settlement documents", description: "Prepare certificates, financial records, medical records, education documents, insurance and family files for settlement.", timing: "T-60", priority: "High", category: "Settlement" },
+    { id: "settlement-network", phase: "Days 31 to 90", title: "Build long-term local support", description: "Map community, schools, healthcare, banking, tax professionals, transport and housing options for a stable first year.", timing: "Month 2 to 3", priority: "Medium", category: "Community" },
   ],
   business: [
-    { id: "business-setup-research", phase: "Days 31 to 90", day: "Month 2", title: "Research business setup and professional support", description: "Use official sources and qualified professionals for company setup, tax, banking, licences, and local network building.", owner: "Founder", category: "Services", priority: "Normal", tools: ["Official links", "Professional support list"] },
+    { id: "business-setup", phase: "Before you move", title: "Research business setup and tax caution areas", description: "Use official business registration, banking and tax sources. Treat this as research, not tax or legal advice.", timing: "T-45", priority: "High", category: "Business" },
+    { id: "network-build", phase: "Days 31 to 90", title: "Build local founder and professional network", description: "Find chambers, communities, startup groups, coworking options and professional service providers to research.", timing: "Month 2", priority: "Medium", category: "Network" },
   ],
-  assignment: [
-    { id: "assignment-light-setup", phase: "Before flying", day: "T-14", title: "Keep the move light and reversible", description: "Prioritise temporary stay, local SIM, transport, expense tracking, and minimal shipping for a short assignment.", owner: "Mover", category: "Travel", priority: "Normal", tools: ["Short assignment checklist"] },
+  short: [
+    { id: "light-pack", phase: "Before you move", title: "Plan light packing and temporary setup", description: "Avoid over-shipping. Focus on documents, clothes, work essentials, medicines and serviced accommodation.", timing: "T-21", priority: "Medium", category: "Packing" },
+    { id: "expense-tracking", phase: "Days 1 to 7", title: "Set simple expense tracking", description: "Track reimbursable and personal expenses from day one to avoid assignment confusion.", timing: "Day 1", priority: "Medium", category: "Money" },
+  ],
+  returning: [
+    { id: "reverse-relocation", phase: "Before you move", title: "Treat return home as a full relocation", description: "Check housing, NRI banking, tax residency caution, school transfer, documents, movers, SIM and healthcare continuity.", timing: "T-45", priority: "High", category: "Returning home" },
+    { id: "local-reintegration", phase: "Days 31 to 90", title: "Rebuild local systems and routines", description: "Settle banking, local ID, utilities, domestic help, commute, community, school and healthcare routines.", timing: "Month 2 to 3", priority: "Medium", category: "Routine" },
   ],
   landed: [
-    { id: "landed-stabilise-now", phase: "Days 1 to 7", day: "Today", title: "Stabilise the immediate week", description: "Focus on local SIM, groceries, house search, bank access, WiFi, emergency contacts, and official appointments already pending.", owner: "Mover", category: "AI", priority: "Critical", tools: ["AI triage", "First 7 days list"] },
+    { id: "already-landed-triage", phase: "Days 1 to 7", title: "Run first-week triage", description: "Prioritise SIM, bank, temporary stay, house search, groceries, emergency contacts, WiFi and local transport.", timing: "Today", priority: "High", category: "Arrival" },
+    { id: "catch-up-plan", phase: "Days 8 to 30", title: "Catch up missed pre-move tasks", description: "Backfill documents, insurance, banking, housing, school, utilities and local registrations that were not completed before arrival.", timing: "Week 2", priority: "High", category: "Catch-up" },
   ],
 };
 
 const profileAddOns: Record<ProfileKey, TimelineTask[]> = {
-  solo: [],
+  solo: [
+    { id: "solo-basics", phase: "Days 1 to 7", title: "Stabilise solo essentials", description: "Focus on temporary stay, SIM, transport, food, banking, safety and budget discipline.", timing: "Day 1 to 7", priority: "Medium", category: "Solo" },
+  ],
   couple: [
-    { id: "couple-spouse-setup", phase: "Days 31 to 90", day: "Month 2", title: "Build spouse and couple routine", description: "Review spouse setup, community, budget, groceries, healthcare, commute, and personal support network.", owner: "Couple", category: "Family", priority: "Normal", tools: ["Community finder"] },
+    { id: "couple-setup", phase: "Days 8 to 30", title: "Align couple housing and budget", description: "Agree commute, rent ceiling, groceries, spouse setup, community and weekend routine.", timing: "Week 2 to 4", priority: "Medium", category: "Couple" },
   ],
   familyChild: [
-    { id: "child-playgroup-route", phase: "Days 8 to 30", day: "Week 3", title: "Test school route and child routine", description: "Check school or childcare commute, play area, clinic access, groceries, and weekend family activities before routine locks in.", owner: "Family", category: "Family", priority: "High", tools: ["School route checklist", "Playgroup finder"] },
+    { id: "child-comfort", phase: "Days 1 to 7", title: "Set child comfort and safety basics", description: "Map school route, clinic, groceries, playground, medicines, emergency contacts and safe commute.", timing: "Day 1 to 7", priority: "High", category: "Child" },
   ],
   familyChildren: [
-    { id: "children-school-calendar", phase: "Before flying", day: "T-30", title: "Align school calendar and records", description: "Prepare records for each child, understand transition timing, and keep family medical and vaccination records ready.", owner: "Family", category: "Family", priority: "High", tools: ["School checklist", "Medical records"] },
+    { id: "children-routine", phase: "Days 8 to 30", title: "Build children’s school and activity routine", description: "Coordinate school records, transport, childcare, playgroups, healthcare and family-friendly neighbourhood research.", timing: "Week 2 to 4", priority: "High", category: "Children" },
   ],
-  student: [],
-  parents: [
-    { id: "parents-medical-comfort", phase: "Before flying", day: "T-21", title: "Prepare seniors comfort and medical plan", description: "Plan medicines, doctor letters, accessibility, transport, insurance, emergency contacts, and familiar food comfort items.", owner: "Family", category: "Family", priority: "High", tools: ["Senior checklist", "Medicine list"] },
+  student: [
+    { id: "student-life", phase: "Days 8 to 30", title: "Set student life routine", description: "Plan accommodation, campus transport, budget, groceries, health cover, study schedule and local support.", timing: "Week 2", priority: "Medium", category: "Student" },
+  ],
+  seniors: [
+    { id: "senior-access", phase: "Before you move", title: "Plan senior medical and accessibility needs", description: "Check medicines, prescriptions, accessibility, transport, nearby clinic, insurance and emergency contacts.", timing: "T-30", priority: "High", category: "Seniors" },
   ],
 };
 
-export function buildTimeline(destinationKey: DestinationKey, reasonKey: MoveReasonKey, profileKey: ProfileKey): TimelineTask[] {
-  const destination = destinations.find((item) => item.key === destinationKey) ?? destinations[0];
+function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string): TimelineTask {
+  return {
+    ...task,
+    description: task.description.replace("selected origin and destination", `${originLabel} to ${destinationLabel}`),
+  };
+}
+
+export function buildTimeline(originKey: DestinationKey, destinationKey: DestinationKey, reasonKey: MoveReasonKey, profileKey: ProfileKey): TimelineTask[] {
+  const origin = destinations.find((item) => item.key === originKey) ?? destinations[0];
+  const destination = destinations.find((item) => item.key === destinationKey) ?? destinations[1];
   const reason = moveReasons.find((item) => item.key === reasonKey) ?? moveReasons[0];
   const profile = profiles.find((item) => item.key === profileKey) ?? profiles[0];
 
-  const destinationTask: TimelineTask = {
-    id: `destination-${destination.key}`,
-    phase: "Before flying",
-    day: "T-45",
-    title: `Load ${destination.label} starter kit`,
-    description: `${destination.headline} Focus on ${destination.focus.slice(0, 3).join(", ").toLowerCase()} and verify official-source details directly.`,
-    owner: "Mover",
-    category: "AI",
-    priority: destination.key === "singapore" ? "Critical" : "High",
-    tools: ["Country kit", "Reference links", "Services directory"],
+  const routeSpecific: TimelineTask = {
+    id: "route-specific-starter-kit",
+    phase: "Before you move",
+    title: `Create your ${origin.label} to ${destination.label} route starter kit`,
+    description: `Use the ${reason.label.toLowerCase()} and ${profile.label.toLowerCase()} context to prioritise official links, documents, services, money planning and first-month tasks.`,
+    timing: "Today",
+    priority: "High",
+    category: "Route starter kit",
   };
 
-  return [destinationTask, ...baseTimeline, ...(reasonAddOns[reason.key] ?? []), ...(profileAddOns[profile.key] ?? [])].sort((a, b) => phaseOrder[a.phase] - phaseOrder[b.phase]);
+  return [routeSpecific, ...baseTasks.map((task) => withRouteContext(task, origin.label, destination.label)), ...reasonAddOns[reason.key], ...profileAddOns[profile.key]];
 }
 
-export const phaseOrder: Record<TimelinePhase, number> = {
-  "Before flying": 1,
-  "Days 1 to 7": 2,
-  "Days 8 to 30": 3,
-  "Days 31 to 90": 4,
-};
-
 export function groupByPhase(tasks: TimelineTask[]) {
-  return tasks.reduce<Record<TimelinePhase, TimelineTask[]>>((acc, task) => {
-    acc[task.phase] = acc[task.phase] || [];
+  return tasks.reduce<Record<string, TimelineTask[]>>((acc, task) => {
+    if (!acc[task.phase]) acc[task.phase] = [];
     acc[task.phase].push(task);
     return acc;
-  }, { "Before flying": [], "Days 1 to 7": [], "Days 8 to 30": [], "Days 31 to 90": [] });
+  }, {});
 }
 
 export function calculateProgress(tasks: TimelineTask[], completedIds: string[]) {
   if (!tasks.length) return 0;
-  return Math.round((tasks.filter((task) => completedIds.includes(task.id)).length / tasks.length) * 100);
+  const completed = tasks.filter((task) => completedIds.includes(task.id)).length;
+  return Math.round((completed / tasks.length) * 100);
 }
