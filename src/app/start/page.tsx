@@ -3,7 +3,7 @@ import { ExecutiveDemoHome } from "@/components/demo/ExecutiveDemoHome";
 
 export const metadata: Metadata = {
   title: "Plan Your Global Relocation Route",
-  description: "Choose moving from, moving to, move reason, and family profile to get a VideshFlow route plan.",
+  description: "Choose moving from, moving to, move reason, and family profile to get a SettlePath route plan.",
 };
 
 export default function StartPage() {

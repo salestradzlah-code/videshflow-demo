@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 const promptChips = [
   "Is this Singapore salary enough for a family of 3?",
   "What should I do in my first 7 days after landing?",
-  "How do I keep my Indian SIM active for OTPs?",
+  "How do I keep my home SIM active for OTPs while abroad?",
   "What should I check before renting a house?",
-  "What should I pack before leaving India?",
+  "What should I pack before leaving home?",
   "What services should I research before moving?",
 ];
 
@@ -33,10 +33,10 @@ const roadmap = [
 
 
 const languageExamples = [
-  "Singapore madhe family sathi rent kiti yel?",
-  "UK la first week madhe kay karaycha?",
-  "Mala Indian SIM OTP sathi kay plan karaycha?",
-  "Kids schooling Singapore madhe kasa plan karaycha?",
+  "What is a realistic rent budget for a family in Singapore?",
+  "What should I do in the first week in the UK?",
+  "How do I keep my home SIM active for OTPs?",
+  "How do I plan kids' schooling in Singapore?",
 ];
 
 export default function AiAssistantPage() {
@@ -47,13 +47,13 @@ export default function AiAssistantPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">AI relocation assistant</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Ask practical relocation questions in one place</h1>
           <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-600">
-            VideshFlow is being prepared for an AI-first relocation assistant that can guide users through planning questions, country guides, service categories, future reminders, and official-source routing.
+            SettlePath is being prepared for an AI-first relocation assistant that can guide users through planning questions, route guides, service categories, future reminders, and official-source routing.
           </p>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {[
               "Cost of living and offer planning",
               "First 7, 30, and 90 day checklists",
-              "Documents, packing, medicine, and Indian SIM OTP continuity",
+              "Documents, packing, medicine, and SIM OTP continuity",
               "Rental research, school planning, groceries, community, and home setup",
             ].map((item) => (
               <div key={item} className="rounded-2xl bg-[#f8f6f1] p-4 text-sm font-semibold text-[#123638]">{item}</div>
@@ -101,7 +101,7 @@ export default function AiAssistantPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Future AI planner features</p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#172326]">Designed to help users think, plan, and remember</h2>
           <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-600">
-            In future, VideshFlow can help users remember relocation tasks such as mover delivery dates, key collection, rental inspection, school appointments, SIM activation, WiFi setup, and document follow-ups. Users should still verify directly with service providers and official sources.
+            In future, SettlePath can help users remember relocation tasks such as mover delivery dates, key collection, rental inspection, school appointments, SIM activation, WiFi setup, and document follow-ups. Users should still verify directly with service providers and official sources.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {roadmap.map((item) => (
@@ -123,10 +123,10 @@ export default function AiAssistantPage() {
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {[
-              "India to Singapore + job offer + family with child",
+              "Singapore to UK + job offer + family with child",
               "India to UK + student move + solo",
-              "India to UAE + corporate transfer + family",
-              "India to Canada + PR migration + couple",
+              "United States to UAE + corporate transfer + family",
+              "United Kingdom to Canada + PR migration + couple",
             ].map((item) => (
               <div key={item} className="rounded-2xl bg-[#f8f6f1] p-4 text-sm font-semibold text-[#123638]">{item}</div>
             ))}
@@ -140,7 +140,7 @@ export default function AiAssistantPage() {
           <Languages className="h-8 w-8 text-[#123638]" />
           <h2 className="mt-5 text-2xl font-semibold text-[#172326]">Language support approach</h2>
           <p className="mt-4 text-sm leading-7 text-slate-600">
-            Prefer another language? You can use your browser translate feature to view this page in your preferred language. The future AI assistant is planned to support English, Hindi, Marathi, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, Punjabi, and Hinglish-style questions.
+            Prefer another language? You can use your browser translate feature to view this page in your preferred language. The future AI assistant is planned to support multiple languages over time.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {languageExamples.map((example) => (

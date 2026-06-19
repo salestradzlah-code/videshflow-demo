@@ -10,6 +10,7 @@ export type DestinationKey =
   | "united-arab-emirates"
   | "germany-eu"
   | "saudi-gulf"
+  | "portugal"
   | "other";
 
 export type MoveReasonKey =
@@ -21,9 +22,13 @@ export type MoveReasonKey =
   | "business"
   | "short"
   | "returning"
-  | "landed";
+  | "landed"
+  | "retirement"
+  | "domestic";
 
-export type ProfileKey = "solo" | "couple" | "familyChild" | "familyChildren" | "student" | "seniors";
+export type ProfileKey = "solo" | "couple" | "familyChild" | "familyChildren" | "student" | "seniors" | "retiree";
+
+export type PetKey = "none" | "dog" | "cat" | "multiple" | "other";
 
 export type TimelinePhase = "Before you move" | "Days 1 to 7" | "Days 8 to 30" | "Days 31 to 90";
 
@@ -55,8 +60,8 @@ export const destinations = [
     starterPath: "/countries/singapore",
     headline: "Fast, organised and expensive. The big wins are housing research, pass rules, schooling, food, banking and first-month setup.",
     climate: "Hot, humid and rainy across the year. Pack light office wear, umbrellas, breathable clothes and medicines.",
-    essentials: ["Work or student pass status", "Temporary stay before rental", "Local SIM and banking", "School or childcare plan", "Indian grocery and community map"],
-    services: ["Serviced apartment", "Rental portals", "Movers", "SIM and broadband", "Indian groceries"],
+    essentials: ["Work or student pass status", "Temporary stay before rental", "Local SIM and banking", "School or childcare plan", "Local community and support map"],
+    services: ["Serviced apartment", "Rental portals", "Movers", "SIM and broadband", "Groceries and local food"],
   },
   {
     key: "united-kingdom",
@@ -64,7 +69,7 @@ export const destinations = [
     route: "Global to UK",
     starterPath: "/countries/united-kingdom",
     headline: "Plan around visa status, NHS access, rental deposits, school catchments, weather, transport and high initial setup costs.",
-    climate: "Cooler and wetter than most Indian cities. Layered clothing, rainwear and winter preparation matter.",
+    climate: "Cooler and wetter than most tropical and equatorial climates. Layered clothing, rainwear and winter preparation matter.",
     essentials: ["Visa and BRP/eVisa checks", "NHS and GP registration", "Rental deposit planning", "Council tax awareness", "School catchment research"],
     services: ["Temporary stay", "Rental search", "Banking", "Furniture and appliances", "School research"],
   },
@@ -129,6 +134,16 @@ export const destinations = [
     services: ["Temporary stay", "Relocation support", "School search", "Car rental", "Furniture and appliances"],
   },
   {
+    key: "portugal",
+    label: "Portugal",
+    route: "Global to Portugal",
+    starterPath: undefined,
+    headline: "Plan around visa or residence route, NIF and bank account setup, rental documents, healthcare registration and regional cost differences.",
+    climate: "Mild winters, hot summers. Coastal areas and inland cities differ in heat and humidity.",
+    essentials: ["Visa or residence route", "NIF and bank account", "Rental documents", "Healthcare registration", "Local transport"],
+    services: ["Temporary stay", "Rental search", "Translation", "Notary support", "Healthcare research"],
+  },
+  {
     key: "other",
     label: "Other",
     route: "Custom global route",
@@ -150,6 +165,8 @@ export const moveReasons = [
   { key: "short", label: "Short assignment", focus: ["Temporary stay", "Light packing", "Local SIM", "Transport", "Food", "Expense tracking"] },
   { key: "returning", label: "Returning home", focus: ["Reverse relocation", "NRI paperwork", "Banking", "Home setup", "School transfer", "Tax caution"] },
   { key: "landed", label: "Already landed", focus: ["First 7 days", "Local SIM", "Bank", "House search", "WiFi", "Groceries", "Emergency contacts"] },
+  { key: "retirement", label: "Retirement / lifestyle move", focus: ["Healthcare access", "Long-term insurance", "Pension and income planning", "Housing comfort", "Community routine", "Tax and residency caution"] },
+  { key: "domestic", label: "Domestic move", focus: ["Lease handover", "Movers", "Utilities", "Address changes", "School transfer", "Local registrations"] },
 ] as const;
 
 export const profiles = [
@@ -159,6 +176,15 @@ export const profiles = [
   { key: "familyChildren", label: "Family with children", focus: ["School zones", "Childcare", "Healthcare", "Larger rental", "Safety", "Commute", "Playgroups"] },
   { key: "student", label: "Student", focus: ["Accommodation", "Budget", "Documents", "Local SIM", "Student life"] },
   { key: "seniors", label: "With parents / seniors", focus: ["Medical", "Accessibility", "Transport", "Medicines", "Comfort", "Emergency contacts"] },
+  { key: "retiree", label: "Retiree / senior couple", focus: ["Healthcare access", "Insurance", "Accessibility", "Community", "Comfort", "Budgeting"] },
+] as const;
+
+export const petOptions = [
+  { key: "none", label: "No pets" },
+  { key: "dog", label: "Dog" },
+  { key: "cat", label: "Cat" },
+  { key: "multiple", label: "Multiple pets" },
+  { key: "other", label: "Other pet" },
 ] as const;
 
 export const platformStats = [
@@ -169,10 +195,10 @@ export const platformStats = [
 ];
 
 export const documentCategories = [
-  { title: "Identity and travel", icon: FileText, items: ["Passport", "Visa / pass approval", "Birth certificates", "Marriage certificate"], requiredFor: ["job", "corporate", "student", "family", "pr", "business", "short", "returning", "landed"] },
+  { title: "Identity and travel", icon: FileText, items: ["Passport", "Visa / pass approval", "Birth certificates", "Marriage certificate"], requiredFor: ["job", "corporate", "student", "family", "pr", "business", "short", "returning", "landed", "retirement"] },
   { title: "Education and work", icon: GraduationCap, items: ["Degree certificates", "Transcripts", "Employment letter", "Offer letter"], requiredFor: ["job", "corporate", "student", "pr", "business"] },
   { title: "Family and school", icon: UsersRound, items: ["School records", "Vaccination records", "Child medical notes", "Dependent documents"], requiredFor: ["family", "corporate", "pr", "familyChild", "familyChildren", "seniors"] },
-  { title: "Money and setup", icon: Landmark, items: ["Bank statements", "Tax residency notes", "Insurance policy", "Rental documents"], requiredFor: ["job", "corporate", "family", "pr", "business", "returning", "landed"] },
+  { title: "Money and setup", icon: Landmark, items: ["Bank statements", "Tax residency notes", "Insurance policy", "Rental documents"], requiredFor: ["job", "corporate", "family", "pr", "business", "returning", "landed", "retirement", "domestic"] },
 ];
 
 export const serviceCategories = [
@@ -186,8 +212,9 @@ export const serviceCategories = [
   { title: "Healthcare and insurance", icon: HeartHandshake, note: "Research GP, clinics, insurance, medicine rules and emergency numbers." },
   { title: "Notary and attestation", icon: BadgeCheck, note: "Research apostille, notarisation, translation and embassy-specific requirements." },
   { title: "Transport and driving", icon: Car, note: "Research airport transfer, taxi apps, public transport cards, IDP and driving licence rules." },
-  { title: "Groceries and community", icon: ShoppingBag, note: "Find Indian groceries, temples, mandals, community groups and local support networks." },
+  { title: "Groceries and community", icon: ShoppingBag, note: "Cultural food, community, faith, language, and local support to research near likely neighbourhoods." },
   { title: "Official links", icon: MapPin, note: "Always verify visa, tax, healthcare, school and residency rules from official sources." },
+  { title: "Pet relocation", icon: HeartHandshake, note: "Research pet import or local pet rules, vaccination records, microchip checks, quarantine requirements and pet-friendly transport and rentals." },
 ];
 
 export const realStories = [

@@ -5,7 +5,7 @@ import { countries } from "@/data/countries";
 
 export const metadata: Metadata = {
   title: "Country Starter Kits",
-  description: "Browse VideshFlow country starter kits for Indians moving abroad.",
+  description: "Browse SettlePath route starter kits for people and families planning relocation across countries, cities, and life stages.",
 };
 
 export default function CountriesPage() {
@@ -13,9 +13,9 @@ export default function CountriesPage() {
     <section className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader
-          eyebrow="Country library"
-          title="Relocation starter kits for Indian movers"
-          description="Each country guide follows the same practical structure: who it is for, official links, first 7 days, first 30 days, first 90 days, Indian family tips, and common mistakes."
+          eyebrow="Route library"
+          title="Relocation starter kits by route"
+          description="Each route guide follows the same practical structure: who it is for, official links, first 7 days, first 30 days, first 90 days, family tips, and common mistakes."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {countries.map((country) => <CountryCard key={country.slug} country={country} />)}

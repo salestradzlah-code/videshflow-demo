@@ -5,7 +5,7 @@ import { DisclaimerBox } from "@/components/DisclaimerBox";
 
 export const metadata: Metadata = {
   title: "First 30 Days Home Setup",
-  description: "Practical home setup checklist for the first 30 days after moving into a rental house abroad.",
+  description: "Practical home setup checklist for the first 30 days after moving into a new rental home.",
 };
 
 const moveInChecklist = [
@@ -28,10 +28,10 @@ const moveInChecklist = [
 ];
 
 const setupSections = [
-  { icon: Phone, title: "Connectivity", items: ["Local SIM and mobile plan", "Indian SIM and OTP backup", "Map, transport, and local payment apps", "Important numbers saved in phone"] },
+  { icon: Phone, title: "Connectivity", items: ["Local SIM and mobile plan", "Home SIM and OTP backup", "Map, transport, and local payment apps", "Important numbers saved in phone"] },
   { icon: Wifi, title: "WiFi and utilities", items: ["Broadband request", "Electricity and utilities", "TV or streaming decisions", "Billing account setup"] },
   { icon: Bed, title: "Furniture and appliances", items: ["Bed, mattress, table, chairs, and storage", "Fridge, washer, microwave, kettle, and iron", "Delivery and assembly timing", "New versus used purchase options"] },
-  { icon: Home, title: "Kitchen and daily basics", items: ["Cookware, pressure cooker, utensils, and masala storage", "Cleaning supplies", "Vegetarian food options", "Supermarkets and Indian shops nearby"] },
+  { icon: Home, title: "Kitchen and daily basics", items: ["Cookware, utensils, and pantry storage", "Cleaning supplies", "Dietary and food preference options", "Supermarkets and specialty shops nearby"] },
   { icon: ClipboardCheck, title: "Family routine", items: ["Kids playgroups and childcare", "School commute planning", "Parks and weekend routines", "Doctor, dentist, and emergency options"] },
   { icon: PackageCheck, title: "Deliveries and reminders", items: ["Mover delivery tickets", "Furniture delivery dates", "Appliance warranty and invoices", "Future AI reminder support planned, not live yet"] },
 ];
@@ -44,7 +44,7 @@ export default function HomeSetupPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Arrival and settlement</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">First 30 Days Home Setup</h1>
           <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-600">
-            Once you move from temporary stay into your rental home, the real setup begins: keys, inspection, WiFi, electricity, furniture, appliances, SIM, groceries, school routes, helper options, and community.
+            Once you move from temporary stay into your rental home, the real setup begins: keys, inspection, WiFi, electricity, furniture, appliances, SIM, groceries, school routes, helper options, pets, and community.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href="/get-help" className="inline-flex items-center rounded-full bg-[#123638] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0c2829]">

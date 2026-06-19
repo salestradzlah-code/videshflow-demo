@@ -6,13 +6,13 @@ import { DisclaimerBox } from "@/components/DisclaimerBox";
 
 export const metadata: Metadata = {
   title: "Share Your Relocation Story",
-  description: "Contribute a real relocation story to help Indian professionals and families moving abroad.",
+  description: "Contribute a real relocation story to help people and families planning relocation across countries.",
 };
 
 const questions = [
   "What was the most stressful part before your move?",
   "Which document or admin step surprised you?",
-  "How did you manage Indian bank OTPs after landing?",
+  "How did you manage home bank OTPs after landing?",
   "What hidden cost appeared in the first 30 days?",
   "What would you do differently if you moved again?",
 ];
@@ -26,7 +26,7 @@ export default function ShareStoryPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Contributor stories</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Share the move lessons you wish someone had told you</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              Your experience can help the next Indian family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
+              Your experience can help the next family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
             </p>
             <div className="mt-8 grid gap-3">
               {questions.map((question) => (

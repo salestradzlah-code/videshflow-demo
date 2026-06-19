@@ -26,14 +26,17 @@ export function Footer() {
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
             <span className="h-2 w-2 rounded-full bg-[#f2c56b]" />
-            <p className="text-lg font-semibold">VideshFlow</p>
+            <p className="text-lg font-semibold">SettlePath</p>
           </div>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70">
-            AI-assisted route planning for global Indian families and professionals moving across countries, cities and life stages, built from practical checklists, public sources, service categories and real stories.
+            AI-assisted route planning for people and families planning relocation across countries, cities, and life stages, built from practical checklists, public sources, service categories and real stories.
           </p>
           <p className="mt-4 max-w-2xl text-xs leading-5 text-white/55">{DISCLAIMER_SHORT}</p>
           <p className="mt-3 max-w-2xl text-xs leading-5 text-white/55">
-            Prefer another language? Use your browser translation feature for now. The future AI assistant is planned to support Indian languages and Hinglish-style questions.
+            Prefer another language? Use your browser translation feature for now. The future AI assistant is planned to support multiple languages over time.
+          </p>
+          <p className="mt-3 max-w-2xl text-xs leading-5 text-white/55">
+            VideshFlow may later become the India and diaspora route track inside SettlePath.
           </p>
         </div>
         <div>

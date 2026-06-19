@@ -56,9 +56,9 @@ const profiles: Profile[] = [
 ];
 
 const nextSteps = [
-  { title: "Country starter kit", text: "Open the destination guide first so the advice feels relevant to your move.", href: "/countries", icon: Globe2 },
+  { title: "Route starter kit", text: "Open the destination guide first so the advice feels relevant to your move.", href: "/countries", icon: Globe2 },
   { title: "Before accepting the offer", text: "Review cost, rent, commute, school, family budget, and destination fit before deciding.", href: "/start#reason-guidance", icon: SearchCheck },
-  { title: "Before you fly from India", text: "Prepare documents, clothes, medicines, driving papers, baggage, SIM, and digital backups.", href: "/before-you-fly", icon: Plane },
+  { title: "Before you move", text: "Prepare documents, clothes, medicines, driving papers, baggage, SIM, and digital backups.", href: "/before-you-fly", icon: Plane },
   { title: "First 7 days", text: "Focus on SIM, transport, temporary stay, food, key documents, and immediate admin.", href: "/ai-assistant", icon: CheckCircle2 },
   { title: "First 30 days home setup", text: "Plan keys, inspection, WiFi, utilities, furniture, appliances, groceries, and commute tests.", href: "/home-setup", icon: Home },
   { title: "Services to research", text: "Compare movers, temporary stay, SIM, rentals, schools, medical prep, banking, and groceries.", href: "/services", icon: ClipboardCheck },
@@ -82,7 +82,7 @@ export function StartPathClient() {
             Start Your Relocation Path
           </h1>
           <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-600">
-            Choose your destination, move reason, and family profile. VideshFlow will point you to the most relevant country kit, checklist, service categories, reference links, and future AI guidance.
+            Choose your destination, move reason, and family profile. SettlePath will point you to the most relevant route kit, checklist, service categories, reference links, and future AI guidance.
           </p>
           <div className="mt-8 grid gap-4 rounded-3xl bg-[#f8f6f1] p-5 md:grid-cols-3">
             <div>
@@ -155,12 +155,12 @@ export function StartPathClient() {
             <UsersRound className="h-8 w-8 text-[#f2c56b]" />
             <h2 className="mt-5 text-2xl font-semibold">Your selected path</h2>
             <p className="mt-4 text-sm leading-7 text-white/75">
-              India to {destination.shortLabel} + {reason.label.toLowerCase()} + {profile.label.toLowerCase()}.
+              Your route to {destination.shortLabel} + {reason.label.toLowerCase()} + {profile.label.toLowerCase()}.
             </p>
             <p className="mt-4 text-sm leading-7 text-white/75">{destination.note}</p>
             <div className="mt-7 flex flex-col gap-3">
               <Link href={destinationHref} className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#123638]">
-                {destination.href ? "Open country starter kit" : "Open general country library"} <ArrowRight className="ml-2 h-4 w-4" />
+                {destination.href ? "Open route starter kit" : "Open general route library"} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link href="/get-help" className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
                 Share this move stage later
@@ -179,7 +179,7 @@ export function StartPathClient() {
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#172326]">Follow the right sequence, not a random ocean of links</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {nextSteps.map((step) => (
-              <Link key={step.title} href={step.title === "Country starter kit" ? destinationHref : step.href} className="group rounded-3xl border border-black/5 bg-[#f8f6f1] p-6 transition hover:-translate-y-1 hover:shadow-lg">
+              <Link key={step.title} href={step.title === "Route starter kit" ? destinationHref : step.href} className="group rounded-3xl border border-black/5 bg-[#f8f6f1] p-6 transition hover:-translate-y-1 hover:shadow-lg">
                 <step.icon className="h-7 w-7 text-[#123638]" />
                 <h3 className="mt-5 text-lg font-semibold text-[#172326]">{step.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{step.text}</p>

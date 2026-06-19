@@ -7,7 +7,7 @@ import { DIRECTORY_DISCLAIMER } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Services Directory",
-  description: "Neutral relocation service categories to research before and after moving abroad.",
+  description: "Neutral relocation service categories to research before and after moving.",
 };
 
 const serviceCategories = [
@@ -16,20 +16,21 @@ const serviceCategories = [
   { title: "Temporary accommodation", text: "Compare hotels, serviced apartments, long-stay apartments, and employer-provided temporary stay options." },
   { title: "Rental search support", text: "Research property portals, agents, neighbourhoods, commute, deposits, and rental scam warning signs." },
   { title: "Schooling and childcare support", text: "Understand school options, childcare, calendars, curriculum transition, fees, and waitlist realities." },
-  { title: "Banking, NRE / NRO, remittance and forex", text: "Research account access, Indian SIM OTP continuity, remittance providers, and professional advice where needed." },
-  { title: "SIM, roaming and connectivity", text: "Plan Indian SIM continuity, local SIM, roaming backup, broadband, and mobile app setup." },
+  { title: "Banking, account access and forex", text: "Research account access, home SIM OTP continuity, remittance providers, and professional advice where needed." },
+  { title: "SIM, roaming and connectivity", text: "Plan home SIM continuity, local SIM, roaming backup, broadband, and mobile app setup." },
   { title: "Travel, health and expat insurance", text: "Compare travel and health coverage directly with providers and understand exclusions before purchase." },
-  { title: "Medical and dental preparation", text: "Plan dental checks, eye checks, prescriptions, vaccinations, and destination medicine rules before leaving India." },
+  { title: "Medical and dental preparation", text: "Plan dental checks, eye checks, prescriptions, vaccinations, and destination medicine rules before departure." },
   { title: "Driving licence, IDP, cab and rental car", text: "Research IDP, local licence conversion, airport transfer, taxi apps, public transport, and rental car requirements." },
   { title: "Home setup, WiFi, electricity, furniture and appliances", text: "Plan the first apartment setup, broadband, utilities, household supplies, furniture, appliances, and delivery timelines." },
-  { title: "Indian groceries, temples, regional groups and community", text: "Find supermarkets, Indian shops, vegetarian options, temples, Maharashtra Mandal-style groups, and kids playgroups." },
+  { title: "Pet relocation and local services", text: "Research pet import rules, vaccination and microchip needs, pet-friendly transport, and local vet options." },
+  { title: "Cultural food, faith, community and groups", text: "Find supermarkets, specialty shops, dietary options, places of worship, regional community groups, and kids playgroups." },
 ];
 
 const directoryLayers = [
   { icon: SearchCheck, title: "Service categories to research", label: "Research only", text: "Use this to understand what type of help you may need before and after moving." },
   { icon: Tags, title: "Public platforms to compare", label: "Verify directly", text: "Compare prices, reviews, availability, and rules directly on provider websites." },
   { icon: ShieldAlert, title: "Provider options to verify", label: "No guarantee", text: "Listings are not endorsements, approvals, or promises of quality or outcome." },
-  { icon: BriefcaseBusiness, title: "Future partner listings", label: "Disclosed later", text: "VideshFlow may include affiliate or referral links in future where clearly disclosed." },
+  { icon: BriefcaseBusiness, title: "Future partner listings", label: "Disclosed later", text: "SettlePath may include affiliate or referral links in future where clearly disclosed." },
 ];
 
 export default function ServicesPage() {
@@ -41,7 +42,7 @@ export default function ServicesPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Services directory</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Service categories to research before moving</h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-              VideshFlow is not a full marketplace at launch. This page gives users a safe, neutral structure for the services they may need to research before and after relocation.
+              SettlePath is not a full marketplace at launch. This page gives users a safe, neutral structure for the services they may need to research before and after relocation.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/get-help" className="inline-flex items-center rounded-full bg-[#123638] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0c2829]">
@@ -76,7 +77,7 @@ export default function ServicesPage() {
         </div>
 
         <div className="mt-8 rounded-3xl border border-[#f2c56b]/70 bg-[#fff8df] p-6 text-sm leading-6 text-[#68420c]">
-          <strong>Directory safety wording:</strong> {DIRECTORY_DISCLAIMER} VideshFlow may include affiliate or referral links in future where disclosed.
+          <strong>Directory safety wording:</strong> {DIRECTORY_DISCLAIMER} SettlePath may include affiliate or referral links in future where disclosed.
         </div>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">

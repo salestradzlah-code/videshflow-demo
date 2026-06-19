@@ -5,7 +5,7 @@ import { DisclaimerBox } from "@/components/DisclaimerBox";
 
 export const metadata: Metadata = {
   title: "Reference Links",
-  description: "Research links and public-resource categories for Indians planning a relocation abroad.",
+  description: "Research links and public-resource categories for people planning a relocation across countries.",
 };
 
 const categories = [
@@ -15,29 +15,30 @@ const categories = [
   "Airbnb style stays",
   "International movers and baggage",
   "Forex and remittance",
-  "Indian SIM and roaming",
+  "Home SIM and roaming",
   "Local SIM and internet",
   "Rental search platforms",
   "Online shopping",
   "Furniture and appliances",
-  "Indian groceries and provision stores",
+  "Cultural food and provision stores",
   "Supermarkets",
   "Cab, airport transfer, and rental car",
   "Driving licence and IDP resources",
   "Healthcare and clinics",
   "Dental and medical preparation",
   "Schooling and childcare",
-  "Community, temples, and regional groups",
+  "Pet relocation and local vet search",
+  "Community, faith, and regional groups",
   "Language and culture tools",
   "Official government sources",
 ];
 
 const singaporeFirst = [
-  "Groceries and Indian provision stores",
+  "Groceries and cultural provision stores",
   "Rental portals and neighbourhood research",
   "Local SIM, broadband, and transport apps",
   "Supermarkets and online shopping",
-  "Community groups, temples, and family support",
+  "Community groups and family support",
 ];
 
 export default function ReferenceLinksPage() {
@@ -75,7 +76,7 @@ export default function ReferenceLinksPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f2c56b]">Singapore first</p>
               <h2 className="mt-3 text-2xl font-semibold">Singapore specific links will be reviewed first</h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-white/75">
-                VideshFlow will start with Singapore because the move is highly practical: rent, commute, SIM, groceries, schools, temporary stay, and first-month home setup matter immediately.
+                SettlePath will start with Singapore because the move is highly practical: rent, commute, SIM, groceries, schools, temporary stay, and first-month home setup matter immediately.
               </p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {singaporeFirst.map((item) => (

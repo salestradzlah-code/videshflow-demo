@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, FileSearch, Globe2, Plane, RefreshCcw, Route, Sparkles, UploadCloud } from "lucide-react";
-import { destinations, documentCategories, moveReasons, platformStats, profiles, realStories, serviceCategories, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
+import { destinations, documentCategories, moveReasons, petOptions, platformStats, profiles, realStories, serviceCategories, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress, groupByPhase } from "@/lib/relocationTimeline";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 
@@ -15,16 +15,22 @@ type SelectItem = { key: string; label: string };
 
 type RouteSelection = {
   fromKey: DestinationKey | null;
+  fromCity: string;
   toKey: DestinationKey | null;
+  toCity: string;
   reasonKey: MoveReasonKey | null;
   profileKey: ProfileKey | null;
+  petKey: PetKey;
 };
 
 const initialSelection: RouteSelection = {
   fromKey: null,
+  fromCity: "",
   toKey: null,
+  toCity: "",
   reasonKey: null,
   profileKey: null,
+  petKey: "none",
 };
 
 export function ExecutiveDemoHome() {
@@ -36,15 +42,22 @@ export function ExecutiveDemoHome() {
   const destination = destinations.find((item) => item.key === selection.toKey) ?? null;
   const reason = moveReasons.find((item) => item.key === selection.reasonKey) ?? null;
   const profile = profiles.find((item) => item.key === selection.profileKey) ?? null;
+  const isDomestic = Boolean(selection.fromKey && selection.toKey && selection.fromKey === selection.toKey);
 
-  const routeLabel = isRouteReady && origin && destination ? `${origin.label} to ${destination.label}` : "Choose your route";
+  const originLabel = origin ? (selection.fromCity ? `${selection.fromCity}, ${origin.label}` : origin.label) : "";
+  const destinationLabel = destination ? (selection.toCity ? `${selection.toCity}, ${destination.label}` : destination.label) : "";
+  const routeLabel = isRouteReady && origin && destination
+    ? isDomestic
+      ? `Domestic move within ${destinationLabel}`
+      : `${originLabel} to ${destinationLabel}`
+    : "Choose your route";
   const routeMeta = isRouteReady && reason && profile ? `${reason.label} · ${profile.label}` : "Moving from, moving to, reason and profile";
-  const progressStorageKey = isRouteReady ? `videshflow-progress-v2-${selection.fromKey}-${selection.toKey}-${selection.reasonKey}-${selection.profileKey}` : "videshflow-progress-v2-draft";
+  const progressStorageKey = isRouteReady ? `settlepath-progress-v4-${selection.fromKey}-${selection.toKey}-${selection.reasonKey}-${selection.profileKey}-${selection.petKey}` : "settlepath-progress-v4-draft";
 
   const timeline = useMemo(() => {
     if (!isRouteReady || !selection.fromKey || !selection.toKey || !selection.reasonKey || !selection.profileKey) return [];
-    return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey);
-  }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey]);
+    return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey);
+  }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey]);
 
   const grouped = useMemo(() => groupByPhase(timeline), [timeline]);
   const progress = calculateProgress(timeline, completedIds);
@@ -97,25 +110,32 @@ export function ExecutiveDemoHome() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold-dark)]">Step 1 · Route selector</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--ink)] sm:text-4xl">Where are you moving from and to?</h2>
               <p className="mt-4 text-sm leading-7 text-slate-600">
-                VideshFlow now starts with a global route, not just one destination. Choose the route, reason and family profile first. The dashboard appears only after your path is clear.
+                SettlePath starts with a global route, not just one destination. Choose the route, reason and who is moving first. The dashboard appears only after your path is clear.
               </p>
               <SelectionProgress selection={selection} />
             </div>
 
             <div className="grid gap-6">
-              <ChoiceGroup title="Moving from" items={destinations} selected={selection.fromKey} onSelect={(key) => updateSelection("fromKey", key as DestinationKey)} />
-              <ChoiceGroup title="Moving to" items={destinations} selected={selection.toKey} onSelect={(key) => updateSelection("toKey", key as DestinationKey)} />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <ChoiceGroup title="Moving from country" items={destinations} selected={selection.fromKey} onSelect={(key) => updateSelection("fromKey", key as DestinationKey)} />
+                <CityField label="Moving from city (optional)" value={selection.fromCity} onChange={(value) => updateSelection("fromCity", value)} />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <ChoiceGroup title="Moving to country" items={destinations} selected={selection.toKey} onSelect={(key) => updateSelection("toKey", key as DestinationKey)} />
+                <CityField label="Moving to city (optional)" value={selection.toCity} onChange={(value) => updateSelection("toCity", value)} />
+              </div>
               <ChoiceGroup title="Move reason" items={moveReasons} selected={selection.reasonKey} onSelect={(key) => updateSelection("reasonKey", key as MoveReasonKey)} />
               <ChoiceGroup title="Who is moving" items={profiles} selected={selection.profileKey} onSelect={(key) => updateSelection("profileKey", key as ProfileKey)} />
+              <ChoiceGroup title="Pets" items={petOptions} selected={selection.petKey} onSelect={(key) => updateSelection("petKey", key as PetKey)} />
             </div>
           </div>
 
           <RouteReadyCard
             isReady={isRouteReady}
+            isDomestic={isDomestic}
             routeLabel={routeLabel}
             routeMeta={routeMeta}
             onViewPlan={() => scrollTo("timeline-dashboard")}
-            onExploreServices={() => scrollTo("services-to-research")}
           />
         </div>
       </section>
@@ -124,12 +144,12 @@ export function ExecutiveDemoHome() {
 
       {isRouteReady && origin && destination && reason && profile && (
         <>
-          <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} />
+          <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} isDomestic={isDomestic} />
 
           <section id="timeline-dashboard" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.28fr_0.72fr]">
               <TimelineBoard grouped={grouped} completedIds={completedIds} onToggle={toggleTask} onReset={resetProgress} progress={progress} />
-              <RouteStarterKit origin={origin} destination={destination} reasonFocus={reason.focus} profileFocus={profile.focus} routeLabel={routeLabel} />
+              <RouteStarterKit origin={origin} destination={destination} reasonFocus={reason.focus} profileFocus={profile.focus} routeLabel={routeLabel} isDomestic={isDomestic} />
             </div>
           </section>
 
@@ -150,6 +170,10 @@ export function ExecutiveDemoHome() {
 }
 
 function Hero() {
+  function scrollTo(sectionId: string) {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <section className="relative overflow-hidden px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
       <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_12%_12%,rgba(212,175,55,0.34),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(0,77,77,0.2),transparent_30%)]" />
@@ -157,12 +181,26 @@ function Hero() {
         <div className="max-w-4xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm font-semibold text-[var(--teal)] shadow-sm">
             <Sparkles className="h-4 w-4 text-[var(--gold-dark)]" />
-            V2 global route UX · no forced login
+            SettlePath · from anywhere to home
           </div>
-          <h1 className="mt-7 text-5xl font-semibold tracking-tight text-[var(--ink)] sm:text-6xl lg:text-7xl">Plan any relocation route with VideshFlow</h1>
+          <h1 className="mt-7 text-5xl font-semibold tracking-tight text-[var(--ink)] sm:text-6xl lg:text-7xl">Move from anywhere to home.</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            VideshFlow helps global Indian families and professionals plan relocation across countries, cities, and life stages. Start with your route, then unlock the 90-day plan, route starter kit, document checklist, services to research and AI assistant preview.
+            SettlePath helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in.
           </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <button
+              onClick={() => scrollTo("route-selector")}
+              className="rounded-full bg-[var(--teal)] px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[var(--teal-dark,var(--teal))]"
+            >
+              Build my move plan
+            </button>
+            <button
+              onClick={() => scrollTo("sample-routes")}
+              className="rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-[var(--ink)] shadow-sm hover:border-[var(--teal)] hover:text-[var(--teal)]"
+            >
+              See sample routes
+            </button>
+          </div>
           <div className="mt-8 grid gap-3 sm:grid-cols-4">
             {platformStats.map((stat) => (
               <div key={stat.label} className="rounded-2xl border border-black/5 bg-white/80 p-4 shadow-sm">
@@ -231,22 +269,34 @@ function ChoiceGroup({ title, items, selected, onSelect }: { title: string; item
   );
 }
 
-function RouteReadyCard({ isReady, routeLabel, routeMeta, onViewPlan, onExploreServices }: { isReady: boolean; routeLabel: string; routeMeta: string; onViewPlan: () => void; onExploreServices: () => void }) {
+function CityField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <div>
+      <p className="mb-3 text-sm font-semibold text-[var(--ink)]">{label}</p>
+      <input
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="City name"
+        className="w-full rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-slate-700 outline-none placeholder:text-slate-400 focus:border-[var(--teal)]"
+      />
+    </div>
+  );
+}
+
+function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan }: { isReady: boolean; isDomestic: boolean; routeLabel: string; routeMeta: string; onViewPlan: () => void }) {
   return (
     <div className={classNames("mt-8 rounded-[2rem] border p-6", isReady ? "border-[var(--teal)] bg-[var(--teal)] text-white" : "border-black/5 bg-[var(--cream-soft)] text-[var(--ink)]")}>
       {isReady ? (
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">Your relocation plan is ready</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{isDomestic ? "Your domestic relocation plan is ready" : "Your international relocation plan is ready"}</p>
             <h3 className="mt-2 text-2xl font-semibold">{routeLabel} · {routeMeta}</h3>
             <p className="mt-2 text-sm text-white/75">Progress baseline: 0% ready. Start ticking tasks once you begin planning.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <button onClick={onViewPlan} className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-[var(--teal)] shadow-sm hover:bg-[var(--cream)]">
-              View my 90-day plan <ArrowRight className="ml-2 inline h-4 w-4" />
-            </button>
-            <button onClick={onExploreServices} className="rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
-              Explore services to research
+              Build my move plan <ArrowRight className="ml-2 inline h-4 w-4" />
             </button>
           </div>
         </div>
@@ -254,8 +304,8 @@ function RouteReadyCard({ isReady, routeLabel, routeMeta, onViewPlan, onExploreS
         <div className="flex items-start gap-4">
           <Route className="mt-1 h-6 w-6 text-[var(--teal)]" />
           <div>
-            <p className="text-lg font-semibold">Complete the four choices above</p>
-            <p className="mt-1 text-sm leading-6 text-slate-600">The full dashboard, timeline, document checklist and AI mock assistant stay hidden until your route is selected. This keeps the first action clear.</p>
+            <p className="text-lg font-semibold">Complete the route choices above</p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">The full dashboard, timeline, document checklist and AI mock assistant stay hidden until your route is selected. Cities and pets are optional. This keeps the first action clear.</p>
           </div>
         </div>
       )}
@@ -288,16 +338,16 @@ function PreSelectionGuide() {
   );
 }
 
-function Dashboard({ origin, destination, reason, profile, progress, completed, total, routeLabel }: { origin: Destination; destination: Destination; reason: MoveReason; profile: Profile; progress: number; completed: number; total: number; routeLabel: string }) {
+function Dashboard({ origin, destination, reason, profile, progress, completed, total, routeLabel, isDomestic }: { origin: Destination; destination: Destination; reason: MoveReason; profile: Profile; progress: number; completed: number; total: number; routeLabel: string; isDomestic: boolean }) {
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionEyebrow eyebrow="Interactive dashboard" title="Relocation project view" description="The dashboard now appears only after the route is selected, so the user knows exactly what changed." />
+        <SectionEyebrow eyebrow="Interactive dashboard" title={isDomestic ? "Domestic relocation plan" : "International relocation plan"} description="The dashboard now appears only after the route is selected, so the user knows exactly what changed." />
         <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_1.2fr]">
           <div className="rounded-[2rem] bg-[var(--teal)] p-7 text-white shadow-xl shadow-black/10">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">Selected route</p>
             <h3 className="mt-4 text-3xl font-semibold">{routeLabel}</h3>
-            <p className="mt-3 text-sm leading-7 text-white/75">From {origin.label} to {destination.label}. Context: {reason.label} · {profile.label}.</p>
+            <p className="mt-3 text-sm leading-7 text-white/75">{isDomestic ? `Before you move within ${destination.label}.` : `From ${origin.label} to ${destination.label}.`} Context: {reason.label} · {profile.label}.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <InfoPill label="Move reason" value={reason.label} />
               <InfoPill label="Who is moving" value={profile.label} />
@@ -402,16 +452,16 @@ function TimelineBoard({ grouped, completedIds, onToggle, onReset, progress }: {
   );
 }
 
-function RouteStarterKit({ origin, destination, reasonFocus, profileFocus, routeLabel }: { origin: Destination; destination: Destination; reasonFocus: readonly string[]; profileFocus: readonly string[]; routeLabel: string }) {
+function RouteStarterKit({ origin, destination, reasonFocus, profileFocus, routeLabel, isDomestic }: { origin: Destination; destination: Destination; reasonFocus: readonly string[]; profileFocus: readonly string[]; routeLabel: string; isDomestic: boolean }) {
   return (
     <aside className="rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-7">
       <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--gold-dark)]">Route starter kit</p>
       <h2 className="mt-2 text-3xl font-semibold text-[var(--ink)]">{routeLabel}</h2>
-      <p className="mt-3 text-sm leading-7 text-slate-600">This panel replaces the old country-only view. It combines origin, destination, reason and profile into a practical route view.</p>
+      <p className="mt-3 text-sm leading-7 text-slate-600">{isDomestic ? "This panel focuses on lease handover, movers, utilities and local registrations for your move." : "This panel combines origin, destination, reason and profile into a practical route view."}</p>
 
       <div className="mt-6 space-y-5">
-        <FocusList title={`From ${origin.label}, remember`} items={origin.essentials} />
-        <FocusList title={`To ${destination.label}, prioritise`} items={destination.essentials} />
+        {!isDomestic && <FocusList title={`From ${origin.label}, remember`} items={origin.essentials} />}
+        <FocusList title={isDomestic ? `Within ${destination.label}, prioritise` : `To ${destination.label}, prioritise`} items={destination.essentials} />
         <FocusList title="Reason focus" items={reasonFocus} />
         <FocusList title="Profile focus" items={profileFocus} />
       </div>
@@ -550,7 +600,7 @@ function ServicesSection() {
 
 function RealStoriesSection() {
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section id="sample-routes" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionEyebrow eyebrow="Human proof" title="Real stories grid" description="Community insights can become searchable, anonymised relocation wisdom across many global routes." />
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">

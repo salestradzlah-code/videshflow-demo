@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Disclaimer",
-  description: "VideshFlow safety, advice, and content boundaries.",
+  description: "SettlePath safety, advice, and content boundaries.",
 };
 
 const boundaries = [
@@ -23,7 +23,7 @@ export default function DisclaimerPage() {
         <div className="overflow-hidden rounded-[1.5rem] border border-black/5 bg-[#f8f6f1] shadow-sm lg:order-2">
           <Image
             src="/images/official_links_trust.png"
-            alt="Trust shield, checklist, and official source link icons representing VideshFlow content boundaries"
+            alt="Trust shield, checklist, and official source link icons representing SettlePath content boundaries"
             width={1448}
             height={1086}
             className="h-auto w-full object-cover"
@@ -35,7 +35,7 @@ export default function DisclaimerPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Trust and safety</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Disclaimer</h1>
           <p className="mt-5 text-lg leading-8 text-slate-600">
-            VideshFlow is an experience-backed relocation information product. It is designed to help users ask better questions, prepare practical checklists, and find official sources faster.
+            SettlePath is an experience-backed relocation information product. It is designed to help users ask better questions, prepare practical checklists, and find official sources faster.
           </p>
           <div className="mt-8 space-y-4">
             {boundaries.map((item) => (

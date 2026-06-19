@@ -1,4 +1,4 @@
-import { destinations, moveReasons, profiles, type DestinationKey, type MoveReasonKey, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
+import { destinations, moveReasons, profiles, type DestinationKey, type MoveReasonKey, type ProfileKey, type PetKey, type TimelineTask } from "@/data/demoPlatform";
 
 const baseTasks: TimelineTask[] = [
   {
@@ -111,6 +111,113 @@ const baseTasks: TimelineTask[] = [
   },
 ];
 
+const domesticBaseTasks: TimelineTask[] = [
+  {
+    id: "lease-handover",
+    phase: "Before you move",
+    title: "Plan lease handover and notice periods",
+    description: "Confirm notice period, deposit return conditions, handover inspection and any cleaning or repair obligations on the current address.",
+    timing: "T-30",
+    priority: "High",
+    category: "Housing",
+  },
+  {
+    id: "movers-quotes-domestic",
+    phase: "Before you move",
+    title: "Get mover quotes and book a moving date",
+    description: "Compare local mover quotes, insurance cover, packing materials and a realistic moving-day schedule.",
+    timing: "T-21",
+    priority: "High",
+    category: "Movers",
+  },
+  {
+    id: "utilities-transfer",
+    phase: "Before you move",
+    title: "Transfer or close out utilities",
+    description: "Plan electricity, water, gas, internet and home insurance closure at the old address and setup at the new one.",
+    timing: "T-14",
+    priority: "High",
+    category: "Utilities",
+  },
+  {
+    id: "address-change",
+    phase: "Days 1 to 7",
+    title: "Update your address everywhere it matters",
+    description: "Update address with banks, employer, postal redirection, subscriptions and government registrations.",
+    timing: "Day 1 to 7",
+    priority: "High",
+    category: "Address changes",
+  },
+  {
+    id: "school-transfer-domestic",
+    phase: "Days 1 to 7",
+    title: "Handle school transfer paperwork",
+    description: "Request transfer records, confirm new school enrolment steps and align term dates if children are moving with you.",
+    timing: "Day 1 to 7",
+    priority: "Medium",
+    category: "Schooling",
+  },
+  {
+    id: "local-registrations",
+    phase: "Days 8 to 30",
+    title: "Complete local registrations",
+    description: "Check local council, town or city registrations, parking permits and any address-linked local services.",
+    timing: "Week 2 to 4",
+    priority: "Medium",
+    category: "Registrations",
+  },
+  {
+    id: "storage-furniture",
+    phase: "Days 8 to 30",
+    title: "Sort storage and furniture decisions",
+    description: "Decide what to store, sell, donate or move, and book storage or furniture delivery slots accordingly.",
+    timing: "Week 2 to 4",
+    priority: "Medium",
+    category: "Home setup",
+  },
+  {
+    id: "local-transport-domestic",
+    phase: "Days 8 to 30",
+    title: "Confirm local transport and commute",
+    description: "Test the new commute, update transport passes or vehicle registration details for the new address.",
+    timing: "Week 2 to 4",
+    priority: "Medium",
+    category: "Transport",
+  },
+  {
+    id: "domestic-budget-review",
+    phase: "Days 31 to 90",
+    title: "Review moving budget versus actual spend",
+    description: "Compare actual mover, deposit, repair and setup costs against the original moving budget.",
+    timing: "Month 2 to 3",
+    priority: "Medium",
+    category: "Money",
+  },
+];
+
+const petAddOns: Record<PetKey, TimelineTask[]> = {
+  none: [],
+  dog: [
+    { id: "pet-dog-rules", phase: "Before you move", title: "Check pet import or local pet rules", description: "Research import permits, vaccination records, microchip checks and quarantine requirements where relevant for your dog.", timing: "T-45", priority: "High", category: "Pets" },
+    { id: "pet-dog-transport", phase: "Before you move", title: "Arrange pet-friendly transport", description: "Book airline or ground pet transport, crate requirements and travel timing suited to your dog.", timing: "T-21", priority: "Medium", category: "Pets" },
+    { id: "pet-dog-stay-vet", phase: "Days 1 to 7", title: "Confirm pet-friendly stay and find a local vet", description: "Check pet-friendly temporary stay and rental rules, and shortlist a local vet near your new address.", timing: "Day 1 to 7", priority: "Medium", category: "Pets" },
+  ],
+  cat: [
+    { id: "pet-cat-rules", phase: "Before you move", title: "Check pet import or local pet rules", description: "Research import permits, vaccination records, microchip checks and quarantine requirements where relevant for your cat.", timing: "T-45", priority: "High", category: "Pets" },
+    { id: "pet-cat-transport", phase: "Before you move", title: "Arrange pet-friendly transport", description: "Book airline or ground pet transport, carrier requirements and travel timing suited to your cat.", timing: "T-21", priority: "Medium", category: "Pets" },
+    { id: "pet-cat-stay-vet", phase: "Days 1 to 7", title: "Confirm pet-friendly stay and find a local vet", description: "Check pet-friendly temporary stay and rental rules, and shortlist a local vet near your new address.", timing: "Day 1 to 7", priority: "Medium", category: "Pets" },
+  ],
+  multiple: [
+    { id: "pet-multi-rules", phase: "Before you move", title: "Check import or local pet rules for each pet", description: "Research import permits, vaccination records, microchip checks and quarantine requirements for every pet separately.", timing: "T-45", priority: "High", category: "Pets" },
+    { id: "pet-multi-transport", phase: "Before you move", title: "Arrange transport for multiple pets", description: "Plan airline or ground transport, crates and travel timing that work for all pets together.", timing: "T-21", priority: "Medium", category: "Pets" },
+    { id: "pet-multi-stay-vet", phase: "Days 1 to 7", title: "Confirm pet-friendly stay and find a local vet", description: "Check pet-friendly temporary stay and rental rules for multiple pets, and shortlist a local vet near your new address.", timing: "Day 1 to 7", priority: "Medium", category: "Pets" },
+  ],
+  other: [
+    { id: "pet-other-rules", phase: "Before you move", title: "Check import or local rules for your pet", description: "Research species-specific import rules, vaccination or health records, and any quarantine requirements.", timing: "T-45", priority: "High", category: "Pets" },
+    { id: "pet-other-stay-vet", phase: "Days 1 to 7", title: "Confirm pet-friendly stay and find a local vet", description: "Check pet-friendly temporary stay and rental rules, and shortlist a local vet familiar with your pet's species.", timing: "Day 1 to 7", priority: "Medium", category: "Pets" },
+  ],
+};
+
 const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
   job: [
     { id: "job-offer-reality", phase: "Before you move", title: "Check salary against real setup costs", description: "Compare salary, rent, tax direction, transport, school, insurance and deposits before finalising the move plan.", timing: "T-45", priority: "High", category: "Offer decision" },
@@ -126,7 +233,7 @@ const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
   ],
   family: [
     { id: "family-schooling", phase: "Before you move", title: "Start school and childcare research", description: "Check school calendars, records, vaccination notes, catchments, transport and childcare waitlists before arrival.", timing: "T-60", priority: "High", category: "Schooling" },
-    { id: "family-groceries", phase: "Days 1 to 7", title: "Map groceries, clinic and family basics", description: "Find nearest supermarket, Indian groceries, clinic, pharmacy, playground and safe transport routine.", timing: "Day 1 to 7", priority: "Medium", category: "Family" },
+    { id: "family-groceries", phase: "Days 1 to 7", title: "Map groceries, clinic and family basics", description: "Find nearest supermarket, cultural food and community options, clinic, pharmacy, playground and safe transport routine.", timing: "Day 1 to 7", priority: "Medium", category: "Family" },
   ],
   pr: [
     { id: "long-term-docs", phase: "Before you move", title: "Plan long-term settlement documents", description: "Prepare certificates, financial records, medical records, education documents, insurance and family files for settlement.", timing: "T-60", priority: "High", category: "Settlement" },
@@ -147,6 +254,16 @@ const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
   landed: [
     { id: "already-landed-triage", phase: "Days 1 to 7", title: "Run first-week triage", description: "Prioritise SIM, bank, temporary stay, house search, groceries, emergency contacts, WiFi and local transport.", timing: "Today", priority: "High", category: "Arrival" },
     { id: "catch-up-plan", phase: "Days 8 to 30", title: "Catch up missed pre-move tasks", description: "Backfill documents, insurance, banking, housing, school, utilities and local registrations that were not completed before arrival.", timing: "Week 2", priority: "High", category: "Catch-up" },
+  ],
+  retirement: [
+    { id: "retirement-healthcare", phase: "Before you move", title: "Check healthcare access and long-term insurance", description: "Research healthcare system access, long-term insurance options, and prescription or medicine continuity for the destination.", timing: "T-60", priority: "High", category: "Healthcare" },
+    { id: "retirement-income", phase: "Before you move", title: "Plan pension and retirement income logistics", description: "Understand how pension or retirement income transfers, and note tax or residency caution points to confirm with qualified professionals.", timing: "T-45", priority: "High", category: "Income planning" },
+    { id: "retirement-housing-comfort", phase: "Days 8 to 30", title: "Prioritise housing comfort and accessibility", description: "Check accessibility, transport ease, single-level living options and proximity to healthcare and daily needs.", timing: "Week 2 to 4", priority: "Medium", category: "Housing" },
+    { id: "retirement-community", phase: "Days 31 to 90", title: "Build a community and social routine", description: "Find local clubs, faith communities, hobby groups and a steady weekly routine to support wellbeing.", timing: "Month 2 to 3", priority: "Medium", category: "Community" },
+  ],
+  domestic: [
+    { id: "domestic-school-transfer", phase: "Days 1 to 7", title: "Confirm school transfer is on track", description: "Follow up on transfer records and new-school enrolment steps if children are part of the move.", timing: "Day 1 to 7", priority: "Medium", category: "Schooling" },
+    { id: "domestic-services-update", phase: "Days 8 to 30", title: "Update local services and memberships", description: "Update gym, clinic, subscriptions and any address-linked memberships or local services.", timing: "Week 2 to 4", priority: "Low", category: "Local services" },
   ],
 };
 
@@ -169,6 +286,9 @@ const profileAddOns: Record<ProfileKey, TimelineTask[]> = {
   seniors: [
     { id: "senior-access", phase: "Before you move", title: "Plan senior medical and accessibility needs", description: "Check medicines, prescriptions, accessibility, transport, nearby clinic, insurance and emergency contacts.", timing: "T-30", priority: "High", category: "Seniors" },
   ],
+  retiree: [
+    { id: "retiree-routine", phase: "Days 31 to 90", title: "Settle into a steady retirement routine", description: "Balance healthcare appointments, social activities, transport and a comfortable weekly rhythm in the new location.", timing: "Month 2 to 3", priority: "Medium", category: "Retiree" },
+  ],
 };
 
 function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string): TimelineTask {
@@ -178,23 +298,48 @@ function withRouteContext(task: TimelineTask, originLabel: string, destinationLa
   };
 }
 
-export function buildTimeline(originKey: DestinationKey, destinationKey: DestinationKey, reasonKey: MoveReasonKey, profileKey: ProfileKey): TimelineTask[] {
+export function buildTimeline(
+  originKey: DestinationKey,
+  destinationKey: DestinationKey,
+  reasonKey: MoveReasonKey,
+  profileKey: ProfileKey,
+  petKey: PetKey = "none",
+): TimelineTask[] {
   const origin = destinations.find((item) => item.key === originKey) ?? destinations[0];
   const destination = destinations.find((item) => item.key === destinationKey) ?? destinations[1];
   const reason = moveReasons.find((item) => item.key === reasonKey) ?? moveReasons[0];
   const profile = profiles.find((item) => item.key === profileKey) ?? profiles[0];
+  const isDomestic = originKey === destinationKey;
 
-  const routeSpecific: TimelineTask = {
-    id: "route-specific-starter-kit",
-    phase: "Before you move",
-    title: `Create your ${origin.label} to ${destination.label} route starter kit`,
-    description: `Use the ${reason.label.toLowerCase()} and ${profile.label.toLowerCase()} context to prioritise official links, documents, services, money planning and first-month tasks.`,
-    timing: "Today",
-    priority: "High",
-    category: "Route starter kit",
-  };
+  const routeSpecific: TimelineTask = isDomestic
+    ? {
+        id: "route-specific-starter-kit",
+        phase: "Before you move",
+        title: `Build your domestic relocation plan within ${origin.label}`,
+        description: `Use the ${reason.label.toLowerCase()} and ${profile.label.toLowerCase()} context to prioritise lease handover, movers, utilities, registrations and first-month tasks.`,
+        timing: "Today",
+        priority: "High",
+        category: "Domestic relocation plan",
+      }
+    : {
+        id: "route-specific-starter-kit",
+        phase: "Before you move",
+        title: `Create your ${origin.label} to ${destination.label} route starter kit`,
+        description: `Use the ${reason.label.toLowerCase()} and ${profile.label.toLowerCase()} context to prioritise official links, documents, services, money planning and first-month tasks.`,
+        timing: "Today",
+        priority: "High",
+        category: "International relocation plan",
+      };
 
-  return [routeSpecific, ...baseTasks.map((task) => withRouteContext(task, origin.label, destination.label)), ...reasonAddOns[reason.key], ...profileAddOns[profile.key]];
+  const baseSet = isDomestic ? domesticBaseTasks : baseTasks;
+
+  return [
+    routeSpecific,
+    ...baseSet.map((task) => withRouteContext(task, origin.label, destination.label)),
+    ...reasonAddOns[reason.key],
+    ...profileAddOns[profile.key],
+    ...petAddOns[petKey],
+  ];
 }
 
 export function groupByPhase(tasks: TimelineTask[]) {
