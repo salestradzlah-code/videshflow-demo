@@ -76,7 +76,7 @@ export default function ReferenceLinksPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f2c56b]">Singapore first</p>
               <h2 className="mt-3 text-2xl font-semibold">Singapore specific links will be reviewed first</h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-white/75">
-                SettlePath will start with Singapore because the move is highly practical: rent, commute, SIM, groceries, schools, temporary stay, and first-month home setup matter immediately.
+                SettleMap will start with Singapore because the move is highly practical: rent, commute, SIM, groceries, schools, temporary stay, and first-month home setup matter immediately.
               </p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {singaporeFirst.map((item) => (

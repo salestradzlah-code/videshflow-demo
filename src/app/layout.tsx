@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_NAME, SITE_URL, BETA_NOTE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} | Move from anywhere to home`,
+    default: `${SITE_NAME} | Map your move. Settle with confidence.`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
     "Real relocation stories, practical checklists, official links, and first 7, 30, and 90 day guidance for people and families planning relocation across countries, cities, and life stages.",
   openGraph: {
-    title: `${SITE_NAME} | Move from anywhere to home`,
+    title: `${SITE_NAME} | Map your move. Settle with confidence.`,
     description:
       "Experience-backed relocation playbooks for people, families, students, professionals, retirees, and pet owners moving across countries, cities, and life stages.",
     url: SITE_URL,
@@ -27,6 +27,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <Header />
+        <div className="bg-[#f2c56b]/25 px-4 py-2 text-center text-xs font-semibold text-[#7a4d12] sm:px-6 lg:px-8">
+          {BETA_NOTE}
+        </div>
         <main>{children}</main>
         <Footer />
       </body>

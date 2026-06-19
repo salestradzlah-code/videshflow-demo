@@ -26,7 +26,7 @@ export function Footer() {
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
             <span className="h-2 w-2 rounded-full bg-[#f2c56b]" />
-            <p className="text-lg font-semibold">SettlePath</p>
+            <p className="text-lg font-semibold">SettleMap</p>
           </div>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70">
             AI-assisted route planning for people and families planning relocation across countries, cities, and life stages, built from practical checklists, public sources, service categories and real stories.
@@ -35,9 +35,7 @@ export function Footer() {
           <p className="mt-3 max-w-2xl text-xs leading-5 text-white/55">
             Prefer another language? Use your browser translation feature for now. The future AI assistant is planned to support multiple languages over time.
           </p>
-          <p className="mt-3 max-w-2xl text-xs leading-5 text-white/55">
-            VideshFlow may later become the India and diaspora route track inside SettlePath.
-          </p>
+          {/* Internal note: VideshFlow may later become the India and diaspora route track inside SettleMap. Not shown publicly until feedback stage is complete. */}
         </div>
         <div>
           <p className="font-semibold">Explore</p>

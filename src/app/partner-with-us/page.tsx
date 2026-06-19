@@ -6,7 +6,7 @@ import { DisclaimerBox } from "@/components/DisclaimerBox";
 
 export const metadata: Metadata = {
   title: "Partner With Us",
-  description: "Service providers can express interest in future SettlePath listings and referral leads.",
+  description: "Service providers can express interest in future SettleMap listings and referral leads.",
 };
 
 const providerFields = [
@@ -25,10 +25,10 @@ export default function PartnerWithUsPage() {
     <section className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <div className="rounded-[2rem] bg-white p-8 shadow-sm sm:p-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Partner with SettlePath</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Partner with SettleMap</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">For relocation service providers</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            SettlePath may later list service categories and provider options for users to research. Providers can express interest in future listings or referral lead discussions.
+            SettleMap may later list service categories and provider options for users to research. Providers can express interest in future listings or referral lead discussions.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href={PARTNER_FORM_URL} className="rounded-full bg-[#123638] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#0c2829]">
@@ -65,7 +65,7 @@ export default function PartnerWithUsPage() {
             <div>
               <h2 className="text-lg font-semibold">Provider listing disclaimer</h2>
               <p className="mt-2 text-sm leading-7">
-                Submitting provider details does not guarantee listing, partnership, endorsement, or lead volume. SettlePath may review providers before publishing any listing.
+                Submitting provider details does not guarantee listing, partnership, endorsement, or lead volume. SettleMap may review providers before publishing any listing.
               </p>
             </div>
           </div>

@@ -30,7 +30,7 @@ const directoryLayers = [
   { icon: SearchCheck, title: "Service categories to research", label: "Research only", text: "Use this to understand what type of help you may need before and after moving." },
   { icon: Tags, title: "Public platforms to compare", label: "Verify directly", text: "Compare prices, reviews, availability, and rules directly on provider websites." },
   { icon: ShieldAlert, title: "Provider options to verify", label: "No guarantee", text: "Listings are not endorsements, approvals, or promises of quality or outcome." },
-  { icon: BriefcaseBusiness, title: "Future partner listings", label: "Disclosed later", text: "SettlePath may include affiliate or referral links in future where clearly disclosed." },
+  { icon: BriefcaseBusiness, title: "Future partner listings", label: "Disclosed later", text: "SettleMap may include affiliate or referral links in future where clearly disclosed." },
 ];
 
 export default function ServicesPage() {
@@ -42,7 +42,7 @@ export default function ServicesPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Services directory</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Service categories to research before moving</h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-              SettlePath is not a full marketplace at launch. This page gives users a safe, neutral structure for the services they may need to research before and after relocation.
+              SettleMap is not a full marketplace at launch. This page gives users a safe, neutral structure for the services they may need to research before and after relocation.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/get-help" className="inline-flex items-center rounded-full bg-[#123638] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0c2829]">
@@ -77,7 +77,7 @@ export default function ServicesPage() {
         </div>
 
         <div className="mt-8 rounded-3xl border border-[#f2c56b]/70 bg-[#fff8df] p-6 text-sm leading-6 text-[#68420c]">
-          <strong>Directory safety wording:</strong> {DIRECTORY_DISCLAIMER} SettlePath may include affiliate or referral links in future where disclosed.
+          <strong>Directory safety wording:</strong> {DIRECTORY_DISCLAIMER} SettleMap may include affiliate or referral links in future where disclosed.
         </div>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">

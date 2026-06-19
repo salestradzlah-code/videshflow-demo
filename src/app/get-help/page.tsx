@@ -6,7 +6,7 @@ import { DisclaimerBox } from "@/components/DisclaimerBox";
 
 export const metadata: Metadata = {
   title: "Get Relocation Help",
-  description: "Tell SettlePath what relocation help you need beyond route guides.",
+  description: "Tell SettleMap what relocation help you need beyond route guides.",
 };
 
 const categories = [
@@ -27,8 +27,8 @@ const categories = [
 
 const steps = [
   { title: "Tell us your stage", text: "Share where you are moving, your timeline, family situation, and the help categories you need." },
-  { title: "Get routed to resources", text: "SettlePath can point you to route guides, checklists, service categories, or future AI triage paths." },
-  { title: "Provider connection later", text: "Where you consent, SettlePath may connect you with relevant service providers for your own review." },
+  { title: "Get routed to resources", text: "SettleMap can point you to route guides, checklists, service categories, or future AI triage paths." },
+  { title: "Provider connection later", text: "Where you consent, SettleMap may connect you with relevant service providers for your own review." },
 ];
 
 export default function GetHelpPage() {
@@ -39,7 +39,7 @@ export default function GetHelpPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Get relocation help</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Tell us what you need help with</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            SettlePath is not built around manual consulting as the main model. This is a scalable request intake flow that can later connect to AI triage, planning resources, and service categories or providers for your review.
+            SettleMap is not built around manual consulting as the main model. This is a scalable request intake flow that can later connect to AI triage, planning resources, and service categories or providers for your review.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href={HELP_FORM_URL} className="rounded-full bg-[#123638] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#0c2829]">
@@ -56,7 +56,7 @@ export default function GetHelpPage() {
           <Route className="h-7 w-7 text-[#123638]" />
           <h2 className="mt-5 text-2xl font-semibold text-[#172326]">The three details that make the request useful</h2>
           <p className="mt-3 text-sm leading-7 text-slate-600">
-            Destination, move reason, and family profile help SettlePath route users to the correct playbook, AI checklist, service category, or provider option for review.
+            Destination, move reason, and family profile help SettleMap route users to the correct playbook, AI checklist, service category, or provider option for review.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {[
@@ -89,7 +89,7 @@ export default function GetHelpPage() {
           <div className="space-y-6">
             <div className="rounded-[2rem] bg-white p-8 shadow-sm">
               <Route className="h-7 w-7 text-[#123638]" />
-              <h2 className="mt-5 text-2xl font-semibold text-[#172326]">How SettlePath handles your request</h2>
+              <h2 className="mt-5 text-2xl font-semibold text-[#172326]">How SettleMap handles your request</h2>
               <div className="mt-5 grid gap-4">
                 {steps.map((step) => (
                   <div key={step.title} className="rounded-2xl border border-black/5 bg-[#f8f6f1] p-5">

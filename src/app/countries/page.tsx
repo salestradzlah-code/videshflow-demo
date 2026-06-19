@@ -4,8 +4,8 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { countries } from "@/data/countries";
 
 export const metadata: Metadata = {
-  title: "Country Starter Kits",
-  description: "Browse SettlePath route starter kits for people and families planning relocation across countries, cities, and life stages.",
+  title: "Route Library",
+  description: "Browse SettleMap route starter kits for people and families planning relocation across countries, cities, and life stages.",
 };
 
 export default function CountriesPage() {

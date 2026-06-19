@@ -11,3 +11,7 @@ deploy-log.txt
 
 deploy-videshflow.ps1
 *.zip
+release-log.txt
+build-log*.txt
+package-lock.json
+run-*.bat

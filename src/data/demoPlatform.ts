@@ -26,9 +26,24 @@ export type MoveReasonKey =
   | "retirement"
   | "domestic";
 
-export type ProfileKey = "solo" | "couple" | "familyChild" | "familyChildren" | "student" | "seniors" | "retiree";
+export type ProfileKey = "solo" | "couple" | "familyChild" | "familyChildren" | "student" | "seniors" | "retiree" | "elderlyParent" | "preferNotToSay";
 
 export type PetKey = "none" | "dog" | "cat" | "multiple" | "other";
+
+export type AddOnKey =
+  | "pets"
+  | "schooling"
+  | "seniorHealthcare"
+  | "medication"
+  | "vehicle"
+  | "bankSimContinuity"
+  | "contractsTerminate"
+  | "contractsSetup"
+  | "insurance"
+  | "temporaryStay"
+  | "furniture"
+  | "storage"
+  | "languageCommunity";
 
 export type TimelinePhase = "Before you move" | "Days 1 to 7" | "Days 8 to 30" | "Days 31 to 90";
 
@@ -177,6 +192,24 @@ export const profiles = [
   { key: "student", label: "Student", focus: ["Accommodation", "Budget", "Documents", "Local SIM", "Student life"] },
   { key: "seniors", label: "With parents / seniors", focus: ["Medical", "Accessibility", "Transport", "Medicines", "Comfort", "Emergency contacts"] },
   { key: "retiree", label: "Retiree / senior couple", focus: ["Healthcare access", "Insurance", "Accessibility", "Community", "Comfort", "Budgeting"] },
+  { key: "elderlyParent", label: "Elderly parent included", focus: ["Medical continuity", "Accessibility", "Medicines", "Insurance caution", "Comfort", "Emergency contacts"] },
+  { key: "preferNotToSay", label: "Prefer not to say", focus: ["General checklist", "Documents", "Banking", "Housing", "Connectivity"] },
+] as const;
+
+export const addOnOptions = [
+  { key: "pets", label: "Pets" },
+  { key: "schooling", label: "Children / schooling" },
+  { key: "seniorHealthcare", label: "Senior healthcare" },
+  { key: "medication", label: "Medication / prescriptions" },
+  { key: "vehicle", label: "Vehicle / driving" },
+  { key: "bankSimContinuity", label: "Home country bank OTP / SIM continuity" },
+  { key: "contractsTerminate", label: "Existing contracts to terminate" },
+  { key: "contractsSetup", label: "New contracts to set up" },
+  { key: "insurance", label: "Insurance planning" },
+  { key: "temporaryStay", label: "Temporary stay" },
+  { key: "furniture", label: "Furniture and appliances" },
+  { key: "storage", label: "Storage" },
+  { key: "languageCommunity", label: "Language / community / culture" },
 ] as const;
 
 export const petOptions = [
@@ -215,6 +248,7 @@ export const serviceCategories = [
   { title: "Groceries and community", icon: ShoppingBag, note: "Cultural food, community, faith, language, and local support to research near likely neighbourhoods." },
   { title: "Official links", icon: MapPin, note: "Always verify visa, tax, healthcare, school and residency rules from official sources." },
   { title: "Pet relocation", icon: HeartHandshake, note: "Research pet import or local pet rules, vaccination records, microchip checks, quarantine requirements and pet-friendly transport and rentals." },
+  { title: "Insurance planning", icon: ShieldCheck, note: "Compare travel, health, renter, vehicle, pet and student insurance directly with licensed providers. SettleMap does not sell or advise on insurance." },
 ];
 
 export const realStories = [
@@ -249,6 +283,38 @@ export const realStories = [
     stress: "Accommodation, SIM, transport and document deadlines were scattered across many portals.",
     lesson: "A single timeline with official links and reminders reduces anxiety.",
     outcome: "The student knew what to do before travel, on arrival week and in the first month.",
+  },
+  {
+    name: "Returning analyst",
+    route: "Singapore to India",
+    profile: "Returning home · Solo",
+    stress: "Bank account closures, SIM porting and shipping personal items back felt more complex than the original move out.",
+    lesson: "A reverse move needs its own checklist, not just the forward one read backwards.",
+    outcome: "Closing local accounts and confirming tax residency status early avoided last-month surprises.",
+  },
+  {
+    name: "Cross-state hire",
+    route: "USA to USA (domestic)",
+    profile: "Domestic move · Couple",
+    stress: "Lease handover, utility transfers and address changes across state lines were more paperwork than expected for a same-country move.",
+    lesson: "Domestic moves still need a structured 30-day checklist, especially for state-specific registrations.",
+    outcome: "A documented handover and address-change list reduced missed bills and registration gaps.",
+  },
+  {
+    name: "Retired couple",
+    route: "Canada to Portugal",
+    profile: "Retirement / lifestyle move · Retiree couple",
+    stress: "Healthcare registration, NIF setup and pension/income planning needed coordination before relocating, not after.",
+    lesson: "Retirement moves need healthcare and tax residency confirmed before committing to a city.",
+    outcome: "Sequencing NIF, bank account and healthcare registration ahead of arrival gave a calmer settling-in period.",
+  },
+  {
+    name: "Relocating family",
+    route: "Singapore to Singapore (domestic)",
+    profile: "Domestic move · Family with child",
+    stress: "Switching towns within Singapore still meant lease handover, school transfer paperwork and re-registering services felt heavier than expected for a short-distance move.",
+    lesson: "A same-country move still benefits from a structured checklist, not just a moving truck booking.",
+    outcome: "A 30-day domestic checklist kept school transfer, address changes and utility switches on schedule.",
   },
 ];
 

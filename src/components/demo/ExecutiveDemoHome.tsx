@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, FileSearch, Globe2, Plane, RefreshCcw, Route, Sparkles, UploadCloud } from "lucide-react";
-import { destinations, documentCategories, moveReasons, petOptions, platformStats, profiles, realStories, serviceCategories, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
+import { addOnOptions, destinations, documentCategories, moveReasons, petOptions, platformStats, profiles, realStories, serviceCategories, type AddOnKey, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress, groupByPhase } from "@/lib/relocationTimeline";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 
@@ -21,6 +21,7 @@ type RouteSelection = {
   reasonKey: MoveReasonKey | null;
   profileKey: ProfileKey | null;
   petKey: PetKey;
+  addOns: AddOnKey[];
 };
 
 const initialSelection: RouteSelection = {
@@ -31,13 +32,24 @@ const initialSelection: RouteSelection = {
   reasonKey: null,
   profileKey: null,
   petKey: "none",
+  addOns: [],
 };
+
+const WIZARD_STEPS = [
+  { id: 1, label: "Route" },
+  { id: 2, label: "Reason" },
+  { id: 3, label: "Profile" },
+  { id: 4, label: "Add-ons" },
+] as const;
 
 export function ExecutiveDemoHome() {
   const [selection, setSelection] = useState<RouteSelection>(initialSelection);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
+  const [step, setStep] = useState(1);
+  const [confirmed, setConfirmed] = useState(false);
 
   const isRouteReady = Boolean(selection.fromKey && selection.toKey && selection.reasonKey && selection.profileKey);
+  const showDashboard = confirmed && isRouteReady;
   const origin = destinations.find((item) => item.key === selection.fromKey) ?? null;
   const destination = destinations.find((item) => item.key === selection.toKey) ?? null;
   const reason = moveReasons.find((item) => item.key === selection.reasonKey) ?? null;
@@ -52,12 +64,13 @@ export function ExecutiveDemoHome() {
       : `${originLabel} to ${destinationLabel}`
     : "Choose your route";
   const routeMeta = isRouteReady && reason && profile ? `${reason.label} · ${profile.label}` : "Moving from, moving to, reason and profile";
-  const progressStorageKey = isRouteReady ? `settlepath-progress-v4-${selection.fromKey}-${selection.toKey}-${selection.reasonKey}-${selection.profileKey}-${selection.petKey}` : "settlepath-progress-v4-draft";
+  const addOnsKey = [...selection.addOns].sort().join(",");
+  const progressStorageKey = isRouteReady ? `settlemap-progress-v6-${selection.fromKey}-${selection.toKey}-${selection.reasonKey}-${selection.profileKey}-${selection.petKey}-${addOnsKey}` : "settlemap-progress-v6-draft";
 
   const timeline = useMemo(() => {
     if (!isRouteReady || !selection.fromKey || !selection.toKey || !selection.reasonKey || !selection.profileKey) return [];
-    return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey);
-  }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey]);
+    return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, selection.addOns);
+  }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, addOnsKey]);
 
   const grouped = useMemo(() => groupByPhase(timeline), [timeline]);
   const progress = calculateProgress(timeline, completedIds);
@@ -93,56 +106,143 @@ export function ExecutiveDemoHome() {
 
   function resetProgress() {
     setCompletedIds([]);
+    try {
+      localStorage.removeItem(progressStorageKey);
+    } catch {}
+  }
+
+  function toggleAddOn(key: AddOnKey) {
+    setSelection((current) => ({
+      ...current,
+      addOns: current.addOns.includes(key) ? current.addOns.filter((item) => item !== key) : [...current.addOns, key],
+    }));
   }
 
   function scrollTo(sectionId: string) {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function goToStep(next: number) {
+    setStep(Math.min(4, Math.max(1, next)));
+  }
+
+  function editRoute() {
+    setConfirmed(false);
+    setStep(1);
+    setTimeout(() => scrollTo("route-selector"), 50);
+  }
+
+  function confirmRoute() {
+    setConfirmed(true);
+  }
+
+  useEffect(() => {
+    if (!showDashboard) return;
+    const timeout = setTimeout(() => scrollTo("dashboard-top"), 150);
+    return () => clearTimeout(timeout);
+  }, [showDashboard]);
+
   return (
     <div className="min-h-screen bg-[var(--cream)] text-[var(--ink)]">
       <Hero />
 
       <section id="route-selector" className="px-4 pb-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-black/5 bg-white/85 p-6 shadow-xl shadow-black/5 backdrop-blur sm:p-8">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold-dark)]">Step 1 · Route selector</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--ink)] sm:text-4xl">Where are you moving from and to?</h2>
-              <p className="mt-4 text-sm leading-7 text-slate-600">
-                SettlePath starts with a global route, not just one destination. Choose the route, reason and who is moving first. The dashboard appears only after your path is clear.
-              </p>
-              <SelectionProgress selection={selection} />
-            </div>
+        <div className="mx-auto max-w-4xl rounded-[2rem] border border-black/5 bg-white/85 p-6 shadow-xl shadow-black/5 backdrop-blur sm:p-8">
+          {!showDashboard ? (
+            <>
+              <WizardStepper step={step} />
 
-            <div className="grid gap-6">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <ChoiceGroup title="Moving from country" items={destinations} selected={selection.fromKey} onSelect={(key) => updateSelection("fromKey", key as DestinationKey)} />
-                <CityField label="Moving from city (optional)" value={selection.fromCity} onChange={(value) => updateSelection("fromCity", value)} />
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <ChoiceGroup title="Moving to country" items={destinations} selected={selection.toKey} onSelect={(key) => updateSelection("toKey", key as DestinationKey)} />
-                <CityField label="Moving to city (optional)" value={selection.toCity} onChange={(value) => updateSelection("toCity", value)} />
-              </div>
-              <ChoiceGroup title="Move reason" items={moveReasons} selected={selection.reasonKey} onSelect={(key) => updateSelection("reasonKey", key as MoveReasonKey)} />
-              <ChoiceGroup title="Who is moving" items={profiles} selected={selection.profileKey} onSelect={(key) => updateSelection("profileKey", key as ProfileKey)} />
-              <ChoiceGroup title="Pets" items={petOptions} selected={selection.petKey} onSelect={(key) => updateSelection("petKey", key as PetKey)} />
-            </div>
-          </div>
+              {step === 1 && (
+                <WizardStep
+                  eyebrow="Step 1 of 4"
+                  title="Where are you moving from and to?"
+                  description="Cities are optional. SettleMap covers international routes and domestic moves within the same country."
+                >
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <ChoiceGroup title="Moving from country" items={destinations} selected={selection.fromKey} onSelect={(key) => updateSelection("fromKey", key as DestinationKey)} />
+                    <CityField label="Moving from city (optional)" value={selection.fromCity} onChange={(value) => updateSelection("fromCity", value)} />
+                  </div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <ChoiceGroup title="Moving to country" items={destinations} selected={selection.toKey} onSelect={(key) => updateSelection("toKey", key as DestinationKey)} />
+                    <CityField label="Moving to city (optional)" value={selection.toCity} onChange={(value) => updateSelection("toCity", value)} />
+                  </div>
+                </WizardStep>
+              )}
 
-          <RouteReadyCard
-            isReady={isRouteReady}
-            isDomestic={isDomestic}
-            routeLabel={routeLabel}
-            routeMeta={routeMeta}
-            onViewPlan={() => scrollTo("timeline-dashboard")}
-          />
+              {step === 2 && (
+                <WizardStep eyebrow="Step 2 of 4" title="What is the reason for your move?" description="This shapes which tasks and documents show up in your plan.">
+                  <ChoiceGroup title="Move reason" items={moveReasons} selected={selection.reasonKey} onSelect={(key) => updateSelection("reasonKey", key as MoveReasonKey)} />
+                </WizardStep>
+              )}
+
+              {step === 3 && (
+                <WizardStep eyebrow="Step 3 of 4" title="Who is part of this move?" description="We use life-stage bands only — never an exact date of birth.">
+                  <ChoiceGroup title="Household profile" items={profiles} selected={selection.profileKey} onSelect={(key) => updateSelection("profileKey", key as ProfileKey)} />
+                </WizardStep>
+              )}
+
+              {step === 4 && (
+                <WizardStep eyebrow="Step 4 of 4" title="Any add-ons or special needs?" description="Select any that apply. This is optional and can be changed later.">
+                  <MultiChoiceGroup title="Add-ons" items={addOnOptions} selected={selection.addOns} onToggle={(key) => toggleAddOn(key as AddOnKey)} />
+                  {selection.addOns.includes("pets") && (
+                    <div className="mt-4">
+                      <ChoiceGroup title="Pet type" items={petOptions} selected={selection.petKey} onSelect={(key) => updateSelection("petKey", key as PetKey)} />
+                    </div>
+                  )}
+                </WizardStep>
+              )}
+
+              <div className="mt-8 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => goToStep(step - 1)}
+                  disabled={step === 1}
+                  className={classNames("rounded-full border px-5 py-3 text-sm font-semibold", step === 1 ? "cursor-not-allowed border-black/5 text-slate-300" : "border-black/10 text-[var(--ink)] hover:border-[var(--teal)] hover:text-[var(--teal)]")}
+                >
+                  Back
+                </button>
+                {step < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => goToStep(step + 1)}
+                    disabled={(step === 1 && !(selection.fromKey && selection.toKey)) || (step === 2 && !selection.reasonKey) || (step === 3 && !selection.profileKey)}
+                    className={classNames(
+                      "rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm",
+                      (step === 1 && !(selection.fromKey && selection.toKey)) || (step === 2 && !selection.reasonKey) || (step === 3 && !selection.profileKey)
+                        ? "cursor-not-allowed bg-slate-300"
+                        : "bg-[var(--teal)] hover:bg-[var(--teal-dark,var(--teal))]"
+                    )}
+                  >
+                    Next <ArrowRight className="ml-2 inline h-4 w-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={confirmRoute}
+                    disabled={!isRouteReady}
+                    className={classNames("rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm", isRouteReady ? "bg-[var(--teal)] hover:bg-[var(--teal-dark,var(--teal))]" : "cursor-not-allowed bg-slate-300")}
+                  >
+                    Build my move plan <ArrowRight className="ml-2 inline h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            </>
+          ) : (
+            <RouteReadyCard
+              isReady={isRouteReady}
+              isDomestic={isDomestic}
+              routeLabel={routeLabel}
+              routeMeta={routeMeta}
+              onViewPlan={() => scrollTo("timeline-dashboard")}
+              onEditRoute={editRoute}
+            />
+          )}
         </div>
       </section>
 
-      {!isRouteReady && <PreSelectionGuide />}
+      {!showDashboard && <PreSelectionGuide />}
 
-      {isRouteReady && origin && destination && reason && profile && (
+      {showDashboard && origin && destination && reason && profile && (
         <>
           <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} isDomestic={isDomestic} />
 
@@ -181,11 +281,11 @@ function Hero() {
         <div className="max-w-4xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm font-semibold text-[var(--teal)] shadow-sm">
             <Sparkles className="h-4 w-4 text-[var(--gold-dark)]" />
-            SettlePath · from anywhere to home
+            SettleMap · Map your move. Settle with confidence.
           </div>
-          <h1 className="mt-7 text-5xl font-semibold tracking-tight text-[var(--ink)] sm:text-6xl lg:text-7xl">Move from anywhere to home.</h1>
+          <h1 className="mt-7 text-5xl font-semibold tracking-tight text-[var(--ink)] sm:text-6xl lg:text-7xl">Map your move. Settle with confidence.</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            SettlePath helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in.
+            SettleMap helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in. This is an early feedback demo.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <button
@@ -198,7 +298,7 @@ function Hero() {
               onClick={() => scrollTo("sample-routes")}
               className="rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-[var(--ink)] shadow-sm hover:border-[var(--teal)] hover:text-[var(--teal)]"
             >
-              See sample routes
+              Explore sample routes
             </button>
           </div>
           <div className="mt-8 grid gap-3 sm:grid-cols-4">
@@ -216,30 +316,59 @@ function Hero() {
   );
 }
 
-function SelectionProgress({ selection }: { selection: RouteSelection }) {
-  const steps = [
-    { label: "From", done: Boolean(selection.fromKey) },
-    { label: "To", done: Boolean(selection.toKey) },
-    { label: "Reason", done: Boolean(selection.reasonKey) },
-    { label: "Profile", done: Boolean(selection.profileKey) },
-  ];
-  const doneCount = steps.filter((step) => step.done).length;
-
+function WizardStepper({ step }: { step: number }) {
   return (
-    <div className="mt-6 rounded-3xl bg-[var(--cream-soft)] p-5">
+    <div className="mb-2">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm font-semibold text-[var(--teal)]">Route setup</p>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{doneCount}/4 complete</p>
+        <p className="text-sm font-semibold text-[var(--teal)]">Route setup wizard</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step {step} of 4</p>
       </div>
-      <div className="mt-4 h-2 rounded-full bg-white">
-        <div className="h-2 rounded-full bg-[var(--teal)] transition-all" style={{ width: `${(doneCount / 4) * 100}%` }} />
+      <div className="mt-4 h-2 rounded-full bg-[var(--cream-soft)]">
+        <div className="h-2 rounded-full bg-[var(--teal)] transition-all" style={{ width: `${(step / 4) * 100}%` }} />
       </div>
       <div className="mt-4 grid gap-2 sm:grid-cols-4">
-        {steps.map((step) => (
-          <div key={step.label} className={classNames("rounded-2xl border p-3 text-xs font-semibold", step.done ? "border-[var(--teal)] bg-white text-[var(--teal)]" : "border-black/5 bg-white/50 text-slate-500")}>
-            {step.done ? "✓ " : "○ "}{step.label}
+        {WIZARD_STEPS.map((item) => (
+          <div key={item.id} className={classNames("rounded-2xl border p-3 text-center text-xs font-semibold", item.id === step ? "border-[var(--teal)] bg-[var(--teal)] text-white" : item.id < step ? "border-[var(--teal)] bg-white text-[var(--teal)]" : "border-black/5 bg-white/50 text-slate-500")}>
+            {item.id < step ? "✓ " : ""}{item.label}
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function WizardStep({ eyebrow, title, description, children }: { eyebrow: string; title: string; description: string; children: ReactNode }) {
+  return (
+    <div className="mt-6">
+      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold-dark)]">{eyebrow}</p>
+      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--ink)] sm:text-3xl">{title}</h2>
+      <p className="mt-3 text-sm leading-7 text-slate-600">{description}</p>
+      <div className="mt-6">{children}</div>
+    </div>
+  );
+}
+
+function MultiChoiceGroup({ title, items, selected, onToggle }: { title: string; items: readonly SelectItem[]; selected: string[]; onToggle: (key: string) => void }) {
+  return (
+    <div>
+      <p className="mb-3 text-sm font-semibold text-[var(--ink)]">{title}</p>
+      <div className="flex flex-wrap gap-2">
+        {items.map((item) => {
+          const active = selected.includes(item.key);
+          return (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => onToggle(item.key)}
+              className={classNames(
+                "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                active ? "border-[var(--teal)] bg-[var(--teal)] text-white shadow-sm" : "border-black/10 bg-white text-slate-700 hover:border-[var(--teal)] hover:text-[var(--teal)]"
+              )}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -284,9 +413,9 @@ function CityField({ label, value, onChange }: { label: string; value: string; o
   );
 }
 
-function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan }: { isReady: boolean; isDomestic: boolean; routeLabel: string; routeMeta: string; onViewPlan: () => void }) {
+function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan, onEditRoute }: { isReady: boolean; isDomestic: boolean; routeLabel: string; routeMeta: string; onViewPlan: () => void; onEditRoute: () => void }) {
   return (
-    <div className={classNames("mt-8 rounded-[2rem] border p-6", isReady ? "border-[var(--teal)] bg-[var(--teal)] text-white" : "border-black/5 bg-[var(--cream-soft)] text-[var(--ink)]")}>
+    <div className={classNames("rounded-[2rem] border p-6", isReady ? "border-[var(--teal)] bg-[var(--teal)] text-white" : "border-black/5 bg-[var(--cream-soft)] text-[var(--ink)]")}>
       {isReady ? (
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
@@ -296,7 +425,10 @@ function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan
           </div>
           <div className="flex flex-wrap gap-3">
             <button onClick={onViewPlan} className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-[var(--teal)] shadow-sm hover:bg-[var(--cream)]">
-              Build my move plan <ArrowRight className="ml-2 inline h-4 w-4" />
+              View my plan <ArrowRight className="ml-2 inline h-4 w-4" />
+            </button>
+            <button onClick={onEditRoute} className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+              Edit route
             </button>
           </div>
         </div>
@@ -340,10 +472,10 @@ function PreSelectionGuide() {
 
 function Dashboard({ origin, destination, reason, profile, progress, completed, total, routeLabel, isDomestic }: { origin: Destination; destination: Destination; reason: MoveReason; profile: Profile; progress: number; completed: number; total: number; routeLabel: string; isDomestic: boolean }) {
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section id="dashboard-top" className="scroll-mt-24 px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionEyebrow eyebrow="Interactive dashboard" title={isDomestic ? "Domestic relocation plan" : "International relocation plan"} description="The dashboard now appears only after the route is selected, so the user knows exactly what changed." />
-        <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_1.2fr]">
+        <SectionEyebrow eyebrow="Interactive dashboard" title={isDomestic ? "Domestic relocation plan" : "International relocation plan"} description="Your dashboard, built the moment your route is selected." />
+        <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_1.2fr]">
           <div className="rounded-[2rem] bg-[var(--teal)] p-7 text-white shadow-xl shadow-black/10">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">Selected route</p>
             <h3 className="mt-4 text-3xl font-semibold">{routeLabel}</h3>
@@ -468,7 +600,7 @@ function RouteStarterKit({ origin, destination, reasonFocus, profileFocus, route
 
       {destination.starterPath ? (
         <Link href={destination.starterPath} className="mt-6 inline-flex items-center rounded-full bg-[var(--teal)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--teal-dark)]">
-          Open country starter kit <ArrowRight className="ml-2 h-4 w-4" />
+          Open route starter kit <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       ) : (
         <div className="mt-6 rounded-3xl bg-[var(--cream-soft)] p-4 text-sm leading-6 text-slate-600">

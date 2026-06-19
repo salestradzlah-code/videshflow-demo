@@ -19,7 +19,7 @@ export function CountryCard({ country }: { country: CountryGuide }) {
       <h3 className="mt-5 text-xl font-semibold text-[#172326]">{country.route}</h3>
       <p className="mt-3 text-sm leading-6 text-slate-600">{country.summary}</p>
       <div className="mt-5 flex items-center text-sm font-semibold text-[#123638]">
-        Open starter kit
+        Open route starter kit
         <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
       </div>
     </Link>

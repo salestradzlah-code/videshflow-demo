@@ -20,8 +20,8 @@ export function Header() {
             <Route className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-[#f2c56b] p-0.5 text-[#123638]" aria-hidden="true" />
           </span>
           <span className="leading-none">
-            <span className="block text-lg font-bold tracking-tight">SettlePath</span>
-            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9a6a20] sm:block">From anywhere to home</span>
+            <span className="block text-lg font-bold tracking-tight">SettleMap</span>
+            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9a6a20] sm:block">Map your move. Settle with confidence.</span>
           </span>
         </Link>
         <nav className="hidden items-center gap-5 text-sm font-medium text-slate-700 lg:flex">

@@ -1,4 +1,4 @@
-import { destinations, moveReasons, profiles, type DestinationKey, type MoveReasonKey, type ProfileKey, type PetKey, type TimelineTask } from "@/data/demoPlatform";
+import { destinations, moveReasons, profiles, type AddOnKey, type DestinationKey, type MoveReasonKey, type ProfileKey, type PetKey, type TimelineTask } from "@/data/demoPlatform";
 
 const baseTasks: TimelineTask[] = [
   {
@@ -289,6 +289,82 @@ const profileAddOns: Record<ProfileKey, TimelineTask[]> = {
   retiree: [
     { id: "retiree-routine", phase: "Days 31 to 90", title: "Settle into a steady retirement routine", description: "Balance healthcare appointments, social activities, transport and a comfortable weekly rhythm in the new location.", timing: "Month 2 to 3", priority: "Medium", category: "Retiree" },
   ],
+  elderlyParent: [
+    { id: "elderly-parent-continuity", phase: "Before you move", title: "Plan elderly parent medical continuity and comfort", description: "Confirm medication supply, medical records transfer, accessibility needs, insurance caution for pre-existing conditions, and emergency contacts before the move.", timing: "T-30", priority: "High", category: "Elderly parent" },
+  ],
+  preferNotToSay: [
+    { id: "general-checklist", phase: "Days 1 to 7", title: "Follow a general relocation checklist", description: "Cover documents, banking, housing, connectivity and healthcare basics that apply to most relocations.", timing: "Day 1 to 7", priority: "Medium", category: "General" },
+  ],
+};
+
+const addOnTasks: Record<AddOnKey, TimelineTask[]> = {
+  pets: [],
+  schooling: [
+    { id: "addon-school-records", phase: "Before you move", title: "Request school records and transfer documents", description: "Collect transcripts, vaccination records and transfer letters from the current school before the move.", timing: "T-45", priority: "High", category: "New contracts to set up" },
+    { id: "addon-school-shortlist", phase: "Days 1 to 7", title: "Shortlist schools or childcare near your new address", description: "Compare catchments, fees, waitlists, transport and admission timelines. Verify directly with each school.", timing: "Day 1 to 7", priority: "High", category: "New contracts to set up" },
+  ],
+  seniorHealthcare: [
+    { id: "addon-senior-coverage", phase: "Before you move", title: "Check senior healthcare coverage and pre-existing conditions", description: "Insurance for seniors often excludes or surcharges pre-existing conditions. Compare policies and confirm exclusions directly with providers before relying on any plan.", timing: "T-45", priority: "High", category: "Insurance planning" },
+    { id: "addon-senior-clinic", phase: "Days 8 to 30", title: "Register with a local clinic or GP for senior care", description: "Find a clinic comfortable with ongoing senior care needs and confirm how prescriptions and referrals work locally.", timing: "Week 2 to 4", priority: "High", category: "New contracts to set up" },
+  ],
+  medication: [
+    { id: "addon-medication-supply", phase: "Before you move", title: "Plan medication and prescription continuity", description: "Check how much medication you can legally carry, get prescriptions in destination-recognised format, and confirm local availability of the same medicines.", timing: "T-30", priority: "High", category: "Insurance planning" },
+    { id: "addon-medication-pharmacy", phase: "Days 1 to 7", title: "Locate a local pharmacy and confirm refill process", description: "Find a nearby pharmacy and confirm how prescriptions are transferred or re-issued in the new location.", timing: "Day 1 to 7", priority: "Medium", category: "New contracts to set up" },
+  ],
+  vehicle: [
+    { id: "addon-vehicle-old", phase: "Before you move", title: "Decide on selling, shipping or storing your vehicle", description: "Compare costs of selling, shipping or storing your vehicle, plus road tax, parking and insurance cancellation at the old address.", timing: "T-30", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-vehicle-new", phase: "Days 8 to 30", title: "Check driving licence, IDP and local vehicle options", description: "Confirm licence validity, International Driving Permit requirements, and compare buying, leasing or ride-hailing for the new location.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+  ],
+  bankSimContinuity: [
+    { id: "addon-sim-otp", phase: "Before you move", title: "Plan home-country bank OTP and SIM continuity", description: "Check if your home carrier offers low-cost roaming or standby plans, or switch OTP-critical accounts to an authenticator app before leaving.", timing: "T-21", priority: "High", category: "Existing contracts to terminate" },
+    { id: "addon-sim-otp-followup", phase: "Days 1 to 7", title: "Confirm OTP access is working from the new location", description: "Test banking and government logins early so you are not locked out if SMS OTPs do not arrive internationally.", timing: "Day 1 to 7", priority: "High", category: "New contracts to set up" },
+  ],
+  contractsTerminate: [
+    { id: "addon-lease-notice", phase: "Before you move", title: "Give lease notice and plan handover", description: "Confirm notice period, deposit return conditions and handover inspection at your current address.", timing: "T-45", priority: "High", category: "Existing contracts to terminate" },
+    { id: "addon-broadband-cancel", phase: "Before you move", title: "Cancel or transfer broadband, WiFi, TV and cable", description: "Check cancellation notice periods and early-termination fees for internet, TV and cable contracts.", timing: "T-21", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-mobile-downgrade", phase: "Before you move", title: "Downgrade mobile plan or set up roaming", description: "Switch to a roaming plan or pause your existing mobile contract to avoid paying for unused local minutes.", timing: "T-14", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-utilities-cancel", phase: "Before you move", title: "Cancel or transfer utilities at the old address", description: "Plan final readings and closure for electricity, water and gas, or transfer where the new occupant agrees.", timing: "T-14", priority: "High", category: "Existing contracts to terminate" },
+    { id: "addon-memberships-cancel", phase: "Before you move", title: "Cancel gym, clubs and memberships", description: "Review notice periods for gym, clubs and recurring memberships tied to your current address.", timing: "T-14", priority: "Low", category: "Existing contracts to terminate" },
+    { id: "addon-school-notice", phase: "Before you move", title: "Give school or childcare notice at the old location", description: "Notify the current school or childcare provider and request transfer documents ahead of departure.", timing: "T-30", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-insurance-cancel", phase: "Before you move", title: "Cancel or transfer existing insurance policies", description: "Check renter, home, vehicle or health insurance cancellation terms before leaving. Confirm refund or transfer rules directly with the insurer.", timing: "T-21", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-vehicle-wind-down", phase: "Before you move", title: "Wind down vehicle sale, storage, road tax and parking", description: "Settle vehicle sale or storage, cancel road tax and parking permits where no longer needed at the old address.", timing: "T-21", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-helper-notice", phase: "Before you move", title: "Give notice to domestic helper or service providers where relevant", description: "Confirm notice periods, final payments and references for any household helper or recurring service provider.", timing: "T-21", priority: "Low", category: "Existing contracts to terminate" },
+    { id: "addon-mail-forwarding", phase: "Days 1 to 7", title: "Set up mail forwarding and update your address", description: "Arrange mail redirection and update your address with banks, employer and key subscriptions.", timing: "Day 1 to 7", priority: "Medium", category: "Existing contracts to terminate" },
+    { id: "addon-subscriptions-cancel", phase: "Before you move", title: "Cancel local subscriptions and deliveries", description: "Review recurring local subscriptions, food deliveries and memberships that will not transfer to the new location.", timing: "T-14", priority: "Low", category: "Existing contracts to terminate" },
+  ],
+  contractsSetup: [
+    { id: "addon-setup-temp-stay", phase: "Before you move", title: "Book temporary stay at the destination", description: "Arrange a temporary stay before committing to a long-term rental at the destination.", timing: "T-21", priority: "High", category: "New contracts to set up" },
+    { id: "addon-setup-rental", phase: "Days 8 to 30", title: "Sign a long-term rental agreement", description: "Compare rent, deposit terms and lease conditions before signing a long-term rental at the destination.", timing: "Week 2 to 4", priority: "High", category: "New contracts to set up" },
+    { id: "addon-setup-utilities", phase: "Days 1 to 7", title: "Set up electricity, water and gas", description: "Open new utility accounts at the destination address and confirm activation timelines.", timing: "Day 1 to 7", priority: "High", category: "New contracts to set up" },
+    { id: "addon-setup-broadband", phase: "Days 1 to 7", title: "Set up broadband and WiFi", description: "Compare local broadband providers and book installation as early as possible.", timing: "Day 1 to 7", priority: "Medium", category: "New contracts to set up" },
+    { id: "addon-setup-mobile", phase: "Days 1 to 7", title: "Activate a local mobile, SIM or eSIM", description: "Set up a local SIM or eSIM for calls, data and local verification codes.", timing: "Day 1 to 7", priority: "High", category: "New contracts to set up" },
+    { id: "addon-setup-tv", phase: "Days 8 to 30", title: "Set up TV or streaming if relevant", description: "Compare local TV, cable or streaming options if relevant to your household.", timing: "Week 2 to 4", priority: "Low", category: "New contracts to set up" },
+    { id: "addon-setup-banking", phase: "Days 1 to 7", title: "Set up local banking and payment apps", description: "Open a local bank account and set up payment apps for daily transactions.", timing: "Day 1 to 7", priority: "High", category: "New contracts to set up" },
+    { id: "addon-setup-insurance", phase: "Days 8 to 30", title: "Set up local insurance where relevant", description: "Compare renter, health or vehicle insurance for the new location and verify with licensed providers.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+    { id: "addon-setup-school", phase: "Days 8 to 30", title: "Set up school or childcare at the destination", description: "Complete enrolment steps for school or childcare if children are part of the move.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+    { id: "addon-setup-clinic", phase: "Days 8 to 30", title: "Register with a healthcare clinic or GP", description: "Find a nearby clinic or GP and register before you need urgent care.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+    { id: "addon-setup-transport-card", phase: "Days 1 to 7", title: "Get a public transport card", description: "Set up a local transport card or app for daily commuting.", timing: "Day 1 to 7", priority: "Low", category: "New contracts to set up" },
+    { id: "addon-setup-driving", phase: "Days 8 to 30", title: "Check driving licence or IDP requirements", description: "Confirm whether your licence is valid locally or whether you need an International Driving Permit or local conversion.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+    { id: "addon-setup-furniture", phase: "Days 8 to 30", title: "Plan furniture and appliance delivery", description: "Compare furniture and appliance options and confirm delivery windows for the new home.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+    { id: "addon-setup-groceries", phase: "Days 1 to 7", title: "Map groceries and community options", description: "Find the nearest supermarket, cultural food options and community groups near your new home.", timing: "Day 1 to 7", priority: "Low", category: "New contracts to set up" },
+  ],
+  insurance: [
+    { id: "addon-insurance-travel", phase: "Before you move", title: "Compare travel insurance for the move itself", description: "Compare travel insurance covering the journey and the initial settling-in period. SettleMap does not sell or advise on insurance.", timing: "T-30", priority: "Medium", category: "Insurance planning" },
+    { id: "addon-insurance-health", phase: "Before you move", title: "Compare health or medical insurance", description: "Compare health or medical insurance options at the destination. Verify coverage, exclusions and waiting periods with licensed providers.", timing: "T-30", priority: "High", category: "Insurance planning" },
+    { id: "addon-insurance-home", phase: "Days 8 to 30", title: "Compare renter or home insurance", description: "Compare renter or home insurance for your new address, including contents and liability cover.", timing: "Week 2 to 4", priority: "Medium", category: "Insurance planning" },
+  ],
+  temporaryStay: [
+    { id: "addon-temp-stay-book", phase: "Before you move", title: "Book a temporary stay bridge before signing a lease", description: "Book a hotel, serviced apartment or short stay to bridge the gap before committing to a long-term rental.", timing: "T-21", priority: "High", category: "New contracts to set up" },
+  ],
+  furniture: [
+    { id: "addon-furniture-plan", phase: "Days 8 to 30", title: "Plan furniture and appliances for the new home", description: "Compare voltage, warranty, delivery and installation timing for furniture and appliances before buying.", timing: "Week 2 to 4", priority: "Medium", category: "New contracts to set up" },
+  ],
+  storage: [
+    { id: "addon-storage-book", phase: "Before you move", title: "Book storage for items not moving immediately", description: "Compare storage unit size, cost and access terms for belongings not travelling with you right away.", timing: "T-21", priority: "Medium", category: "Existing contracts to terminate" },
+  ],
+  languageCommunity: [
+    { id: "addon-language-community", phase: "Days 31 to 90", title: "Connect with language, community and cultural groups", description: "Find community groups, language classes, faith groups and cultural associations to help you settle in socially.", timing: "Month 2 to 3", priority: "Low", category: "Settling in" },
+  ],
 };
 
 function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string): TimelineTask {
@@ -304,6 +380,7 @@ export function buildTimeline(
   reasonKey: MoveReasonKey,
   profileKey: ProfileKey,
   petKey: PetKey = "none",
+  addOns: AddOnKey[] = [],
 ): TimelineTask[] {
   const origin = destinations.find((item) => item.key === originKey) ?? destinations[0];
   const destination = destinations.find((item) => item.key === destinationKey) ?? destinations[1];
@@ -333,12 +410,15 @@ export function buildTimeline(
 
   const baseSet = isDomestic ? domesticBaseTasks : baseTasks;
 
+  const uniqueAddOns = Array.from(new Set(addOns));
+
   return [
     routeSpecific,
     ...baseSet.map((task) => withRouteContext(task, origin.label, destination.label)),
     ...reasonAddOns[reason.key],
     ...profileAddOns[profile.key],
     ...petAddOns[petKey],
+    ...uniqueAddOns.flatMap((key) => addOnTasks[key] ?? []),
   ];
 }
 
