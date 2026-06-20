@@ -15,3 +15,5 @@ release-log.txt
 build-log*.txt
 package-lock.json
 run-*.bat
+
+tsconfig.tsbuildinfo
