@@ -1,15 +1,18 @@
 export const SITE_NAME = "SettleMap";
-// No new domain has been purchased or connected. This stays the existing Vercel demo URL
-// until the user explicitly approves a domain change.
-export const SITE_URL = "https://videshflow-demo.vercel.app";
+export const SITE_URL = "https://settlemap-demo.vercel.app";
 
-// Replace these with real Tally, Typeform, or CRM URLs later.
+// Live feedback channel for the early public demo. All feedback and waitlist CTAs point here.
+export const TALLY_FORM_URL = "https://tally.so/r/Pd46qP";
+export const WAITLIST_FORM_URL = TALLY_FORM_URL;
+
+// Help and partner intake forms are not yet connected to a backend.
 // Until then, they point to safe internal fallback sections so users never hit broken external links.
 export const STORY_FORM_URL = "#story-form-coming-soon";
 export const HELP_FORM_URL = "#help-form-coming-soon";
 export const PARTNER_FORM_URL = "#partner-form-coming-soon";
-export const WAITLIST_FORM_URL = "https://formspree.io/f/REPLACE_ME";
-export const CONTACT_EMAIL = "hello@settlemap.app";
+
+// No fake contact inbox is shown publicly. Use the feedback form instead.
+export const CONTACT_NOTE = "Use the feedback form to contact us during this early demo.";
 
 export const DISCLAIMER_SHORT =
   "SettleMap is an early feedback prototype, not a finished product. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Always verify current requirements with official sources and qualified professionals.";

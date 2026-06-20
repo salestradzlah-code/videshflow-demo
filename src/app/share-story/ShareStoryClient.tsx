@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Copy } from "lucide-react";
+import { ArrowRight, Check, Copy } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
-import { CONTACT_EMAIL } from "@/lib/constants";
+import { TALLY_FORM_URL } from "@/lib/constants";
 
 const questions = [
   "Your route — where did you move from and to?",
@@ -49,8 +49,16 @@ export function ShareStoryClient() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Feedback request</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Help shape SettleMap with your move experience</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              This is an early feedback demo. Copy any question below and email your answer to {CONTACT_EMAIL}, or use it as a starting point for a conversation with our team. Your experience helps the next family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
+              This is an early feedback demo. Copy any question below and submit your answer through our feedback form, or use it as a starting point for a conversation with our team. Your experience helps the next family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
             </p>
+            <a
+              href={TALLY_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#123638] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0c2829]"
+            >
+              Share feedback <ArrowRight className="h-4 w-4" />
+            </a>
             <div className="mt-8 grid gap-3">
               {questions.map((question) => (
                 <button
@@ -72,7 +80,7 @@ export function ShareStoryClient() {
               <button
                 type="button"
                 onClick={copyAllQuestions}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#123638] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0c2829]"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-[#123638] hover:bg-slate-50"
               >
                 {copiedAll ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 {copiedAll ? "Copied all questions" : "Copy all questions"}

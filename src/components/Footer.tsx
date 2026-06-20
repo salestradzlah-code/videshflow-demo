@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DISCLAIMER_SHORT } from "@/lib/constants";
+import { DISCLAIMER_SHORT, TALLY_FORM_URL } from "@/lib/constants";
 
 const exploreLinks = [
   { href: "/#route-selector", label: "Build My Move Plan" },
@@ -8,7 +8,6 @@ const exploreLinks = [
   { href: "/get-help", label: "Get Help" },
   { href: "/services", label: "Services Directory" },
   { href: "/reference-links", label: "Reference Links" },
-  { href: "/share-story", label: "Feedback" },
 ];
 
 const planningLinks = [
@@ -47,6 +46,9 @@ export function Footer() {
                 {link.label}
               </Link>
             ))}
+            <a href={TALLY_FORM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+              Feedback
+            </a>
           </div>
         </div>
         <div>

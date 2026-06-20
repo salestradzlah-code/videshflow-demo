@@ -159,8 +159,8 @@ export function RouteWizard() {
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       <Hero />
 
-      <section id="route-selector" className="px-4 pb-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+      <section id="route-selector" className="px-4 pb-10 pt-2 sm:px-6 lg:px-8">
+        <div className="mx-auto mt-8 max-w-5xl rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8 lg:mt-12">
           {!showDashboard ? (
             <>
               <StepProgress step={step} totalSteps={4} labels={WIZARD_STEPS} />
@@ -171,7 +171,7 @@ export function RouteWizard() {
                   title="Where are you moving from and to?"
                   description="Cities are optional. SettleMap covers international routes and domestic moves within the same country."
                 >
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-6 sm:grid-cols-2">
                     <div className="space-y-3">
                       <SearchableSelect
                         label="Moving from"
@@ -358,15 +358,15 @@ function Hero() {
               Explore sample routes
             </button>
           </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-4">
-            {platformStats.map((stat) => (
-              <div key={stat.label} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-                <stat.icon className="mb-3 h-5 w-5 text-emerald-600" />
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">{stat.label}</p>
-                <p className="mt-2 text-sm font-semibold text-zinc-900">{stat.value}</p>
-              </div>
-            ))}
-          </div>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {platformStats.map((stat) => (
+            <div key={stat.label} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+              <stat.icon className="mb-3 h-5 w-5 text-emerald-600" />
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">{stat.label}</p>
+              <p className="mt-2 text-sm font-semibold text-zinc-900">{stat.value}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
