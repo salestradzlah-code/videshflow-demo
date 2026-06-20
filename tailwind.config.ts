@@ -4,15 +4,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cream: "#F5F5DC",
-        "cream-soft": "#FAF7EA",
-        teal: "#004D4D",
-        "teal-dark": "#003737",
-        gold: "#D4AF37",
-        ink: "#172326",
+        cream: "#fafafa",
+        "cream-soft": "#f4f4f5",
+        teal: "#059669",
+        "teal-dark": "#047857",
+        gold: "#10b981",
+        ink: "#18181b",
       },
       boxShadow: {
-        premium: "0 24px 80px rgba(0, 77, 77, 0.12)",
+        premium: "0 24px 80px rgba(5, 150, 105, 0.10)",
       },
     },
   },

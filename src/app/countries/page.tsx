@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { CountryCard } from "@/components/CountryCard";
-import { SectionHeader } from "@/components/SectionHeader";
-import { countries } from "@/data/countries";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { RouteLibraryGrid } from "@/components/settlemap/RouteLibraryGrid";
 
 export const metadata: Metadata = {
   title: "Route Library",
@@ -10,15 +9,15 @@ export const metadata: Metadata = {
 
 export default function CountriesPage() {
   return (
-    <section className="px-4 py-20 sm:px-6 lg:px-8">
+    <section className="bg-zinc-50 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow="Route library"
-          title="Relocation starter kits by route"
-          description="Each route guide follows the same practical structure: who it is for, official links, first 7 days, first 30 days, first 90 days, family tips, and common mistakes."
+          title="Relocation routes by corridor"
+          description="Each corridor card summarises who it is for, move type, processing speed and complexity. Deep route starter kits are linked where available."
         />
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {countries.map((country) => <CountryCard key={country.slug} country={country} />)}
+        <div className="mt-10">
+          <RouteLibraryGrid />
         </div>
       </div>
     </section>

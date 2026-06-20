@@ -21,3 +21,6 @@ export const DIRECTORY_DISCLAIMER =
 
 export const INSURANCE_DISCLAIMER =
   "SettleMap does not sell or advise on insurance. Users must compare policies and verify with licensed professionals/providers.";
+
+export const AI_ASSISTANT_DISCLAIMER =
+  "SettleMap is a prototype planning assistant. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice.";

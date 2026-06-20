@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SITE_NAME, SITE_URL, BETA_NOTE } from "@/lib/constants";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -24,10 +27,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={inter.variable}>
+      <body className="bg-zinc-50 text-zinc-900">
         <Header />
-        <div className="bg-[#f2c56b]/25 px-4 py-2 text-center text-xs font-semibold text-[#7a4d12] sm:px-6 lg:px-8">
+        <div className="bg-emerald-50 px-4 py-2 text-center text-xs font-semibold text-emerald-800 sm:px-6 lg:px-8">
           {BETA_NOTE}
         </div>
         <main>{children}</main>
