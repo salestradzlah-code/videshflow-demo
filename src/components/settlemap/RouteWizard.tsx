@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, FileSearch, Globe2, Plane, RefreshCcw, Route, Sparkles, UploadCloud } from "lucide-react";
+import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, Copy, ExternalLink, FileSearch, Globe2, Plane, RefreshCcw, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
 import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, moveInWindowOptions, moveReasons, occupancyOptions, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, smokingOptions, transportPrefOptions, type AddOnKey, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress, groupByPhase } from "@/lib/relocationTimeline";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
@@ -82,6 +82,99 @@ const initialSelection: RouteSelection = {
 };
 
 const ACCOMMODATION_TRIGGER_ADDONS: AddOnKey[] = ["temporaryStay", "contractsSetup"];
+
+function labelFor(options: ReadonlyArray<{ key: string; label: string }>, key: string | null): string | null {
+  if (!key) return null;
+  return options.find((item) => item.key === key)?.label ?? null;
+}
+
+function buildTenantBio(accommodation: AccommodationProfile, destinationLabel: string): string {
+  const lines: string[] = [];
+  lines.push(`Hi, I am looking for accommodation in ${destinationLabel}.`);
+  lines.push("Profile:");
+
+  const occupancy = labelFor(occupancyOptions, accommodation.occupancy);
+  if (occupancy) lines.push(`Occupancy: ${occupancy}`);
+
+  const passType = labelFor(passTypeOptions, accommodation.passType);
+  if (passType) lines.push(`Pass type: ${passType} holder`);
+
+  const moveInWindow = labelFor(moveInWindowOptions, accommodation.moveInWindow);
+  if (moveInWindow || accommodation.moveInDate) {
+    lines.push(`Move-in: ${accommodation.moveInDate || moveInWindow}`);
+  }
+
+  if (accommodation.sharedBudget || accommodation.privateBudget) {
+    const currency = accommodation.currency || "";
+    const parts: string[] = [];
+    if (accommodation.sharedBudget) parts.push(`up to ${currency}${accommodation.sharedBudget} for shared room`);
+    if (accommodation.privateBudget) parts.push(`up to ${currency}${accommodation.privateBudget} for private studio`);
+    lines.push(`Budget: ${parts.join(", ")}`);
+  }
+
+  const roomType = labelFor(roomTypeOptions, accommodation.roomType);
+  if (roomType) lines.push(`Preferred room: ${roomType}`);
+
+  const furnishing = labelFor(furnishingOptions, accommodation.furnishing);
+  if (furnishing) lines.push(`Furnishing: ${furnishing}`);
+
+  const cooking = labelFor(cookingOptions, accommodation.cooking);
+  if (cooking) lines.push(`Cooking: ${cooking}`);
+
+  const smoking = labelFor(smokingOptions, accommodation.smoking);
+  if (smoking) lines.push(`Smoking: ${smoking}`);
+
+  if (accommodation.preferredAreas) lines.push(`Preferred areas: ${accommodation.preferredAreas}`);
+
+  const transportPref = labelFor(transportPrefOptions, accommodation.transportPref);
+  if (transportPref) lines.push(`Transport: ${transportPref} preferred`);
+
+  const inclusionNotes: string[] = [];
+  if (accommodation.utilitiesIncluded) inclusionNotes.push("utilities included");
+  if (accommodation.wifiIncluded) inclusionNotes.push("WiFi included");
+  if (accommodation.airconIncluded) inclusionNotes.push("aircon included");
+  if (inclusionNotes.length > 0 || accommodation.agentFee) {
+    const noteParts: string[] = [];
+    if (inclusionNotes.length > 0) noteParts.push(`Prefer ${inclusionNotes.join("/")}`);
+    if (accommodation.agentFee) noteParts.push(`agent fee note: ${accommodation.agentFee}`);
+    else noteParts.push("no agent fee if possible");
+    lines.push(`Notes: ${noteParts.join(", ")}.`);
+  }
+
+  lines.push("");
+  lines.push("Questions:");
+  lines.push("Is daily cooking or only light cooking allowed?");
+  lines.push("Are utilities and WiFi included?");
+  lines.push("Is single occupancy allowed?");
+  lines.push("Is there any agent fee?");
+  if (accommodation.moveInDate || moveInWindow) {
+    lines.push(`Can the move-in date be around ${accommodation.moveInDate || moveInWindow}?`);
+  }
+  lines.push("For HDB, will the landlord register the tenant properly and provide approval/confirmation?");
+  lines.push("For condo/private property, are there any condo or landlord rules I should know?");
+  lines.push("Please let me know if viewing is possible.");
+
+  return lines.join("\n");
+}
+
+const singaporeRentalSafetyChecklist = [
+  "Verify landlord/agent identity",
+  "Check agent registration where applicable",
+  "Confirm legal tenant registration / landlord approval",
+  "Clarify HDB vs condo/private property rules",
+  "Confirm stamp duty / tenancy agreement handling",
+  "Clarify utilities, WiFi, aircon servicing and repair clause",
+  "Clarify cooking and visitor policy",
+  "Take inventory photos on Day 1",
+];
+
+const officialLinkCategories = [
+  { title: "HDB renting / tenant eligibility", href: null },
+  { title: "URA private residential rental guidance", href: null },
+  { title: "CEA public register for property agents", href: null },
+  { title: "IRAS stamp duty for tenancy agreements", href: null },
+  { title: "MOM address update / pass holder address", href: null },
+];
 
 const WIZARD_STEPS = ["Route", "Reason", "Profile", "Add-ons"] as const;
 
@@ -359,6 +452,7 @@ export function RouteWizard() {
                         accommodation={selection.accommodation}
                         onChange={updateAccommodation}
                         isSingapore={selection.toKey === "singapore"}
+                        destinationLabel={destination?.label ?? selection.toKey ?? "your destination"}
                         onCollapse={wantsAccommodationHelp ? undefined : () => setShowAccommodation(false)}
                       />
                     )}
@@ -520,11 +614,13 @@ function AccommodationProfileSection({
   accommodation,
   onChange,
   isSingapore,
+  destinationLabel,
   onCollapse,
 }: {
   accommodation: AccommodationProfile;
   onChange: <K extends keyof AccommodationProfile>(key: K, value: AccommodationProfile[K]) => void;
   isSingapore: boolean;
+  destinationLabel: string;
   onCollapse?: () => void;
 }) {
   return (
@@ -666,6 +762,100 @@ function AccommodationProfileSection({
           For Singapore, verify official rules and landlord or management approval before committing: HDB eligibility and registration rules, condo house rules, cooking and occupancy restrictions, and agent fee terms. This is not housing or legal advice.
         </div>
       )}
+
+      <TenantBioPreview accommodation={accommodation} destinationLabel={destinationLabel} />
+
+      {isSingapore && <SingaporeRentalSafetyChecklist />}
+      {isSingapore && <OfficialLinksSection />}
+
+      <p className="mt-5 text-xs leading-6 text-zinc-500">
+        Only share what you are comfortable sharing. This tenant bio is generated in your browser for copying to agents or landlords. SettleMap does not verify listings, agents, landlords, quotas, contracts or legal eligibility.
+      </p>
+    </div>
+  );
+}
+
+function TenantBioPreview({ accommodation, destinationLabel }: { accommodation: AccommodationProfile; destinationLabel: string }) {
+  const [copied, setCopied] = useState(false);
+  const bioText = useMemo(() => buildTenantBio(accommodation, destinationLabel), [accommodation, destinationLabel]);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(bioText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-5 sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Tenant bio preview</p>
+          <p className="mt-1 text-sm leading-6 text-zinc-600">A copyable message you can send to agents or landlords. Generated in your browser only.</p>
+        </div>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="inline-flex shrink-0 items-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
+        >
+          <Copy className="mr-2 h-3.5 w-3.5" /> Copy tenant bio
+        </button>
+      </div>
+      {copied && (
+        <p className="mt-3 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+          <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Copied to clipboard
+        </p>
+      )}
+      <pre className="mt-4 max-h-80 overflow-auto whitespace-pre-wrap rounded-xl bg-zinc-50 p-4 text-xs leading-6 text-zinc-700">{bioText}</pre>
+    </div>
+  );
+}
+
+function SingaporeRentalSafetyChecklist() {
+  return (
+    <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-5 sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Singapore rental safety checklist</p>
+      <p className="mt-1 text-sm leading-6 text-zinc-600">Before committing to a rental in Singapore, go through these checks. This is a checklist, not legal advice.</p>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        {singaporeRentalSafetyChecklist.map((item) => (
+          <div key={item} className="flex items-start gap-2 rounded-xl bg-zinc-50 p-3 text-sm leading-6 text-zinc-700">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function OfficialLinksSection() {
+  return (
+    <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-5 sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Official links to verify</p>
+      <p className="mt-1 text-sm leading-6 text-zinc-600">Always confirm details directly on the official website before relying on them.</p>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        {officialLinkCategories.map((category) =>
+          category.href ? (
+            <a
+              key={category.title}
+              href={category.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-200/80 bg-white p-3 text-sm font-medium text-emerald-700 transition-all duration-200 ease-in-out hover:border-zinc-300"
+            >
+              {category.title} <ExternalLink className="h-4 w-4 shrink-0" />
+            </a>
+          ) : (
+            <div key={category.title} className="rounded-xl bg-zinc-50 p-3 text-sm leading-6 text-zinc-700">
+              <p className="font-medium text-zinc-900">{category.title}</p>
+              <p className="mt-1 text-xs font-semibold text-zinc-500">Verify from official website</p>
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }
