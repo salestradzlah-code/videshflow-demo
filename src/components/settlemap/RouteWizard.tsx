@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, FileSearch, Globe2, Plane, RefreshCcw, Route, Sparkles, UploadCloud } from "lucide-react";
-import { addOnOptions, destinations, documentCategories, moveReasons, petOptions, platformStats, profiles, realStories, serviceCategories, type AddOnKey, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
+import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, moveInWindowOptions, moveReasons, occupancyOptions, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, smokingOptions, transportPrefOptions, type AddOnKey, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress, groupByPhase } from "@/lib/relocationTimeline";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
@@ -15,6 +15,48 @@ function classNames(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
+type AccommodationProfile = {
+  occupancy: string | null;
+  moveInWindow: string | null;
+  moveInDate: string;
+  currency: string;
+  sharedBudget: string;
+  privateBudget: string;
+  roomType: string | null;
+  furnishing: string | null;
+  cooking: string | null;
+  smoking: string | null;
+  preferredAreas: string;
+  transportPref: string | null;
+  utilitiesIncluded: boolean;
+  wifiIncluded: boolean;
+  airconIncluded: boolean;
+  agentFee: string | null;
+  depositAmount: string;
+  passType: string | null;
+};
+
+const initialAccommodation: AccommodationProfile = {
+  occupancy: null,
+  moveInWindow: null,
+  moveInDate: "",
+  currency: "",
+  sharedBudget: "",
+  privateBudget: "",
+  roomType: null,
+  furnishing: null,
+  cooking: null,
+  smoking: null,
+  preferredAreas: "",
+  transportPref: null,
+  utilitiesIncluded: false,
+  wifiIncluded: false,
+  airconIncluded: false,
+  agentFee: null,
+  depositAmount: "",
+  passType: null,
+};
+
 type RouteSelection = {
   fromKey: DestinationKey | null;
   fromCity: string;
@@ -24,6 +66,7 @@ type RouteSelection = {
   profileKey: ProfileKey | null;
   petKey: PetKey;
   addOns: AddOnKey[];
+  accommodation: AccommodationProfile;
 };
 
 const initialSelection: RouteSelection = {
@@ -35,7 +78,10 @@ const initialSelection: RouteSelection = {
   profileKey: null,
   petKey: "none",
   addOns: [],
+  accommodation: initialAccommodation,
 };
+
+const ACCOMMODATION_TRIGGER_ADDONS: AddOnKey[] = ["temporaryStay", "contractsSetup"];
 
 const WIZARD_STEPS = ["Route", "Reason", "Profile", "Add-ons"] as const;
 
@@ -60,6 +106,35 @@ export function RouteWizard() {
   const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
+  const [prefilled, setPrefilled] = useState(false);
+  const [showAccommodation, setShowAccommodation] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const fromParam = params.get("from");
+    const toParam = params.get("to");
+    const reasonParam = params.get("reason");
+    if (!fromParam && !toParam && !reasonParam) return;
+
+    const validDestinationKeys = destinations.map((item) => item.key);
+    const validReasonKeys = moveReasons.map((item) => item.key);
+    const matchedFrom = validDestinationKeys.includes(fromParam as DestinationKey) ? (fromParam as DestinationKey) : null;
+    const matchedTo = validDestinationKeys.includes(toParam as DestinationKey) ? (toParam as DestinationKey) : null;
+    const matchedReason = validReasonKeys.includes(reasonParam as MoveReasonKey) ? (reasonParam as MoveReasonKey) : null;
+    if (!matchedFrom && !matchedTo && !matchedReason) return;
+
+    setSelection((current) => ({
+      ...current,
+      fromKey: matchedFrom ?? current.fromKey,
+      toKey: matchedTo ?? current.toKey,
+      reasonKey: matchedReason ?? current.reasonKey,
+    }));
+    setPrefilled(true);
+
+    if (matchedFrom && matchedTo && matchedReason) setStep(3);
+    else if (matchedFrom && matchedTo) setStep(2);
+  }, []);
 
   const isRouteReady = Boolean(selection.fromKey && selection.toKey && selection.reasonKey && selection.profileKey);
   const showDashboard = confirmed && isRouteReady;
@@ -68,6 +143,8 @@ export function RouteWizard() {
   const reason = moveReasons.find((item) => item.key === selection.reasonKey) ?? null;
   const profile = profiles.find((item) => item.key === selection.profileKey) ?? null;
   const isDomestic = Boolean(selection.fromKey && selection.toKey && selection.fromKey === selection.toKey);
+  const wantsAccommodationHelp = selection.addOns.some((key) => ACCOMMODATION_TRIGGER_ADDONS.includes(key));
+  const accommodationOpen = showAccommodation || wantsAccommodationHelp;
 
   const originLabel = origin ? (selection.fromCity ? `${selection.fromCity}, ${origin.label}` : origin.label) : "";
   const destinationLabel = destination ? (selection.toCity ? `${selection.toCity}, ${destination.label}` : destination.label) : "";
@@ -111,6 +188,17 @@ export function RouteWizard() {
 
   function updateSelection<K extends keyof RouteSelection>(key: K, value: RouteSelection[K]) {
     setSelection((current) => ({ ...current, [key]: value }));
+  }
+
+  function updateAccommodation<K extends keyof AccommodationProfile>(key: K, value: AccommodationProfile[K]) {
+    setSelection((current) => ({ ...current, accommodation: { ...current.accommodation, [key]: value } }));
+  }
+
+  function clearPrefill() {
+    setSelection(initialSelection);
+    setPrefilled(false);
+    setShowAccommodation(false);
+    setStep(1);
   }
 
   function toggleTask(id: string) {
@@ -165,6 +253,15 @@ export function RouteWizard() {
             <>
               <StepProgress step={step} totalSteps={4} labels={WIZARD_STEPS} />
 
+              {prefilled && (
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                  <p className="text-sm font-semibold text-emerald-800">Prefilled from Route Library. Check the details and continue.</p>
+                  <button type="button" onClick={clearPrefill} className="rounded-full border border-emerald-300 bg-white px-4 py-1.5 text-xs font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:border-emerald-400">
+                    Edit route
+                  </button>
+                </div>
+              )}
+
               {step === 1 && (
                 <WizardStep
                   eyebrow="Step 1 of 4"
@@ -215,6 +312,7 @@ export function RouteWizard() {
                       <ChoiceCard key={item.key} label={item.label} active={selection.profileKey === item.key} onClick={() => updateSelection("profileKey", item.key as ProfileKey)} />
                     ))}
                   </div>
+                  <p className="mt-5 text-xs leading-6 text-zinc-500">Only share what you are comfortable sharing. This demo stores progress in your browser only.</p>
                 </WizardStep>
               )}
 
@@ -246,6 +344,25 @@ export function RouteWizard() {
                       </div>
                     </div>
                   )}
+
+                  <div className="mt-7 border-t border-zinc-200/80 pt-6">
+                    {!accommodationOpen ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowAccommodation(true)}
+                        className="rounded-full border border-zinc-200/80 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:border-zinc-300"
+                      >
+                        + Add accommodation and rental preferences (optional)
+                      </button>
+                    ) : (
+                      <AccommodationProfileSection
+                        accommodation={selection.accommodation}
+                        onChange={updateAccommodation}
+                        isSingapore={selection.toKey === "singapore"}
+                        onCollapse={wantsAccommodationHelp ? undefined : () => setShowAccommodation(false)}
+                      />
+                    )}
+                  </div>
                 </WizardStep>
               )}
 
@@ -395,6 +512,160 @@ function CityField({ label, value, onChange }: { label: string; value: string; o
         placeholder="City name"
         className="w-full rounded-xl border border-zinc-200/80 bg-white px-4 py-3 text-sm font-medium text-zinc-700 outline-none transition-all duration-200 ease-in-out placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20"
       />
+    </div>
+  );
+}
+
+function AccommodationProfileSection({
+  accommodation,
+  onChange,
+  isSingapore,
+  onCollapse,
+}: {
+  accommodation: AccommodationProfile;
+  onChange: <K extends keyof AccommodationProfile>(key: K, value: AccommodationProfile[K]) => void;
+  isSingapore: boolean;
+  onCollapse?: () => void;
+}) {
+  return (
+    <div className="rounded-xl border border-zinc-200/80 bg-zinc-50 p-5 sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Accommodation profile (optional)</p>
+          <p className="mt-1 text-sm leading-6 text-zinc-600">Helps match rental options. Skip anything you are not ready to share.</p>
+        </div>
+        {onCollapse && (
+          <button type="button" onClick={onCollapse} className="text-xs font-semibold text-zinc-500 hover:text-zinc-700">Hide</button>
+        )}
+      </div>
+
+      <div className="mt-5 grid gap-5 sm:grid-cols-2">
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Occupancy preference</p>
+          <div className="space-y-2">
+            {occupancyOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.occupancy === item.key} onClick={() => onChange("occupancy", item.key)} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Move-in window</p>
+          <div className="space-y-2">
+            {moveInWindowOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.moveInWindow === item.key} onClick={() => onChange("moveInWindow", item.key)} />
+            ))}
+          </div>
+          <input
+            type="text"
+            value={accommodation.moveInDate}
+            onChange={(event) => onChange("moveInDate", event.target.value)}
+            placeholder="Target date or window, e.g. late July to early August"
+            className="mt-2 w-full rounded-xl border border-zinc-200/80 bg-white px-4 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20"
+          />
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Monthly budget</p>
+          <div className="grid grid-cols-3 gap-2">
+            <input type="text" value={accommodation.currency} onChange={(event) => onChange("currency", event.target.value)} placeholder="Currency" className="rounded-xl border border-zinc-200/80 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20" />
+            <input type="text" value={accommodation.sharedBudget} onChange={(event) => onChange("sharedBudget", event.target.value)} placeholder="Shared room" className="rounded-xl border border-zinc-200/80 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20" />
+            <input type="text" value={accommodation.privateBudget} onChange={(event) => onChange("privateBudget", event.target.value)} placeholder="Private/studio" className="rounded-xl border border-zinc-200/80 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20" />
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Accommodation type</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {roomTypeOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.roomType === item.key} onClick={() => onChange("roomType", item.key)} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Furnishing</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {furnishingOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.furnishing === item.key} onClick={() => onChange("furnishing", item.key)} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Cooking</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {cookingOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.cooking === item.key} onClick={() => onChange("cooking", item.key)} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Smoking</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {smokingOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.smoking === item.key} onClick={() => onChange("smoking", item.key)} />
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-zinc-500">This is used only for rental compatibility.</p>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Transport preference</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {transportPrefOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.transportPref === item.key} onClick={() => onChange("transportPref", item.key)} />
+            ))}
+          </div>
+        </div>
+
+        <div className="sm:col-span-2">
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Preferred areas</p>
+          <input
+            type="text"
+            value={accommodation.preferredAreas}
+            onChange={(event) => onChange("preferredAreas", event.target.value)}
+            placeholder="e.g. Sengkang, Buangkok, Punggol, Hougang"
+            className="w-full rounded-xl border border-zinc-200/80 bg-white px-4 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Cost inclusions</p>
+          <div className="flex flex-wrap gap-4">
+            <label className="flex items-center gap-2 text-sm text-zinc-700">
+              <input type="checkbox" checked={accommodation.utilitiesIncluded} onChange={(event) => onChange("utilitiesIncluded", event.target.checked)} /> Utilities included
+            </label>
+            <label className="flex items-center gap-2 text-sm text-zinc-700">
+              <input type="checkbox" checked={accommodation.wifiIncluded} onChange={(event) => onChange("wifiIncluded", event.target.checked)} /> WiFi included
+            </label>
+            <label className="flex items-center gap-2 text-sm text-zinc-700">
+              <input type="checkbox" checked={accommodation.airconIncluded} onChange={(event) => onChange("airconIncluded", event.target.checked)} /> Aircon included
+            </label>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            <input type="text" value={accommodation.agentFee ?? ""} onChange={(event) => onChange("agentFee", event.target.value)} placeholder="Agent fee, if any" className="rounded-xl border border-zinc-200/80 bg-white px-4 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20" />
+            <input type="text" value={accommodation.depositAmount} onChange={(event) => onChange("depositAmount", event.target.value)} placeholder="Deposit amount" className="rounded-xl border border-zinc-200/80 bg-white px-4 py-2.5 text-sm text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20" />
+          </div>
+        </div>
+
+        <div className="sm:col-span-2">
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Pass type or residency status (optional)</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {passTypeOptions.map((item) => (
+              <ChoiceCard key={item.key} label={item.label} active={accommodation.passType === item.key} onClick={() => onChange("passType", item.key)} />
+            ))}
+          </div>
+          <p className="mt-2 text-xs leading-6 text-zinc-500">Ask only where relevant for rental eligibility and legal registration. We do not ask for ethnicity or race, and never use it for matching or recommendations.</p>
+        </div>
+      </div>
+
+      {isSingapore && (
+        <div className="mt-5 rounded-xl bg-emerald-50 p-4 text-xs leading-6 text-emerald-800">
+          For Singapore, verify official rules and landlord or management approval before committing: HDB eligibility and registration rules, condo house rules, cooking and occupancy restrictions, and agent fee terms. This is not housing or legal advice.
+        </div>
+      )}
     </div>
   );
 }
@@ -579,7 +850,7 @@ function RouteStarterKit({ origin, destination, reasonFocus, profileFocus, route
 
       <div className="mt-6 space-y-5">
         {!isDomestic && <FocusList title={`From ${origin.label}, remember`} items={origin.essentials} />}
-        <FocusList title={isDomestic ? `Within ${destination.label}, prioritise` : `To ${destination.label}, prioritise`} items={destination.essentials} />
+        <FocusList title={isDomestic ? `Within ${destination.label}, prioritise` : `To ${destination.label}, prioritise`} items={isDomestic ? domesticEssentials : destination.essentials} />
         <FocusList title="Reason focus" items={reasonFocus} />
         <FocusList title="Profile focus" items={profileFocus} />
       </div>

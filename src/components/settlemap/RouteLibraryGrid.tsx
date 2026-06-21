@@ -30,7 +30,7 @@ const corridors: Corridor[] = [
     processingSpeed: "4 to 8 weeks",
     complexity: "Low",
     focus: ["Work pass", "Rental search", "School research", "Banking"],
-    href: "/countries/singapore",
+    href: "/start?from=india&to=singapore&reason=job",
   },
   {
     id: "singapore-india",
@@ -41,7 +41,7 @@ const corridors: Corridor[] = [
     processingSpeed: "3 to 6 weeks",
     complexity: "Medium",
     focus: ["NRI paperwork", "Banking", "Home setup", "School transfer"],
-    href: "/countries/singapore",
+    href: "/start?from=singapore&to=india&reason=returning",
   },
   {
     id: "singapore-australia",
@@ -52,7 +52,7 @@ const corridors: Corridor[] = [
     processingSpeed: "6 to 10 weeks",
     complexity: "Medium",
     focus: ["Visa class", "Rental competition", "School zones", "Medicare"],
-    href: "/countries/australia",
+    href: "/start?from=singapore&to=australia&reason=corporate",
   },
   {
     id: "usa-india",
@@ -63,7 +63,7 @@ const corridors: Corridor[] = [
     processingSpeed: "4 to 8 weeks",
     complexity: "Medium",
     focus: ["Tax residency", "Banking", "Home setup", "Reverse logistics"],
-    href: "/start",
+    href: "/start?from=united-states&to=india&reason=returning",
   },
   {
     id: "uk-uae",
@@ -74,7 +74,7 @@ const corridors: Corridor[] = [
     processingSpeed: "3 to 6 weeks",
     complexity: "Low",
     focus: ["Residence visa", "Housing deposits", "School fees", "Insurance"],
-    href: "/countries/united-arab-emirates",
+    href: "/start?from=united-kingdom&to=united-arab-emirates&reason=corporate",
   },
   {
     id: "usa-domestic",
@@ -85,7 +85,7 @@ const corridors: Corridor[] = [
     processingSpeed: "2 to 4 weeks",
     complexity: "Low",
     focus: ["Lease handover", "Movers", "Address changes", "School transfer"],
-    href: "/start",
+    href: "/start?from=united-states&to=united-states&reason=domestic",
   },
   {
     id: "singapore-domestic",
@@ -96,7 +96,7 @@ const corridors: Corridor[] = [
     processingSpeed: "1 to 3 weeks",
     complexity: "Low",
     focus: ["Lease handover", "Movers", "Utilities", "Local registrations"],
-    href: "/start",
+    href: "/start?from=singapore&to=singapore&reason=domestic",
   },
   {
     id: "canada-portugal",
@@ -107,7 +107,7 @@ const corridors: Corridor[] = [
     processingSpeed: "8 to 14 weeks",
     complexity: "High",
     focus: ["Residence route", "Healthcare access", "NIF and banking", "Pension planning"],
-    href: "/start",
+    href: "/start?from=canada&to=portugal&reason=retirement",
   },
   {
     id: "india-uk",
@@ -118,7 +118,7 @@ const corridors: Corridor[] = [
     processingSpeed: "6 to 10 weeks",
     complexity: "Medium",
     focus: ["Visa and BRP", "NHS registration", "Rental deposits", "School catchments"],
-    href: "/countries/united-kingdom",
+    href: "/start?from=india&to=united-kingdom&reason=student",
   },
   {
     id: "india-uae",
@@ -129,7 +129,7 @@ const corridors: Corridor[] = [
     processingSpeed: "3 to 6 weeks",
     complexity: "Low",
     focus: ["Residence visa", "School fees", "Rental deposits", "Medical insurance"],
-    href: "/countries/united-arab-emirates",
+    href: "/start?from=india&to=united-arab-emirates&reason=family",
   },
   {
     id: "india-germany",
@@ -140,7 +140,7 @@ const corridors: Corridor[] = [
     processingSpeed: "8 to 12 weeks",
     complexity: "High",
     focus: ["Visa route", "City registration", "Health insurance", "Language"],
-    href: "/countries/germany-eu",
+    href: "/start?from=india&to=germany-eu&reason=student",
   },
   {
     id: "india-australia",
@@ -151,7 +151,7 @@ const corridors: Corridor[] = [
     processingSpeed: "8 to 16 weeks",
     complexity: "Medium",
     focus: ["Visa route", "City selection", "School zones", "Banking"],
-    href: "/countries/australia",
+    href: "/start?from=india&to=australia&reason=family",
   },
 ];
 

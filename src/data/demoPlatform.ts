@@ -220,6 +220,94 @@ export const petOptions = [
   { key: "other", label: "Other pet" },
 ] as const;
 
+export const domesticEssentials = [
+  "Lease handover",
+  "Movers",
+  "Address change",
+  "Utilities",
+  "Internet / WiFi / TV / cable",
+  "School transfer",
+  "Local registration",
+  "Storage",
+  "Insurance",
+  "Vehicle",
+  "Mail forwarding",
+  "Budget",
+  "Community",
+] as const;
+
+export type AccommodationKey =
+  | "occupancy"
+  | "moveInWindow"
+  | "roomType"
+  | "furnishing"
+  | "cooking"
+  | "smoking"
+  | "transportPref"
+  | "passType";
+
+export const occupancyOptions = [
+  { key: "single", label: "Single occupancy" },
+  { key: "couple", label: "Couple" },
+  { key: "family", label: "Family" },
+  { key: "sharedOkay", label: "Shared room okay" },
+  { key: "privateOnly", label: "Private studio / entire place preferred" },
+] as const;
+
+export const moveInWindowOptions = [
+  { key: "specificDate", label: "Specific date" },
+  { key: "endOfMonth", label: "End of month" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+export const roomTypeOptions = [
+  { key: "commonRoom", label: "Common room" },
+  { key: "masterRoom", label: "Master room" },
+  { key: "studio", label: "Studio" },
+  { key: "oneBedroom", label: "1-bedroom" },
+  { key: "entireUnit", label: "Entire unit" },
+  { key: "temporaryStay", label: "Temporary stay" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+export const furnishingOptions = [
+  { key: "fully", label: "Fully furnished" },
+  { key: "partially", label: "Partially furnished" },
+  { key: "unfurnished", label: "Unfurnished" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+export const cookingOptions = [
+  { key: "daily", label: "Daily cooking required" },
+  { key: "light", label: "Light cooking okay" },
+  { key: "none", label: "No cooking needed" },
+  { key: "confirm", label: "Need to confirm with landlord" },
+] as const;
+
+export const smokingOptions = [
+  { key: "nonSmoker", label: "Non-smoker" },
+  { key: "smoker", label: "Smoker" },
+  { key: "preferNotToSay", label: "Prefer not to say" },
+] as const;
+
+export const transportPrefOptions = [
+  { key: "nearMrtLrt", label: "Near MRT / LRT" },
+  { key: "directBus", label: "Direct bus" },
+  { key: "maxCommute", label: "Max commute time" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+export const passTypeOptions = [
+  { key: "ep", label: "EP" },
+  { key: "sPass", label: "S Pass" },
+  { key: "dp", label: "Dependant Pass" },
+  { key: "studentPass", label: "Student Pass" },
+  { key: "pr", label: "PR" },
+  { key: "citizen", label: "Citizen" },
+  { key: "tourist", label: "Tourist" },
+  { key: "other", label: "Other" },
+] as const;
+
 export const platformStats = [
   { label: "Route paths", value: "100+", icon: Globe2 },
   { label: "90-day tasks", value: "Adaptive", icon: FileCheck2 },

@@ -367,6 +367,17 @@ const addOnTasks: Record<AddOnKey, TimelineTask[]> = {
   ],
 };
 
+const singaporeRentalChecklist: TimelineTask[] = [
+  { id: "sg-rental-cooking-rules", phase: "Before you move", title: "Confirm cooking rules with the landlord", description: "Check whether daily cooking is allowed or only light cooking. Many shared rooms in Singapore restrict cooking — confirm directly with the landlord or agent.", timing: "T-21", priority: "High", category: "Singapore rental checklist" },
+  { id: "sg-rental-furnishing", phase: "Before you move", title: "Confirm fully furnished items in writing", description: "List exactly what is included: bed, wardrobe, desk, aircon. Get this confirmed in writing before paying any deposit.", timing: "T-21", priority: "High", category: "Singapore rental checklist" },
+  { id: "sg-rental-utilities-wifi", phase: "Before you move", title: "Confirm utilities and WiFi inclusions", description: "Check whether utilities, WiFi and aircon usage are included in rent or billed separately, and ask about any usage caps.", timing: "T-14", priority: "High", category: "Singapore rental checklist" },
+  { id: "sg-rental-occupancy-rules", phase: "Before you move", title: "Confirm single occupancy and visitor rules", description: "Ask about occupancy limits, overnight guest rules and any restrictions tied to your pass type before signing.", timing: "T-14", priority: "Medium", category: "Singapore rental checklist" },
+  { id: "sg-rental-agent-fee", phase: "Before you move", title: "Confirm agent fee, if any", description: "Clarify whether an agent fee applies, who pays it, and get the amount confirmed in writing before committing.", timing: "T-14", priority: "Medium", category: "Singapore rental checklist" },
+  { id: "sg-rental-move-in-date", phase: "Before you move", title: "Confirm move-in date and key handover", description: "Lock the move-in date and key handover process with the landlord or agent ahead of your arrival.", timing: "T-10", priority: "Medium", category: "Singapore rental checklist" },
+  { id: "sg-rental-registration", phase: "Days 1 to 7", title: "Confirm landlord approval and proper registration", description: "For HDB flats, verify official HDB rules, eligibility and registration requirements before committing. For condos, verify condo house rules and management/landlord approval. Always verify official rules directly — this is not legal or housing advice.", timing: "Day 1 to 7", priority: "High", category: "Singapore rental checklist" },
+  { id: "sg-rental-deposit-terms", phase: "Days 1 to 7", title: "Confirm deposit, notice period and minimum stay", description: "Get deposit amount, notice period, minimum stay and visitor rules confirmed in writing before signing the tenancy agreement.", timing: "Day 1 to 7", priority: "High", category: "Singapore rental checklist" },
+];
+
 function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string): TimelineTask {
   return {
     ...task,
@@ -411,6 +422,8 @@ export function buildTimeline(
   const baseSet = isDomestic ? domesticBaseTasks : baseTasks;
 
   const uniqueAddOns = Array.from(new Set(addOns));
+  const wantsHousingHelp = uniqueAddOns.includes("temporaryStay") || uniqueAddOns.includes("contractsSetup");
+  const singaporeChecklist = destinationKey === "singapore" && wantsHousingHelp ? singaporeRentalChecklist : [];
 
   return [
     routeSpecific,
@@ -419,6 +432,7 @@ export function buildTimeline(
     ...profileAddOns[profile.key],
     ...petAddOns[petKey],
     ...uniqueAddOns.flatMap((key) => addOnTasks[key] ?? []),
+    ...singaporeChecklist,
   ];
 }
 
