@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, Copy, ExternalLink, FileSearch, Globe2, Plane, RefreshCcw, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
 import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, moveInWindowOptions, moveReasons, occupancyOptions, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, smokingOptions, transportPrefOptions, type AddOnKey, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress, groupByPhase } from "@/lib/relocationTimeline";
@@ -194,6 +194,27 @@ const ADD_ON_GROUPS: AddOnGroup[] = [
   { title: "Community", keys: ["languageCommunity"] },
 ];
 
+const DESTINATION_ALIASES: Record<string, string> = {
+  uae: "united-arab-emirates",
+  usa: "united-states",
+  us: "united-states",
+  uk: "united-kingdom",
+  gb: "united-kingdom",
+  sg: "singapore",
+  in: "india",
+  au: "australia",
+  ca: "canada",
+  de: "germany-eu",
+  germany: "germany-eu",
+  pt: "portugal",
+};
+
+function normalizeDestinationParam(value: string | null): string | null {
+  if (!value) return null;
+  const lowered = value.toLowerCase().trim();
+  return DESTINATION_ALIASES[lowered] ?? lowered;
+}
+
 export function RouteWizard() {
   const [selection, setSelection] = useState<RouteSelection>(initialSelection);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
@@ -205,8 +226,8 @@ export function RouteWizard() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
-    const fromParam = params.get("from");
-    const toParam = params.get("to");
+    const fromParam = normalizeDestinationParam(params.get("from"));
+    const toParam = normalizeDestinationParam(params.get("to"));
     const reasonParam = params.get("reason");
     if (!fromParam && !toParam && !reasonParam) return;
 
@@ -238,6 +259,19 @@ export function RouteWizard() {
   const isDomestic = Boolean(selection.fromKey && selection.toKey && selection.fromKey === selection.toKey);
   const wantsAccommodationHelp = selection.addOns.some((key) => ACCOMMODATION_TRIGGER_ADDONS.includes(key));
   const accommodationOpen = showAccommodation || wantsAccommodationHelp;
+  const accommodationSectionRef = useRef<HTMLDivElement>(null);
+  const prevWantsAccommodationHelp = useRef(false);
+
+  useEffect(() => {
+    if (wantsAccommodationHelp && !prevWantsAccommodationHelp.current) {
+      const timeoutId = setTimeout(() => {
+        accommodationSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 320);
+      prevWantsAccommodationHelp.current = wantsAccommodationHelp;
+      return () => clearTimeout(timeoutId);
+    }
+    prevWantsAccommodationHelp.current = wantsAccommodationHelp;
+  }, [wantsAccommodationHelp]);
 
   const originLabel = origin ? (selection.fromCity ? `${selection.fromCity}, ${origin.label}` : origin.label) : "";
   const destinationLabel = destination ? (selection.toCity ? `${selection.toCity}, ${destination.label}` : destination.label) : "";
@@ -438,12 +472,12 @@ export function RouteWizard() {
                     </div>
                   )}
 
-                  <div className="mt-7 border-t border-zinc-200/80 pt-6">
+                  <div id="accommodation-profile-section" ref={accommodationSectionRef} className="mt-7 border-t border-zinc-200/80 pt-6">
                     {!accommodationOpen ? (
                       <button
                         type="button"
                         onClick={() => setShowAccommodation(true)}
-                        className="rounded-full border border-zinc-200/80 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:border-zinc-300"
+                        className="rounded-full border border-zinc-200/80 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:border-zinc-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                       >
                         + Add accommodation and rental preferences (optional)
                       </button>
@@ -465,7 +499,7 @@ export function RouteWizard() {
                   type="button"
                   onClick={() => goToStep(step - 1)}
                   disabled={step === 1}
-                  className={classNames("rounded-full border px-5 py-3 text-sm font-semibold transition-all duration-200 ease-in-out", step === 1 ? "cursor-not-allowed border-zinc-200/80 text-zinc-300" : "border-zinc-200/80 text-zinc-700 hover:border-zinc-300")}
+                  className={classNames("rounded-full border px-5 py-3 text-sm font-semibold transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2", step === 1 ? "cursor-not-allowed border-zinc-200/80 text-zinc-300" : "border-zinc-200/80 text-zinc-700 hover:border-zinc-300")}
                 >
                   Back
                 </button>
@@ -475,7 +509,7 @@ export function RouteWizard() {
                     onClick={() => goToStep(step + 1)}
                     disabled={(step === 1 && !(selection.fromKey && selection.toKey)) || (step === 2 && !selection.reasonKey) || (step === 3 && !selection.profileKey)}
                     className={classNames(
-                      "rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out",
+                      "rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2",
                       (step === 1 && !(selection.fromKey && selection.toKey)) || (step === 2 && !selection.reasonKey) || (step === 3 && !selection.profileKey)
                         ? "cursor-not-allowed bg-zinc-300"
                         : "bg-emerald-600 hover:bg-emerald-700"
@@ -488,7 +522,7 @@ export function RouteWizard() {
                     type="button"
                     onClick={confirmRoute}
                     disabled={!isRouteReady}
-                    className={classNames("rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out", isRouteReady ? "bg-emerald-600 hover:bg-emerald-700" : "cursor-not-allowed bg-zinc-300")}
+                    className={classNames("rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2", isRouteReady ? "bg-emerald-600 hover:bg-emerald-700" : "cursor-not-allowed bg-zinc-300")}
                   >
                     Build my move plan <ArrowRight className="ml-2 inline h-4 w-4" />
                   </button>
@@ -776,16 +810,17 @@ function AccommodationProfileSection({
 }
 
 function TenantBioPreview({ accommodation, destinationLabel }: { accommodation: AccommodationProfile; destinationLabel: string }) {
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const bioText = useMemo(() => buildTenantBio(accommodation, destinationLabel), [accommodation, destinationLabel]);
 
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(bioText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+      setCopyState("copied");
+      setTimeout(() => setCopyState("idle"), 2500);
     } catch {
-      setCopied(false);
+      setCopyState("failed");
+      setTimeout(() => setCopyState("idle"), 2500);
     }
   }
 
@@ -799,14 +834,27 @@ function TenantBioPreview({ accommodation, destinationLabel }: { accommodation: 
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex shrink-0 items-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
+          className="inline-flex shrink-0 items-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
         >
-          <Copy className="mr-2 h-3.5 w-3.5" /> Copy tenant bio
+          {copyState === "copied" ? (
+            <>
+              <CheckCircle2 className="mr-2 h-3.5 w-3.5" /> Copied ✓
+            </>
+          ) : (
+            <>
+              <Copy className="mr-2 h-3.5 w-3.5" /> Copy tenant bio
+            </>
+          )}
         </button>
       </div>
-      {copied && (
+      {copyState === "copied" && (
         <p className="mt-3 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
           <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Copied to clipboard
+        </p>
+      )}
+      {copyState === "failed" && (
+        <p className="mt-3 inline-flex items-center rounded-full bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700">
+          Copy failed — please select and copy manually.
         </p>
       )}
       <pre className="mt-4 max-h-80 overflow-auto whitespace-pre-wrap rounded-xl bg-zinc-50 p-4 text-xs leading-6 text-zinc-700">{bioText}</pre>
@@ -871,10 +919,10 @@ function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan
             <p className="mt-2 text-sm text-emerald-50">Progress baseline: 0% ready. Start ticking tasks once you begin planning.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button onClick={onViewPlan} className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-50">
+            <button onClick={onViewPlan} className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-900 focus-visible:ring-offset-2 hover:bg-emerald-50">
               View my plan <ArrowRight className="ml-2 inline h-4 w-4" />
             </button>
-            <button onClick={onEditRoute} className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/10">
+            <button onClick={onEditRoute} className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 hover:bg-white/10">
               Edit route
             </button>
           </div>

@@ -95,7 +95,7 @@ const baseTasks: TimelineTask[] = [
     id: "community-map",
     phase: "Days 31 to 90",
     title: "Build community and routine",
-    description: "Find local communities, temples, mandals, parent groups, professional circles, groceries and weekend routines.",
+    description: "Find local communities, cultural groups, places of worship, neighbourhood groups, expat/returnee networks, parent groups, professional circles, groceries and weekend routines.",
     timing: "Month 2",
     priority: "Medium",
     category: "Community",

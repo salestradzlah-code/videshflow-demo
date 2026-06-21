@@ -20,7 +20,7 @@ export function ChoiceCard({
       type="button"
       onClick={onClick}
       className={classNames(
-        "relative flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-all duration-200 ease-in-out focus:ring-2 focus:ring-emerald-500/20",
+        "relative flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-all duration-200 ease-in-out focus:ring-2 focus:ring-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2",
         active ? "border-emerald-600 bg-emerald-50" : "border-zinc-200/80 bg-white hover:border-zinc-300"
       )}
     >
