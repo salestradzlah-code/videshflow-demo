@@ -1,6 +1,8 @@
-# VideshFlow MVP
+# SettleMap — Map your move. Settle with confidence.
 
-A professional Next.js + Tailwind CSS MVP for VideshFlow, a practical relocation starter kit website for Indians moving abroad.
+A professional Next.js + Tailwind CSS demo for SettleMap, a practical relocation starter kit website for people and families moving across countries.
+
+SettleMap is operated by TRADZLAH LLP, Singapore UEN T20LL0224L. It is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website.
 
 ## Quick start
 
@@ -24,7 +26,7 @@ Push to GitHub and import the repository into Vercel. Use the default Next.js se
 
 ## Start path selector
 
-The launch version now includes `/start`, a first-click relocation path selector. It asks users:
+The launch version includes `/start`, a first-click relocation path selector. It asks users:
 
 - Where are you moving?
 - Why are you moving?
@@ -36,9 +38,9 @@ This keeps the website from feeling like a generic relocation ocean. The selecto
 
 Phase 1: Static AI Assistant page with prompt chips, language support note, service request flow, and safety boundaries.
 
-Phase 2: Embed a no-code AI chatbot such as Chatbase, Crisp, Botpress, Voiceflow, or similar. Train it only on approved VideshFlow pages, FAQs, and official-source links.
+Phase 2: Embed a no-code AI chatbot such as Chatbase, Crisp, Botpress, Voiceflow, or similar. Train it only on approved SettleMap pages, FAQs, and official-source links.
 
-Phase 3: Build a custom Next.js chatbot using Vercel AI SDK or a similar stack. Use retrieval only from an approved VideshFlow knowledge base and keep strict safety guardrails.
+Phase 3: Build a custom Next.js chatbot using Vercel AI SDK or a similar stack. Use retrieval only from an approved SettleMap knowledge base and keep strict safety guardrails.
 
 ### AI assistant guardrails
 
@@ -59,9 +61,9 @@ Update these in `src/lib/constants.ts` when real Tally, Typeform, or CRM links a
 
 While they are placeholders, they point to safe internal fallback sections so users do not hit broken external links.
 
-## VideshFlow launch readiness checklist
+## Launch readiness checklist
 
-1. Buy the domain, for example `videshflow.com`.
+1. Buy the domain.
 2. Push the code to GitHub.
 3. Import the GitHub repo into Vercel.
 4. Deploy the production site.
@@ -85,15 +87,19 @@ Phase 1, current launch version:
 
 Phase 2, no-code AI assistant:
 - Embed a no-code AI chatbot such as Chatbase, Crisp, Botpress, Voiceflow, or similar
-- Train only on VideshFlow website content, FAQs, approved checklists, and official source links
+- Train only on SettleMap website content, FAQs, approved checklists, and official source links
 - Keep responses checklist based and multilingual friendly
 
 Phase 3, custom AI assistant:
 - Build a custom Next.js chatbot using Vercel AI SDK or similar
-- Use retrieval from an approved VideshFlow knowledge base
+- Use retrieval from an approved SettleMap knowledge base
 - Add strict guardrails for legal, immigration, tax, medical, financial, insurance, school admission, housing, and vendor topics
 - Add future user-controlled reminders only after privacy and data storage are designed properly
 
 ## AI safety guardrails
 
 The AI assistant must never provide legal, immigration, tax, financial, medical, insurance, school admission, housing, or vendor advice. It must not guarantee visas, jobs, tax savings, housing, school admission, banking approval, insurance outcomes, vendor quality, or official approvals. For rules and complex topics, it should route users to official sources or qualified professionals.
+
+## Internal migration note
+
+This project was originally scaffolded under the working name "VideshFlow" and briefly "SettlePath" before the public brand was finalized as SettleMap. Some internal-only filenames (e.g. legacy release scripts) and the GitHub repo / local folder path may still reference the old working name — these are not public-facing and are scheduled for cleanup in a later release. The public product name and all user-facing copy is SettleMap.

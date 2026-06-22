@@ -15,7 +15,9 @@ export const PARTNER_FORM_URL = "#partner-form-coming-soon";
 export const CONTACT_NOTE = "Use the feedback form to contact us during this early demo.";
 
 export const DISCLAIMER_SHORT =
-  "SettleMap is an early feedback prototype, not a finished product. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Always verify current requirements with official sources and qualified professionals.";
+  "SettleMap is an early feedback prototype, not a finished product. It is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Always verify current requirements with official sources and qualified professionals.";
+
+export const OPERATOR_LINE = "SettleMap is operated by TRADZLAH LLP, Singapore UEN T20LL0224L.";
 
 export const BETA_NOTE = "Early feedback demo — please do not treat this as professional advice.";
 

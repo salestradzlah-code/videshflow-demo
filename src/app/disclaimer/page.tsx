@@ -14,7 +14,7 @@ const sections = [
   {
     id: "no-professional-advice",
     title: "2. No professional advice",
-    body: "Nothing on SettleMap is legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Content is for general planning convenience only.",
+    body: "SettleMap is not a travel agency, not an immigration adviser, not a property agent, not a financial adviser, not an insurance adviser, not a medical adviser, not a school or admission adviser, and not a government website. Nothing on SettleMap is legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Content is for general planning convenience only.",
   },
   {
     id: "immigration-legal",
