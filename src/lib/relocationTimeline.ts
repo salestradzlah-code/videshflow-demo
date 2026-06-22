@@ -378,9 +378,23 @@ const singaporeRentalChecklist: TimelineTask[] = [
   { id: "sg-rental-deposit-terms", phase: "Days 1 to 7", title: "Confirm deposit, notice period and minimum stay", description: "Get deposit amount, notice period, minimum stay and visitor rules confirmed in writing before signing the tenancy agreement.", timing: "Day 1 to 7", priority: "High", category: "Singapore rental checklist" },
 ];
 
-function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string): TimelineTask {
+// V10.1.1 — make the generic "Build community and routine" task read naturally for the
+// move profile instead of always sounding family/community-oriented (e.g. for a solo or
+// student mover). Title only; the task id, phase and category are unchanged.
+const COMMUNITY_TASK_TITLE_BY_PROFILE: Partial<Record<ProfileKey, string>> = {
+  student: "Build campus and local routine",
+  solo: "Build local routine and support network",
+  familyChild: "Build family routine, school rhythm and local support",
+  familyChildren: "Build family routine, school rhythm and local support",
+};
+
+function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string, profileKey?: ProfileKey): TimelineTask {
+  const title = task.id === "community-map" && profileKey && COMMUNITY_TASK_TITLE_BY_PROFILE[profileKey]
+    ? COMMUNITY_TASK_TITLE_BY_PROFILE[profileKey]!
+    : task.title;
   return {
     ...task,
+    title,
     description: task.description.replace("selected origin and destination", `${originLabel} to ${destinationLabel}`),
   };
 }
@@ -451,13 +465,22 @@ export function buildTimeline(
   const singaporeChecklist = destinationKey === "singapore" && wantsHousingHelp ? singaporeRentalChecklist : [];
   const petTasks = petAddOns[petKey].map((task) => withDomesticPetContext(task, isDomestic));
 
+  // V10.1.1 hotfix — "addon-setup-school" and "addon-school-notice" live inside the
+  // contractsSetup / contractsTerminate add-on bundles, which Student and Solo users pick
+  // for entirely unrelated reasons (broadband, banking, utilities). Those two specific tasks
+  // must still obey the children/schooling gate even though the rest of the bundle should not.
+  const SCHOOL_CHILDCARE_TASK_IDS = new Set(["addon-setup-school", "addon-school-notice"]);
+  const addOnTaskList = uniqueAddOns
+    .flatMap((key) => addOnTasks[key] ?? [])
+    .filter((task) => hasChildrenContext || !SCHOOL_CHILDCARE_TASK_IDS.has(task.id));
+
   return [
     routeSpecific,
-    ...baseSet.map((task) => withRouteContext(task, origin.label, destination.label)),
+    ...baseSet.map((task) => withRouteContext(task, origin.label, destination.label, profile.key)),
     ...reasonTasks,
     ...profileAddOns[profile.key],
     ...petTasks,
-    ...uniqueAddOns.flatMap((key) => addOnTasks[key] ?? []),
+    ...addOnTaskList,
     ...singaporeChecklist,
   ];
 }
