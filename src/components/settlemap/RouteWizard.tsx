@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, Copy, FileSearch, Globe2, Plane, RefreshCcw, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
-import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
-import { buildTimeline, calculateProgress, getMoveDateLabels, groupByPhase } from "@/lib/relocationTimeline";
+import { ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, Globe2, Plane, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
+import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
+import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
+import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
+import { ProjectPlanBoard } from "@/components/settlemap/ProjectPlanBoard";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
@@ -92,6 +94,10 @@ type SavedPlan = {
   selection: RouteSelection;
   step: number;
   completedIds: string[];
+  // V10 — richer per-task status/notes model. Optional so older saved plans (V9 and earlier,
+  // binary completedIds only) still load and migrate cleanly.
+  taskStatuses?: Record<string, TaskStatus>;
+  taskNotes?: Record<string, string>;
   confirmed: boolean;
   createdAt: string;
   updatedAt: string;
@@ -238,7 +244,9 @@ function normalizeDestinationParam(value: string | null): string | null {
 
 export function RouteWizard() {
   const [selection, setSelection] = useState<RouteSelection>(initialSelection);
-  const [completedIds, setCompletedIds] = useState<string[]>([]);
+  // V10 — task status (5-state) and notes replace the old binary completedIds model.
+  const [taskStatuses, setTaskStatuses] = useState<Record<string, TaskStatus>>({});
+  const [taskNotes, setTaskNotes] = useState<Record<string, string>>({});
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
@@ -259,9 +267,21 @@ export function RouteWizard() {
   function resumeSavedPlan() {
     if (!savedPlan) return;
     setSelection(savedPlan.selection);
-    setCompletedIds(savedPlan.completedIds ?? []);
     setStep(savedPlan.step ?? 1);
     setConfirmed(Boolean(savedPlan.confirmed));
+    if (savedPlan.taskStatuses) {
+      setTaskStatuses(savedPlan.taskStatuses);
+    } else if (savedPlan.completedIds && savedPlan.completedIds.length > 0) {
+      // Migrate from the V9-and-earlier binary completedIds model.
+      const migrated: Record<string, TaskStatus> = {};
+      savedPlan.completedIds.forEach((id) => {
+        migrated[id] = "Done";
+      });
+      setTaskStatuses(migrated);
+    } else {
+      setTaskStatuses({});
+    }
+    setTaskNotes(savedPlan.taskNotes ?? {});
     setShowSavedBanner(false);
     setResumedFromSave(true);
   }
@@ -273,7 +293,8 @@ export function RouteWizard() {
     setSavedPlan(null);
     setShowSavedBanner(false);
     setSelection(initialSelection);
-    setCompletedIds([]);
+    setTaskStatuses({});
+    setTaskNotes({});
     setStep(1);
     setConfirmed(false);
     setResumedFromSave(false);
@@ -345,29 +366,50 @@ export function RouteWizard() {
     return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, selection.addOns);
   }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, addOnsKey]);
 
-  const grouped = useMemo(() => groupByPhase(timeline), [timeline]);
+  // Derived from taskStatuses for backward-compatible progress calculation / saved-plan shape.
+  const completedIds = useMemo(() => Object.keys(taskStatuses).filter((id) => taskStatuses[id] === "Done"), [taskStatuses]);
   const progress = calculateProgress(timeline, completedIds);
 
+  // V10 — load task statuses/notes for this route. Falls back to migrating the old V9 binary
+  // completedIds key (same progressStorageKey) if no V10 status map is found yet.
   useEffect(() => {
     if (!isRouteReady) {
-      setCompletedIds([]);
+      setTaskStatuses({});
+      setTaskNotes({});
       return;
     }
-
     try {
-      const stored = localStorage.getItem(progressStorageKey);
-      setCompletedIds(stored ? JSON.parse(stored) : []);
+      const storedStatuses = localStorage.getItem(`${progressStorageKey}-statuses`);
+      if (storedStatuses) {
+        setTaskStatuses(JSON.parse(storedStatuses));
+      } else {
+        const legacy = localStorage.getItem(progressStorageKey);
+        if (legacy) {
+          const ids: string[] = JSON.parse(legacy);
+          const migrated: Record<string, TaskStatus> = {};
+          ids.forEach((id) => {
+            migrated[id] = "Done";
+          });
+          setTaskStatuses(migrated);
+        } else {
+          setTaskStatuses({});
+        }
+      }
+      const storedNotes = localStorage.getItem(`${progressStorageKey}-notes`);
+      setTaskNotes(storedNotes ? JSON.parse(storedNotes) : {});
     } catch {
-      setCompletedIds([]);
+      setTaskStatuses({});
+      setTaskNotes({});
     }
   }, [isRouteReady, progressStorageKey]);
 
   useEffect(() => {
     if (!isRouteReady) return;
     try {
-      localStorage.setItem(progressStorageKey, JSON.stringify(completedIds));
+      localStorage.setItem(`${progressStorageKey}-statuses`, JSON.stringify(taskStatuses));
+      localStorage.setItem(`${progressStorageKey}-notes`, JSON.stringify(taskNotes));
     } catch {}
-  }, [completedIds, isRouteReady, progressStorageKey]);
+  }, [taskStatuses, taskNotes, isRouteReady, progressStorageKey]);
 
   // V9.2 Part 5 — persist the full plan (route, profile, accommodation, progress, step) in this browser only.
   useEffect(() => {
@@ -381,13 +423,28 @@ export function RouteWizard() {
         selection,
         step,
         completedIds,
+        taskStatuses,
+        taskNotes,
         confirmed,
         createdAt,
         updatedAt: new Date().toISOString(),
       };
       localStorage.setItem(SAVED_PLAN_KEY, JSON.stringify(plan));
     } catch {}
-  }, [selection, step, completedIds, confirmed]);
+  }, [selection, step, completedIds, taskStatuses, taskNotes, confirmed]);
+
+  const projectScripts = useMemo(() => {
+    const moveInWindowLabel = labelFor(moveInWindowOptions, selection.accommodation.moveInWindow);
+    const moveInText = selection.accommodation.moveInDate || moveInWindowLabel || "a suitable date";
+    const cookingLabel = labelFor(cookingOptions, selection.accommodation.cooking);
+    return buildProjectScripts({
+      destinationLabel: destinationLabel || (destination?.label ?? "your destination"),
+      isSingapore: selection.toKey === "singapore",
+      moveInText,
+      cookingLabel,
+      agentFee: selection.accommodation.agentFee,
+    });
+  }, [selection.accommodation, destinationLabel, selection.toKey, destination]);
 
   function updateSelection<K extends keyof RouteSelection>(key: K, value: RouteSelection[K]) {
     setSelection((current) => ({ ...current, [key]: value }));
@@ -404,13 +461,20 @@ export function RouteWizard() {
     setStep(1);
   }
 
-  function toggleTask(id: string) {
-    setCompletedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+  function setTaskStatus(id: string, status: TaskStatus) {
+    setTaskStatuses((current) => ({ ...current, [id]: status }));
+  }
+
+  function setTaskNote(id: string, note: string) {
+    setTaskNotes((current) => ({ ...current, [id]: note }));
   }
 
   function resetProgress() {
-    setCompletedIds([]);
+    setTaskStatuses({});
+    setTaskNotes({});
     try {
+      localStorage.removeItem(`${progressStorageKey}-statuses`);
+      localStorage.removeItem(`${progressStorageKey}-notes`);
       localStorage.removeItem(progressStorageKey);
     } catch {}
   }
@@ -666,7 +730,17 @@ export function RouteWizard() {
 
           <section id="timeline-dashboard" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.28fr_0.72fr]">
-              <TimelineBoard grouped={grouped} completedIds={completedIds} onToggle={toggleTask} onReset={resetProgress} progress={progress} moveDateType={selection.moveDateType} moveDateValue={selection.moveDateValue} />
+              <ProjectPlanBoard
+                tasks={timeline}
+                taskStatuses={taskStatuses}
+                taskNotes={taskNotes}
+                onStatusChange={setTaskStatus}
+                onNoteChange={setTaskNote}
+                onReset={resetProgress}
+                moveDateType={selection.moveDateType}
+                moveDateValue={selection.moveDateValue}
+                scripts={projectScripts}
+              />
               <RouteStarterKit origin={origin} destination={destination} reasonFocus={reason.focus} profileFocus={profile.focus} routeLabel={routeLabel} isDomestic={isDomestic} />
             </div>
           </section>
@@ -1235,81 +1309,6 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
     <div className="rounded-xl bg-zinc-50 p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">{label}</p>
       <p className="mt-2 text-sm font-semibold text-zinc-900">{value}</p>
-    </div>
-  );
-}
-
-function TimelineBoard({ grouped, completedIds, onToggle, onReset, progress, moveDateType, moveDateValue }: { grouped: Record<string, TimelineTask[]>; completedIds: string[]; onToggle: (id: string) => void; onReset: () => void; progress: number; moveDateType: MoveDateKey | null; moveDateValue: string }) {
-  const phases = ["Before you move", "Days 1 to 7", "Days 8 to 30", "Days 31 to 90"];
-  const dateLabels = getMoveDateLabels(moveDateType, moveDateValue);
-
-  return (
-    <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-7">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">First 90 days</p>
-          <h2 className="mt-2 text-3xl font-semibold text-zinc-900">Dynamic relocation timeline</h2>
-          <p className="mt-2 text-sm leading-6 text-zinc-600">Tick tasks as your move progresses. This is a demo tracker saved only in this browser.</p>
-        </div>
-        <button onClick={onReset} className="rounded-full border border-zinc-200/80 px-4 py-2 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:border-zinc-300">
-          <RefreshCcw className="mr-2 inline h-4 w-4" /> Reset
-        </button>
-      </div>
-
-      {moveDateType ? (
-        <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
-          {dateLabels.length > 0 ? (
-            <>
-              <p className="font-semibold">Key dates around your move</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {dateLabels.map((entry) => (
-                  <span key={entry.label} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700">
-                    {entry.label}: {entry.date}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-3 text-xs text-emerald-700">Timeline can be personalised around your move date in a future version.</p>
-            </>
-          ) : (
-            <p>Timeline can be personalised around your move date in a future version.</p>
-          )}
-        </div>
-      ) : null}
-
-      <div className="mt-6 h-1 overflow-hidden rounded-full bg-zinc-100">
-        <div className="h-1 rounded-full bg-emerald-600 transition-all duration-300 ease-in-out" style={{ width: `${progress}%` }} />
-      </div>
-
-      <div className="mt-8 space-y-7">
-        {phases.map((phase) => (
-          <div key={phase}>
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-zinc-900">
-              <Clock3 className="h-5 w-5 text-emerald-600" /> {phase}
-            </h3>
-            <div className="mt-4 space-y-3">
-              {(grouped[phase] ?? []).map((task) => {
-                const done = completedIds.includes(task.id);
-                return (
-                  <button key={task.id} onClick={() => onToggle(task.id)} className={classNames("w-full rounded-xl border p-4 text-left transition-all duration-200 ease-in-out", done ? "border-emerald-600 bg-emerald-50" : "border-zinc-200/80 bg-white hover:border-zinc-300")}>
-                    <div className="flex gap-4">
-                      <div className={classNames("mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border", done ? "border-emerald-600 bg-emerald-600 text-white" : "border-zinc-300 text-transparent")}>✓</div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className={classNames("font-semibold", done ? "text-emerald-700 line-through" : "text-zinc-900")}>{task.title}</p>
-                          <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">{task.priority}</span>
-                          <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-700">{task.category}</span>
-                        </div>
-                        <p className="mt-2 text-sm leading-6 text-zinc-600">{task.description}</p>
-                        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-400">{task.timing}</p>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
