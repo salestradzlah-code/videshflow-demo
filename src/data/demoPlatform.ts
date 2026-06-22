@@ -475,6 +475,9 @@ export type ActionLinkCategory = {
   title: string;
   whatToDo: string;
   whereToStart: string;
+  // V9.2.1 — only set when the exact official government/statutory-board URL has been confirmed.
+  // If absent, the UI must show "Verify from official website" instead of a link.
+  url?: string;
 };
 
 // Generic, destination-agnostic action categories. No external URLs are included on purpose —
@@ -495,15 +498,49 @@ export const actionLinkCategories: ActionLinkCategory[] = [
 // Singapore-specific official link categories — verbatim from the V9 official links section,
 // kept here so both the route wizard and the Services Directory can share one source of truth.
 export const singaporeOfficialLinkCategories: ActionLinkCategory[] = [
-  { key: "hdb", title: "HDB renting / tenant eligibility", whatToDo: "Confirm HDB rental eligibility, subletting rules and registration requirements.", whereToStart: "Search the official HDB website." },
-  { key: "ura", title: "URA private residential rental guidance", whatToDo: "Confirm private residential rental guidance for condos and private property.", whereToStart: "Search the official URA website." },
-  { key: "cea", title: "CEA public register for property agents", whatToDo: "Verify an agent's registration before engaging them.", whereToStart: "Search the official CEA public register." },
-  { key: "iras", title: "IRAS stamp duty for tenancy agreements", whatToDo: "Confirm stamp duty obligations for your tenancy agreement.", whereToStart: "Search the official IRAS website." },
-  { key: "mom", title: "MOM address update / pass holder address", whatToDo: "Update your address as a pass holder where required.", whereToStart: "Search the official MOM website." },
+  {
+    key: "hdb",
+    title: "HDB renting from open market / tenant eligibility",
+    whatToDo: "Confirm HDB rental eligibility, subletting rules and registration requirements.",
+    whereToStart: "Search the official HDB website.",
+    url: "https://www.hdb.gov.sg/residential/renting-a-flat/renting-from-the-open-market/eligibility",
+  },
+  {
+    key: "ura",
+    title: "URA private residential rental guidance",
+    whatToDo: "Confirm private residential rental guidance for condos and private property.",
+    whereToStart: "Search the official URA website.",
+    url: "https://www.ura.gov.sg/Corporate/Property/Residential/Renting-Property",
+  },
+  {
+    key: "cea",
+    title: "CEA public register for property agents",
+    whatToDo: "Verify an agent's registration before engaging them.",
+    whereToStart: "Search the official CEA public register.",
+    url: "https://eservices.cea.gov.sg/aceas/public-register/",
+  },
+  {
+    key: "iras",
+    title: "IRAS renting a property / tenancy stamp duty",
+    whatToDo: "Confirm stamp duty obligations for your tenancy agreement.",
+    whereToStart: "Search the official IRAS website.",
+    url: "https://www.iras.gov.sg/taxes/stamp-duty/for-property/renting-a-property",
+  },
+  {
+    key: "mom",
+    title: "MOM address update / pass holder address",
+    whatToDo: "Update your address as a pass holder where required.",
+    whereToStart: "Search the official MOM website.",
+    // V9.2.1 — no single official URL covers all pass types (EP, S Pass, Work Permit, Dependant's Pass
+    // each have their own MOM page), so this stays verify-only rather than risk linking the wrong one.
+  },
 ];
 
 export const ACTION_LINKS_NOT_ENDORSEMENT =
   "These categories are research starting points, not endorsements or recommendations. SettleMap does not verify listings, agents, landlords, visas, taxes, insurance, schools or service providers. Always verify rule-sensitive matters with official sources.";
+
+export const OFFICIAL_LINKS_DISCLAIMER =
+  "Always verify directly from official websites. SettleMap does not provide legal, immigration, tax, housing or real estate advice.";
 
 export type Destination = (typeof destinations)[number];
 export type MoveReason = (typeof moveReasons)[number];

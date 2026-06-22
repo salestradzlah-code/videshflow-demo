@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { InfoBanner } from "@/components/ui/InfoBanner";
 import { DIRECTORY_DISCLAIMER } from "@/lib/constants";
-import { ACTION_LINKS_NOT_ENDORSEMENT, actionLinkCategories, singaporeOfficialLinkCategories } from "@/data/demoPlatform";
+import { ACTION_LINKS_NOT_ENDORSEMENT, actionLinkCategories, OFFICIAL_LINKS_DISCLAIMER, singaporeOfficialLinkCategories } from "@/data/demoPlatform";
 
 type ServiceGroup = "Housing" | "Moving and goods" | "Connectivity and utilities" | "Money and insurance" | "Health and family" | "Transport and admin";
 
@@ -234,10 +234,22 @@ export function ServicesDirectory() {
                 <p className="mt-3 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
                   Where to start: <span className="font-medium text-zinc-600">{category.whereToStart}</span>
                 </p>
-                <p className="mt-2 text-xs text-zinc-400">Verify from official website. Not an endorsement.</p>
+                {category.url ? (
+                  <a
+                    href={category.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-xs font-semibold text-emerald-700 underline hover:text-emerald-800"
+                  >
+                    Visit official website
+                  </a>
+                ) : (
+                  <p className="mt-2 text-xs text-zinc-400">Verify from official website. Not an endorsement.</p>
+                )}
               </div>
             ))}
           </div>
+          <p className="mt-4 text-xs leading-5 text-zinc-500">{OFFICIAL_LINKS_DISCLAIMER}</p>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, Copy, FileSearch, Globe2, Plane, RefreshCcw, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
-import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
+import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress, getMoveDateLabels, groupByPhase } from "@/lib/relocationTimeline";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
@@ -1010,10 +1010,22 @@ function OfficialLinksSection() {
           <div key={category.key} className="rounded-xl bg-zinc-50 p-3 text-sm leading-6 text-zinc-700">
             <p className="font-medium text-zinc-900">{category.title}</p>
             <p className="mt-1 text-xs leading-5 text-zinc-600">{category.whatToDo}</p>
-            <p className="mt-1 text-xs font-semibold text-zinc-500">Verify from official website</p>
+            {category.url ? (
+              <a
+                href={category.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-block text-xs font-semibold text-emerald-700 underline hover:text-emerald-800"
+              >
+                Visit official website
+              </a>
+            ) : (
+              <p className="mt-1 text-xs font-semibold text-zinc-500">Verify from official website</p>
+            )}
           </div>
         ))}
       </div>
+      <p className="mt-4 text-xs leading-5 text-zinc-500">{OFFICIAL_LINKS_DISCLAIMER}</p>
     </div>
   );
 }
