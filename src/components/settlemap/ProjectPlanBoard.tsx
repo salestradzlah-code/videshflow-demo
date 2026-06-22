@@ -276,7 +276,7 @@ function TaskCard({
         <StatusSelect status={task.status} onChange={(status) => onStatusChange(task.id, status)} />
       </div>
       <div className="mt-3">
-        <TaskAction task={task} onNoteChange={onNoteChange} onStatusChange={onStatusChange} scripts={scripts} />
+        <TaskAction task={task} onNoteChange={onNoteChange} onStatusChange={onStatusChange} scripts={scripts} fullWidth />
       </div>
     </div>
   );
@@ -289,7 +289,9 @@ function StatusSelect({ status, onChange }: { status: TaskStatus; onChange: (sta
         value={status}
         onChange={(event) => onChange(event.target.value as TaskStatus)}
         className={classNames(
-          "appearance-none rounded-full border px-3 py-1.5 pr-7 text-xs font-semibold outline-none",
+          // V10.1 Fix 4 — min-h-[2.5rem] keeps the tap target comfortable on mobile (~40px) without
+          // changing the visual size on desktop, where the padding alone already clears 44px hit area.
+          "min-h-[2.5rem] appearance-none rounded-full border px-3 py-1.5 pr-7 text-xs font-semibold outline-none",
           status === "Done"
             ? "border-emerald-600 bg-emerald-50 text-emerald-700"
             : status === "In progress"
@@ -315,11 +317,13 @@ function TaskAction({
   onNoteChange,
   onStatusChange,
   scripts,
+  fullWidth,
 }: {
   task: EnrichedTask;
   onNoteChange: (id: string, note: string) => void;
   onStatusChange: (id: string, status: TaskStatus) => void;
   scripts: Record<string, TaskScript>;
+  fullWidth?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -355,7 +359,7 @@ function TaskAction({
     return (
       <div className="space-y-1.5">
         {task.ruleSensitive && <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-amber-800">Research option — not an endorsement</span>}
-        <button type="button" onClick={handleCopy} className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
+        <button type="button" onClick={handleCopy} className="inline-flex min-h-[2.5rem] items-center rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
           {copied ? (
             <>
               <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Copied
@@ -388,7 +392,10 @@ function TaskAction({
         onChange={(event) => onNoteChange(task.id, event.target.value)}
         placeholder="Add a note"
         rows={2}
-        className="w-full max-w-[220px] rounded-lg border border-zinc-200/80 bg-white px-2.5 py-1.5 text-xs text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20"
+        className={classNames(
+          "w-full rounded-lg border border-zinc-200/80 bg-white px-2.5 py-1.5 text-xs text-zinc-700 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-emerald-500/20",
+          fullWidth ? "" : "max-w-[220px]",
+        )}
       />
     );
   }
@@ -400,7 +407,7 @@ function TaskAction({
         onClick={() => onStatusChange(task.id, "Done")}
         disabled={task.status === "Done"}
         className={classNames(
-          "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ease-in-out",
+          "inline-flex min-h-[2.5rem] items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ease-in-out",
           task.status === "Done" ? "cursor-not-allowed bg-zinc-100 text-zinc-400" : "bg-emerald-600 text-white hover:bg-emerald-700"
         )}
       >

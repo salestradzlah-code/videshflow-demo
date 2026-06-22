@@ -361,10 +361,22 @@ export function RouteWizard() {
   const addOnsKey = [...selection.addOns].sort().join(",");
   const progressStorageKey = isRouteReady ? `settlemap-progress-v6-${selection.fromKey}-${selection.toKey}-${selection.reasonKey}-${selection.profileKey}-${selection.petKey}-${addOnsKey}` : "settlemap-progress-v6-draft";
 
+  // V10.1 Fix 1 — treat the accommodation step as "in use" once it is open AND the user has
+  // actually entered something in it, so Singapore rental tasks appear for manual entry too
+  // (not only when the temporaryStay/contractsSetup add-ons are ticked).
+  const hasAccommodationContext = accommodationOpen && Boolean(
+    selection.accommodation.occupancy ||
+    selection.accommodation.moveInWindow ||
+    selection.accommodation.moveInDate ||
+    selection.accommodation.cooking ||
+    selection.accommodation.roomType ||
+    selection.accommodation.passType,
+  );
+
   const timeline = useMemo(() => {
     if (!isRouteReady || !selection.fromKey || !selection.toKey || !selection.reasonKey || !selection.profileKey) return [];
-    return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, selection.addOns);
-  }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, addOnsKey]);
+    return buildTimeline(selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, selection.addOns, hasAccommodationContext);
+  }, [isRouteReady, selection.fromKey, selection.toKey, selection.reasonKey, selection.profileKey, selection.petKey, addOnsKey, hasAccommodationContext]);
 
   // Derived from taskStatuses for backward-compatible progress calculation / saved-plan shape.
   const completedIds = useMemo(() => Object.keys(taskStatuses).filter((id) => taskStatuses[id] === "Done"), [taskStatuses]);

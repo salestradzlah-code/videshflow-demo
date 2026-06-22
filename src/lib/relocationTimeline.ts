@@ -385,6 +385,17 @@ function withRouteContext(task: TimelineTask, originLabel: string, destinationLa
   };
 }
 
+// V10.1 — for a domestic move, pet tasks should read as a local-only checklist, not an
+// international import/customs checklist. Strip import/customs-specific wording in that case.
+function withDomesticPetContext(task: TimelineTask, isDomestic: boolean): TimelineTask {
+  if (!isDomestic) return task;
+  return {
+    ...task,
+    title: task.title.replace("Check pet import or local pet rules", "Check local pet travel rules").replace("Check import or local pet rules for each pet", "Check local pet travel rules for each pet").replace("Check import or local rules for your pet", "Check local pet travel rules"),
+    description: task.description.replace(/Research import permits, vaccination records, microchip checks and quarantine requirements[^.]*\./, "Confirm vaccination records, microchip checks and any local transport rules for the move within the same country.").replace(/Research species-specific import rules[^.]*\./, "Confirm species-specific local transport rules and any health or microchip records needed."),
+  };
+}
+
 export function buildTimeline(
   originKey: DestinationKey,
   destinationKey: DestinationKey,
@@ -392,12 +403,16 @@ export function buildTimeline(
   profileKey: ProfileKey,
   petKey: PetKey = "none",
   addOns: AddOnKey[] = [],
+  hasAccommodationContext: boolean = false,
 ): TimelineTask[] {
   const origin = destinations.find((item) => item.key === originKey) ?? destinations[0];
   const destination = destinations.find((item) => item.key === destinationKey) ?? destinations[1];
   const reason = moveReasons.find((item) => item.key === reasonKey) ?? moveReasons[0];
   const profile = profiles.find((item) => item.key === profileKey) ?? profiles[0];
   const isDomestic = originKey === destinationKey;
+  // V10.1 Fix 1 — children/childcare/school tasks must only appear when the profile is
+  // Family with child(ren) or the user explicitly selected the Children/schooling add-on.
+  const hasChildrenContext = profileKey === "familyChild" || profileKey === "familyChildren" || addOns.includes("schooling");
 
   const routeSpecific: TimelineTask = isDomestic
     ? {
@@ -419,18 +434,29 @@ export function buildTimeline(
         category: "International relocation plan",
       };
 
-  const baseSet = isDomestic ? domesticBaseTasks : baseTasks;
+  // V10.1 Fix 1 — domestic school-transfer tasks should only appear when children are
+  // actually part of the move, not for every domestic relocation (e.g. Solo, Couple).
+  const baseSet = (isDomestic ? domesticBaseTasks : baseTasks).filter(
+    (task) => hasChildrenContext || task.id !== "school-transfer-domestic",
+  );
+  const reasonTasks = reasonAddOns[reason.key].filter(
+    (task) => hasChildrenContext || task.id !== "domestic-school-transfer",
+  );
 
   const uniqueAddOns = Array.from(new Set(addOns));
-  const wantsHousingHelp = uniqueAddOns.includes("temporaryStay") || uniqueAddOns.includes("contractsSetup");
+  // V10.1 Fix 1 — Singapore rental tasks should appear whenever housing/accommodation is
+  // actually relevant: either the user picked a housing-related add-on, or they opened and
+  // used the accommodation profile step directly (manual "+ Add accommodation" entry point).
+  const wantsHousingHelp = uniqueAddOns.includes("temporaryStay") || uniqueAddOns.includes("contractsSetup") || hasAccommodationContext;
   const singaporeChecklist = destinationKey === "singapore" && wantsHousingHelp ? singaporeRentalChecklist : [];
+  const petTasks = petAddOns[petKey].map((task) => withDomesticPetContext(task, isDomestic));
 
   return [
     routeSpecific,
     ...baseSet.map((task) => withRouteContext(task, origin.label, destination.label)),
-    ...reasonAddOns[reason.key],
+    ...reasonTasks,
     ...profileAddOns[profile.key],
-    ...petAddOns[petKey],
+    ...petTasks,
     ...uniqueAddOns.flatMap((key) => addOnTasks[key] ?? []),
     ...singaporeChecklist,
   ];
