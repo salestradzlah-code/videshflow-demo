@@ -1,4 +1,4 @@
-import { destinations, moveReasons, profiles, type AddOnKey, type DestinationKey, type MoveReasonKey, type ProfileKey, type PetKey, type TimelineTask } from "@/data/demoPlatform";
+import { destinations, moveReasons, profiles, type AddOnKey, type DestinationKey, type MoveReasonKey, type ProfileKey, type PetKey, type MoveDateKey, type TimelineTask } from "@/data/demoPlatform";
 
 const baseTasks: TimelineTask[] = [
   {
@@ -448,4 +448,28 @@ export function calculateProgress(tasks: TimelineTask[], completedIds: string[])
   if (!tasks.length) return 0;
   const completed = tasks.filter((task) => completedIds.includes(task.id)).length;
   return Math.round((completed / tasks.length) * 100);
+}
+
+// V9.2 dynamic timeline foundation. Data and labels only — no calendar integration yet.
+export type MoveDateLabel = { label: string; date: string };
+
+export function getMoveDateLabels(moveDateType: MoveDateKey | null, moveDateValue: string): MoveDateLabel[] {
+  if (moveDateType !== "exact" || !moveDateValue) return [];
+  const moveDate = new Date(`${moveDateValue}T00:00:00`);
+  if (Number.isNaN(moveDate.getTime())) return [];
+
+  function offset(days: number, label: string): MoveDateLabel {
+    const d = new Date(moveDate);
+    d.setDate(d.getDate() + days);
+    return { label, date: d.toISOString().slice(0, 10) };
+  }
+
+  return [
+    offset(-90, "90 days before move"),
+    offset(-30, "30 days before move"),
+    offset(-7, "7 days before move"),
+    offset(0, "Arrival week"),
+    offset(30, "First 30 days"),
+    offset(90, "First 90 days"),
+  ];
 }

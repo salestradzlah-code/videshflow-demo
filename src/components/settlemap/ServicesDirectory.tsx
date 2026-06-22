@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { InfoBanner } from "@/components/ui/InfoBanner";
 import { DIRECTORY_DISCLAIMER } from "@/lib/constants";
+import { ACTION_LINKS_NOT_ENDORSEMENT, actionLinkCategories, singaporeOfficialLinkCategories } from "@/data/demoPlatform";
 
 type ServiceGroup = "Housing" | "Moving and goods" | "Connectivity and utilities" | "Money and insurance" | "Health and family" | "Transport and admin";
 
@@ -202,6 +203,42 @@ export function ServicesDirectory() {
             </p>
           </div>
         ))}
+      </div>
+
+      <div className="mt-12 border-t border-zinc-200/80 pt-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Action links</p>
+        <h2 className="mt-2 text-2xl font-semibold text-zinc-900">Where to start for each category</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-600">{ACTION_LINKS_NOT_ENDORSEMENT}</p>
+
+        <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {actionLinkCategories.map((category) => (
+            <div key={category.key} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+              <h3 className="text-base font-semibold text-zinc-900">{category.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-600">{category.whatToDo}</p>
+              <p className="mt-3 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
+                Where to start: <span className="font-medium text-zinc-600">{category.whereToStart}</span>
+              </p>
+              <p className="mt-2 text-xs text-zinc-400">Verify from official website. Not an endorsement.</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Singapore official links</p>
+          <h3 className="mt-2 text-lg font-semibold text-zinc-900">If your move involves Singapore</h3>
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {singaporeOfficialLinkCategories.map((category) => (
+              <div key={category.key} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+                <h3 className="text-base font-semibold text-zinc-900">{category.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-600">{category.whatToDo}</p>
+                <p className="mt-3 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
+                  Where to start: <span className="font-medium text-zinc-600">{category.whereToStart}</span>
+                </p>
+                <p className="mt-2 text-xs text-zinc-400">Verify from official website. Not an endorsement.</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

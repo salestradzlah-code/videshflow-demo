@@ -290,12 +290,67 @@ export const smokingOptions = [
   { key: "preferNotToSay", label: "Prefer not to say" },
 ] as const;
 
-export const transportPrefOptions = [
-  { key: "nearMrtLrt", label: "Near MRT / LRT" },
+export const transportPrefOptionsDefault = [
+  { key: "nearPublicTransport", label: "Near public transport" },
   { key: "directBus", label: "Direct bus" },
   { key: "maxCommute", label: "Max commute time" },
   { key: "flexible", label: "Flexible" },
 ] as const;
+
+const usCaTransportOptions = [
+  { key: "nearSubwayMetroRail", label: "Near subway / metro / rail" },
+  { key: "directBus", label: "Direct bus" },
+  { key: "maxCommute", label: "Max commute time" },
+  { key: "drivingPreferred", label: "Driving preferred" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+const gulfTransportOptions = [
+  { key: "nearMetroBusTaxi", label: "Near metro / bus / taxi access" },
+  { key: "drivingPreferred", label: "Driving preferred" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+const euTransportOptions = [
+  { key: "nearMetroTramRail", label: "Near metro / tram / rail" },
+  { key: "walkableNeighbourhood", label: "Walkable neighbourhood" },
+  { key: "flexible", label: "Flexible" },
+] as const;
+
+export const transportPrefOptionsByDestination: Record<string, ReadonlyArray<{ key: string; label: string }>> = {
+  singapore: [
+    { key: "nearMrtLrt", label: "Near MRT / LRT" },
+    { key: "directBus", label: "Direct bus" },
+    { key: "maxCommute", label: "Max commute time" },
+    { key: "flexible", label: "Flexible" },
+  ],
+  "united-kingdom": [
+    { key: "nearTubeRail", label: "Near Tube / rail" },
+    { key: "directBus", label: "Direct bus" },
+    { key: "maxCommute", label: "Max commute time" },
+    { key: "flexible", label: "Flexible" },
+  ],
+  "united-states": usCaTransportOptions,
+  canada: usCaTransportOptions,
+  australia: [
+    { key: "nearTrainTramBus", label: "Near train / tram / bus" },
+    { key: "maxCommute", label: "Max commute time" },
+    { key: "drivingPreferred", label: "Driving preferred" },
+    { key: "flexible", label: "Flexible" },
+  ],
+  "united-arab-emirates": gulfTransportOptions,
+  "saudi-gulf": gulfTransportOptions,
+  "germany-eu": euTransportOptions,
+  portugal: euTransportOptions,
+};
+
+export function getTransportPrefOptions(destinationKey: DestinationKey | null): ReadonlyArray<{ key: string; label: string }> {
+  if (!destinationKey) return transportPrefOptionsDefault;
+  return transportPrefOptionsByDestination[destinationKey] ?? transportPrefOptionsDefault;
+}
+
+// Kept for back-compatibility — generic fallback array.
+export const transportPrefOptions = transportPrefOptionsDefault;
 
 export const passTypeOptions = [
   { key: "ep", label: "EP" },
@@ -405,6 +460,50 @@ export const realStories = [
     outcome: "A 30-day domestic checklist kept school transfer, address changes and utility switches on schedule.",
   },
 ];
+
+export const moveDateOptions = [
+  { key: "exact", label: "Exact date" },
+  { key: "endOfMonth", label: "End of month" },
+  { key: "flexible", label: "Flexible" },
+  { key: "notSure", label: "Not sure yet" },
+] as const;
+
+export type MoveDateKey = (typeof moveDateOptions)[number]["key"];
+
+export type ActionLinkCategory = {
+  key: string;
+  title: string;
+  whatToDo: string;
+  whereToStart: string;
+};
+
+// Generic, destination-agnostic action categories. No external URLs are included on purpose —
+// users are pointed to "verify from official website" rather than risk an unverified link.
+export const actionLinkCategories: ActionLinkCategory[] = [
+  { key: "official", title: "Official government links", whatToDo: "Confirm visa, residency, tax and work-pass rules directly from the destination government.", whereToStart: "Search the destination country's official immigration or government portal." },
+  { key: "housing", title: "Housing / rental", whatToDo: "Compare rental listings, deposits and lease terms before committing.", whereToStart: "Search licensed rental portals or registered agents for your destination city." },
+  { key: "sim", title: "SIM / eSIM / internet", whatToDo: "Activate a local SIM or eSIM and compare home broadband plans.", whereToStart: "Search the destination's major telecom providers directly." },
+  { key: "banking", title: "Banking / remittance", whatToDo: "Compare local bank accounts and remittance or FX providers.", whereToStart: "Search licensed banks and regulated remittance providers serving your destination." },
+  { key: "insurance", title: "Insurance", whatToDo: "Compare health, travel, renter and vehicle insurance options.", whereToStart: "Search licensed insurance providers or official comparison sites for your destination." },
+  { key: "healthcare", title: "Healthcare", whatToDo: "Register with a clinic and confirm prescription continuity.", whereToStart: "Search the destination's official healthcare or health ministry portal." },
+  { key: "schooling", title: "Schooling / childcare", whatToDo: "Check admission timelines, catchments and waitlists.", whereToStart: "Search the destination's official education ministry or school admission portal." },
+  { key: "movers", title: "Movers / shipping", whatToDo: "Compare mover quotes, insurance cover and customs handling.", whereToStart: "Search licensed international or local movers serving your route." },
+  { key: "transport", title: "Transport / driving", whatToDo: "Check licence conversion, IDP rules and public transport options.", whereToStart: "Search the destination's official transport authority website." },
+  { key: "pets", title: "Pets", whatToDo: "Check import permits, vaccination and quarantine requirements.", whereToStart: "Search the destination's official agriculture or biosecurity authority website." },
+];
+
+// Singapore-specific official link categories — verbatim from the V9 official links section,
+// kept here so both the route wizard and the Services Directory can share one source of truth.
+export const singaporeOfficialLinkCategories: ActionLinkCategory[] = [
+  { key: "hdb", title: "HDB renting / tenant eligibility", whatToDo: "Confirm HDB rental eligibility, subletting rules and registration requirements.", whereToStart: "Search the official HDB website." },
+  { key: "ura", title: "URA private residential rental guidance", whatToDo: "Confirm private residential rental guidance for condos and private property.", whereToStart: "Search the official URA website." },
+  { key: "cea", title: "CEA public register for property agents", whatToDo: "Verify an agent's registration before engaging them.", whereToStart: "Search the official CEA public register." },
+  { key: "iras", title: "IRAS stamp duty for tenancy agreements", whatToDo: "Confirm stamp duty obligations for your tenancy agreement.", whereToStart: "Search the official IRAS website." },
+  { key: "mom", title: "MOM address update / pass holder address", whatToDo: "Update your address as a pass holder where required.", whereToStart: "Search the official MOM website." },
+];
+
+export const ACTION_LINKS_NOT_ENDORSEMENT =
+  "These categories are research starting points, not endorsements or recommendations. SettleMap does not verify listings, agents, landlords, visas, taxes, insurance, schools or service providers. Always verify rule-sensitive matters with official sources.";
 
 export type Destination = (typeof destinations)[number];
 export type MoveReason = (typeof moveReasons)[number];

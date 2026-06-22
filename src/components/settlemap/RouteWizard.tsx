@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, Copy, ExternalLink, FileSearch, Globe2, Plane, RefreshCcw, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
-import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, moveInWindowOptions, moveReasons, occupancyOptions, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, smokingOptions, transportPrefOptions, type AddOnKey, type Destination, type DestinationKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
-import { buildTimeline, calculateProgress, groupByPhase } from "@/lib/relocationTimeline";
+import { ArrowRight, Bot, CalendarDays, CheckCircle2, Clock3, Copy, FileSearch, Globe2, Plane, RefreshCcw, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
+import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey, type TimelineTask } from "@/data/demoPlatform";
+import { buildTimeline, calculateProgress, getMoveDateLabels, groupByPhase } from "@/lib/relocationTimeline";
 import { DISCLAIMER_SHORT } from "@/lib/constants";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
@@ -67,6 +67,8 @@ type RouteSelection = {
   petKey: PetKey;
   addOns: AddOnKey[];
   accommodation: AccommodationProfile;
+  moveDateType: MoveDateKey | null;
+  moveDateValue: string;
 };
 
 const initialSelection: RouteSelection = {
@@ -79,7 +81,34 @@ const initialSelection: RouteSelection = {
   petKey: "none",
   addOns: [],
   accommodation: initialAccommodation,
+  moveDateType: null,
+  moveDateValue: "",
 };
+
+// V9.2 save/resume plan. Stores the full plan in this browser only — nothing is sent to a server.
+const SAVED_PLAN_KEY = "settlemap-saved-plan-v1";
+
+type SavedPlan = {
+  selection: RouteSelection;
+  step: number;
+  completedIds: string[];
+  confirmed: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+function loadSavedPlan(): SavedPlan | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(SAVED_PLAN_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as SavedPlan;
+    if (!parsed || typeof parsed !== "object") return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
 
 const ACCOMMODATION_TRIGGER_ADDONS: AddOnKey[] = ["temporaryStay", "contractsSetup"];
 
@@ -88,7 +117,7 @@ function labelFor(options: ReadonlyArray<{ key: string; label: string }>, key: s
   return options.find((item) => item.key === key)?.label ?? null;
 }
 
-function buildTenantBio(accommodation: AccommodationProfile, destinationLabel: string): string {
+function buildTenantBio(accommodation: AccommodationProfile, destinationLabel: string, destinationKey: DestinationKey | null): string {
   const lines: string[] = [];
   lines.push(`Hi, I am looking for accommodation in ${destinationLabel}.`);
   lines.push("Profile:");
@@ -126,7 +155,7 @@ function buildTenantBio(accommodation: AccommodationProfile, destinationLabel: s
 
   if (accommodation.preferredAreas) lines.push(`Preferred areas: ${accommodation.preferredAreas}`);
 
-  const transportPref = labelFor(transportPrefOptions, accommodation.transportPref);
+  const transportPref = labelFor(getTransportPrefOptions(destinationKey), accommodation.transportPref);
   if (transportPref) lines.push(`Transport: ${transportPref} preferred`);
 
   const inclusionNotes: string[] = [];
@@ -166,14 +195,6 @@ const singaporeRentalSafetyChecklist = [
   "Clarify utilities, WiFi, aircon servicing and repair clause",
   "Clarify cooking and visitor policy",
   "Take inventory photos on Day 1",
-];
-
-const officialLinkCategories = [
-  { title: "HDB renting / tenant eligibility", href: null },
-  { title: "URA private residential rental guidance", href: null },
-  { title: "CEA public register for property agents", href: null },
-  { title: "IRAS stamp duty for tenancy agreements", href: null },
-  { title: "MOM address update / pass holder address", href: null },
 ];
 
 const WIZARD_STEPS = ["Route", "Reason", "Profile", "Add-ons"] as const;
@@ -222,6 +243,41 @@ export function RouteWizard() {
   const [confirmed, setConfirmed] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
   const [showAccommodation, setShowAccommodation] = useState(false);
+  const [savedPlan, setSavedPlan] = useState<SavedPlan | null>(null);
+  const [showSavedBanner, setShowSavedBanner] = useState(false);
+  const [resumedFromSave, setResumedFromSave] = useState(false);
+
+  // V9.2 Part 5 — check for a saved plan once on mount. Resuming or starting new is the user's choice.
+  useEffect(() => {
+    const found = loadSavedPlan();
+    if (found) {
+      setSavedPlan(found);
+      setShowSavedBanner(true);
+    }
+  }, []);
+
+  function resumeSavedPlan() {
+    if (!savedPlan) return;
+    setSelection(savedPlan.selection);
+    setCompletedIds(savedPlan.completedIds ?? []);
+    setStep(savedPlan.step ?? 1);
+    setConfirmed(Boolean(savedPlan.confirmed));
+    setShowSavedBanner(false);
+    setResumedFromSave(true);
+  }
+
+  function startNewPlan() {
+    try {
+      localStorage.removeItem(SAVED_PLAN_KEY);
+    } catch {}
+    setSavedPlan(null);
+    setShowSavedBanner(false);
+    setSelection(initialSelection);
+    setCompletedIds([]);
+    setStep(1);
+    setConfirmed(false);
+    setResumedFromSave(false);
+  }
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -313,6 +369,26 @@ export function RouteWizard() {
     } catch {}
   }, [completedIds, isRouteReady, progressStorageKey]);
 
+  // V9.2 Part 5 — persist the full plan (route, profile, accommodation, progress, step) in this browser only.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!selection.fromKey && !selection.toKey) return;
+    try {
+      const existingRaw = localStorage.getItem(SAVED_PLAN_KEY);
+      const existing = existingRaw ? (JSON.parse(existingRaw) as SavedPlan) : null;
+      const createdAt = existing?.createdAt ?? new Date().toISOString();
+      const plan: SavedPlan = {
+        selection,
+        step,
+        completedIds,
+        confirmed,
+        createdAt,
+        updatedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(SAVED_PLAN_KEY, JSON.stringify(plan));
+    } catch {}
+  }, [selection, step, completedIds, confirmed]);
+
   function updateSelection<K extends keyof RouteSelection>(key: K, value: RouteSelection[K]) {
     setSelection((current) => ({ ...current, [key]: value }));
   }
@@ -374,6 +450,27 @@ export function RouteWizard() {
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       <Hero />
 
+      {showSavedBanner && savedPlan && (
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mt-2 max-w-5xl rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-4 sm:px-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-emerald-800">Resume your saved move plan</p>
+                <p className="mt-1 text-xs leading-5 text-emerald-700">Saved in this browser only. No login.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={resumeSavedPlan} className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2">
+                  Resume plan
+                </button>
+                <button type="button" onClick={startNewPlan} className="rounded-full border border-emerald-300 bg-white px-5 py-2.5 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:border-emerald-400">
+                  Start new plan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <section id="route-selector" className="px-4 pb-10 pt-2 sm:px-6 lg:px-8">
         <div className="mx-auto mt-8 max-w-5xl rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8 lg:mt-12">
           {!showDashboard ? (
@@ -393,7 +490,7 @@ export function RouteWizard() {
                 <WizardStep
                   eyebrow="Step 1 of 4"
                   title="Where are you moving from and to?"
-                  description="Cities are optional. SettleMap covers international routes and domestic moves within the same country."
+                  description="Start like a travel search. Pick your current country and destination. Cities are optional."
                 >
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div className="space-y-3">
@@ -418,6 +515,24 @@ export function RouteWizard() {
                       />
                       <CityField label="City (optional)" value={selection.toCity} onChange={(value) => updateSelection("toCity", value)} />
                     </div>
+                  </div>
+
+                  <div className="mt-6 border-t border-zinc-100 pt-6">
+                    <p className="mb-2 text-sm font-semibold text-zinc-900">When are you planning to move? (optional)</p>
+                    <p className="mb-3 text-xs leading-5 text-zinc-500">Used to personalise your timeline later. You can change this anytime.</p>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {moveDateOptions.map((item) => (
+                        <ChoiceCard key={item.key} label={item.label} active={selection.moveDateType === item.key} onClick={() => updateSelection("moveDateType", item.key as MoveDateKey)} />
+                      ))}
+                    </div>
+                    {selection.moveDateType === "exact" && (
+                      <input
+                        type="date"
+                        value={selection.moveDateValue}
+                        onChange={(event) => updateSelection("moveDateValue", event.target.value)}
+                        className="mt-3 w-full max-w-xs rounded-xl border border-zinc-200/80 bg-white px-4 py-2.5 text-sm text-zinc-700 outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      />
+                    )}
                   </div>
                 </WizardStep>
               )}
@@ -487,6 +602,7 @@ export function RouteWizard() {
                         onChange={updateAccommodation}
                         isSingapore={selection.toKey === "singapore"}
                         destinationLabel={destination?.label ?? selection.toKey ?? "your destination"}
+                        destinationKey={selection.toKey}
                         onCollapse={wantsAccommodationHelp ? undefined : () => setShowAccommodation(false)}
                       />
                     )}
@@ -546,11 +662,11 @@ export function RouteWizard() {
 
       {showDashboard && origin && destination && reason && profile && (
         <>
-          <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} isDomestic={isDomestic} />
+          <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} isDomestic={isDomestic} moveDateType={selection.moveDateType} moveDateValue={selection.moveDateValue} />
 
           <section id="timeline-dashboard" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.28fr_0.72fr]">
-              <TimelineBoard grouped={grouped} completedIds={completedIds} onToggle={toggleTask} onReset={resetProgress} progress={progress} />
+              <TimelineBoard grouped={grouped} completedIds={completedIds} onToggle={toggleTask} onReset={resetProgress} progress={progress} moveDateType={selection.moveDateType} moveDateValue={selection.moveDateValue} />
               <RouteStarterKit origin={origin} destination={destination} reasonFocus={reason.focus} profileFocus={profile.focus} routeLabel={routeLabel} isDomestic={isDomestic} />
             </div>
           </section>
@@ -649,14 +765,17 @@ function AccommodationProfileSection({
   onChange,
   isSingapore,
   destinationLabel,
+  destinationKey,
   onCollapse,
 }: {
   accommodation: AccommodationProfile;
   onChange: <K extends keyof AccommodationProfile>(key: K, value: AccommodationProfile[K]) => void;
   isSingapore: boolean;
   destinationLabel: string;
+  destinationKey: DestinationKey | null;
   onCollapse?: () => void;
 }) {
+  const transportOptions = getTransportPrefOptions(destinationKey);
   return (
     <div className="rounded-xl border border-zinc-200/80 bg-zinc-50 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -742,9 +861,9 @@ function AccommodationProfileSection({
         </div>
 
         <div>
-          <p className="mb-2 text-sm font-semibold text-zinc-900">Transport preference</p>
+          <p className="mb-2 text-sm font-semibold text-zinc-900">Public transport preference</p>
           <div className="grid gap-2 sm:grid-cols-2">
-            {transportPrefOptions.map((item) => (
+            {transportOptions.map((item) => (
               <ChoiceCard key={item.key} label={item.label} active={accommodation.transportPref === item.key} onClick={() => onChange("transportPref", item.key)} />
             ))}
           </div>
@@ -797,21 +916,23 @@ function AccommodationProfileSection({
         </div>
       )}
 
-      <TenantBioPreview accommodation={accommodation} destinationLabel={destinationLabel} />
+      <TenantBioPreview accommodation={accommodation} destinationLabel={destinationLabel} destinationKey={destinationKey} />
+
+      <ScriptsToCopySection accommodation={accommodation} destinationLabel={destinationLabel} isSingapore={isSingapore} />
 
       {isSingapore && <SingaporeRentalSafetyChecklist />}
       {isSingapore && <OfficialLinksSection />}
 
       <p className="mt-5 text-xs leading-6 text-zinc-500">
-        Only share what you are comfortable sharing. This tenant bio is generated in your browser for copying to agents or landlords. SettleMap does not verify listings, agents, landlords, quotas, contracts or legal eligibility.
+        Only share what you are comfortable sharing. This tenant bio is generated in your browser for copying to agents or landlords. SettleMap does not verify listings, agents, landlords, quotas, contracts or legal eligibility. Saved in your browser only.
       </p>
     </div>
   );
 }
 
-function TenantBioPreview({ accommodation, destinationLabel }: { accommodation: AccommodationProfile; destinationLabel: string }) {
+function TenantBioPreview({ accommodation, destinationLabel, destinationKey }: { accommodation: AccommodationProfile; destinationLabel: string; destinationKey: DestinationKey | null }) {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
-  const bioText = useMemo(() => buildTenantBio(accommodation, destinationLabel), [accommodation, destinationLabel]);
+  const bioText = useMemo(() => buildTenantBio(accommodation, destinationLabel, destinationKey), [accommodation, destinationLabel, destinationKey]);
 
   async function handleCopy() {
     try {
@@ -885,24 +1006,102 @@ function OfficialLinksSection() {
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Official links to verify</p>
       <p className="mt-1 text-sm leading-6 text-zinc-600">Always confirm details directly on the official website before relying on them.</p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
-        {officialLinkCategories.map((category) =>
-          category.href ? (
-            <a
-              key={category.title}
-              href={category.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-200/80 bg-white p-3 text-sm font-medium text-emerald-700 transition-all duration-200 ease-in-out hover:border-zinc-300"
-            >
-              {category.title} <ExternalLink className="h-4 w-4 shrink-0" />
-            </a>
-          ) : (
-            <div key={category.title} className="rounded-xl bg-zinc-50 p-3 text-sm leading-6 text-zinc-700">
-              <p className="font-medium text-zinc-900">{category.title}</p>
-              <p className="mt-1 text-xs font-semibold text-zinc-500">Verify from official website</p>
+        {singaporeOfficialLinkCategories.map((category) => (
+          <div key={category.key} className="rounded-xl bg-zinc-50 p-3 text-sm leading-6 text-zinc-700">
+            <p className="font-medium text-zinc-900">{category.title}</p>
+            <p className="mt-1 text-xs leading-5 text-zinc-600">{category.whatToDo}</p>
+            <p className="mt-1 text-xs font-semibold text-zinc-500">Verify from official website</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// V9.2 Part 8 — communication copilot foundation. Template-based only, no real AI.
+function buildScripts(accommodation: AccommodationProfile, destinationLabel: string, isSingapore: boolean): { title: string; text: string }[] {
+  const moveInWindow = labelFor(moveInWindowOptions, accommodation.moveInWindow);
+  const moveInText = accommodation.moveInDate || moveInWindow || "a suitable date";
+  const cooking = labelFor(cookingOptions, accommodation.cooking);
+
+  const scripts = [
+    {
+      title: "Message landlord / agent",
+      text: `Hi, I am interested in this place in ${destinationLabel}. Could you share more details and let me know if a viewing is possible? Thank you.`,
+    },
+    {
+      title: "Ask about cooking",
+      text: cooking
+        ? `Hi, just to confirm — is ${cooking.toLowerCase()} allowed in this unit? Are there any restrictions I should know about?`
+        : `Hi, could you confirm the cooking policy for this unit — is daily cooking allowed, or only light cooking?`,
+    },
+    {
+      title: "Ask about utilities and WiFi",
+      text: "Hi, could you confirm if utilities and WiFi are included in the rent, or billed separately? What is the typical monthly cost?",
+    },
+    {
+      title: isSingapore ? "Ask about HDB/condo registration" : "Ask about registration requirements",
+      text: isSingapore
+        ? "Hi, for this unit, will the tenant be properly registered with HDB or the relevant authority? Can you confirm the landlord's approval process?"
+        : "Hi, are there any local registration or paperwork requirements for a new tenant moving in? Could you guide me through the process?",
+    },
+    {
+      title: "Ask about move-in date",
+      text: `Hi, I am hoping to move in around ${moveInText}. Is this date workable, or is there flexibility either way?`,
+    },
+    {
+      title: "Ask about agent fee",
+      text: accommodation.agentFee
+        ? `Hi, just to confirm the agent fee noted is "${accommodation.agentFee}" — is this the final amount, and when is it payable?`
+        : "Hi, could you confirm if there is an agent fee for this unit, and if so, how much and when it is payable?",
+    },
+  ];
+
+  return scripts;
+}
+
+function ScriptsToCopySection({ accommodation, destinationLabel, isSingapore }: { accommodation: AccommodationProfile; destinationLabel: string; isSingapore: boolean }) {
+  const [copiedTitle, setCopiedTitle] = useState<string | null>(null);
+  const scripts = useMemo(() => buildScripts(accommodation, destinationLabel, isSingapore), [accommodation, destinationLabel, isSingapore]);
+
+  async function handleCopy(title: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedTitle(title);
+      setTimeout(() => setCopiedTitle(null), 2500);
+    } catch {
+      setCopiedTitle(null);
+    }
+  }
+
+  return (
+    <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-5 sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Scripts to copy</p>
+      <p className="mt-1 text-sm leading-6 text-zinc-600">Template-based messages you can copy and send. Not AI-generated. Edit before sending.</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {scripts.map((script) => (
+          <div key={script.title} className="rounded-xl bg-zinc-50 p-4">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-sm font-semibold text-zinc-900">{script.title}</p>
+              <button
+                type="button"
+                onClick={() => handleCopy(script.title, script.text)}
+                className="inline-flex shrink-0 items-center rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
+              >
+                {copiedTitle === script.title ? (
+                  <>
+                    <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-1.5 h-3.5 w-3.5" /> Copy
+                  </>
+                )}
+              </button>
             </div>
-          )
-        )}
+            <p className="mt-2 text-xs leading-5 text-zinc-600">{script.text}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -965,7 +1164,9 @@ function PreSelectionGuide() {
   );
 }
 
-function Dashboard({ origin, destination, reason, profile, progress, completed, total, routeLabel, isDomestic }: { origin: Destination; destination: Destination; reason: MoveReason; profile: Profile; progress: number; completed: number; total: number; routeLabel: string; isDomestic: boolean }) {
+function Dashboard({ origin, destination, reason, profile, progress, completed, total, routeLabel, isDomestic, moveDateType, moveDateValue }: { origin: Destination; destination: Destination; reason: MoveReason; profile: Profile; progress: number; completed: number; total: number; routeLabel: string; isDomestic: boolean; moveDateType: MoveDateKey | null; moveDateValue: string }) {
+  const moveDateLabel = labelFor(moveDateOptions, moveDateType);
+  const moveDateSummary = moveDateType === "exact" && moveDateValue ? moveDateValue : moveDateLabel;
   return (
     <section id="dashboard-top" className="scroll-mt-24 px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -980,6 +1181,7 @@ function Dashboard({ origin, destination, reason, profile, progress, completed, 
               <InfoPill label="Who is moving" value={profile.label} />
               <InfoPill label="To climate" value={destination.climate} />
               <InfoPill label="Progress" value={`${completed}/${total} tasks`} />
+              <InfoPill label="Target move date" value={moveDateSummary ?? "Not set"} />
             </div>
           </div>
           <div className="rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm">
@@ -1025,8 +1227,9 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function TimelineBoard({ grouped, completedIds, onToggle, onReset, progress }: { grouped: Record<string, TimelineTask[]>; completedIds: string[]; onToggle: (id: string) => void; onReset: () => void; progress: number }) {
+function TimelineBoard({ grouped, completedIds, onToggle, onReset, progress, moveDateType, moveDateValue }: { grouped: Record<string, TimelineTask[]>; completedIds: string[]; onToggle: (id: string) => void; onReset: () => void; progress: number; moveDateType: MoveDateKey | null; moveDateValue: string }) {
   const phases = ["Before you move", "Days 1 to 7", "Days 8 to 30", "Days 31 to 90"];
+  const dateLabels = getMoveDateLabels(moveDateType, moveDateValue);
 
   return (
     <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-7">
@@ -1040,6 +1243,26 @@ function TimelineBoard({ grouped, completedIds, onToggle, onReset, progress }: {
           <RefreshCcw className="mr-2 inline h-4 w-4" /> Reset
         </button>
       </div>
+
+      {moveDateType ? (
+        <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+          {dateLabels.length > 0 ? (
+            <>
+              <p className="font-semibold">Key dates around your move</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dateLabels.map((entry) => (
+                  <span key={entry.label} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700">
+                    {entry.label}: {entry.date}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-emerald-700">Timeline can be personalised around your move date in a future version.</p>
+            </>
+          ) : (
+            <p>Timeline can be personalised around your move date in a future version.</p>
+          )}
+        </div>
+      ) : null}
 
       <div className="mt-6 h-1 overflow-hidden rounded-full bg-zinc-100">
         <div className="h-1 rounded-full bg-emerald-600 transition-all duration-300 ease-in-out" style={{ width: `${progress}%` }} />
