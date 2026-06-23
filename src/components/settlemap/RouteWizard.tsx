@@ -978,30 +978,30 @@ function GetMoreHelpSection() {
     },
     {
       key: "personalised",
-      label: "Coming soon",
+      label: "Pilot interest list",
       title: "Personalised route plan",
       price: "From S$19",
-      copy: "A more detailed plan for your route, timeline, housing, documents and first 30 days.",
+      copy: "Automated route-specific plan, 90-day checklist, official-source reminders, housing/document/first-30-days steps, copy-ready scripts. Download/print-ready format planned.",
       cta: "Join pilot interest list",
       href: TALLY_FORM_URL,
       event: "paid_plan_interest_clicked" as const,
     },
     {
       key: "premium",
-      label: "Coming soon",
+      label: "Pilot interest list",
       title: "Premium relocation pack",
       price: "From S$49",
-      copy: "Includes checklists, scripts, official-source reminders, budgeting prompts and first-week setup plan.",
+      copy: "Everything in the personalised route plan, plus a detailed move checklist, budget and document templates, first-week setup plan, and family/student/pet/senior add-ons where relevant.",
       cta: "Request early access",
       href: "/early-access",
       event: "paid_plan_interest_clicked" as const,
     },
     {
       key: "concierge",
-      label: "Pilot interest",
+      label: "Limited future pilot — not active yet",
       title: "Concierge planning call",
       price: "From S$79",
-      copy: "A planning walkthrough for your route. Not legal, immigration, tax, property, financial, medical, insurance or school advice.",
+      copy: "A planning walkthrough and Q&A on using SettleMap. Not active yet, no guarantee of availability. Not legal, immigration, tax, property, financial, medical, insurance or school advice.",
       cta: "Request concierge interest",
       href: TALLY_FORM_URL,
       event: "concierge_interest_clicked" as const,
@@ -1050,6 +1050,10 @@ function GetMoreHelpSection() {
           })}
         </div>
         <p className="mt-6 max-w-3xl text-xs leading-6 text-zinc-500">{COMMERCIAL_LINKS_NOTE}</p>
+        <p className="mt-3 max-w-3xl text-xs leading-6 text-zinc-500">
+          Not included yet: legal, immigration, property, financial/tax/insurance/medical/school advice, human review, or any booking/payment/submission/provider contact by SettleMap.{" "}
+          <Link href="/pricing" className="font-semibold text-emerald-700 hover:text-emerald-800">See full pricing details</Link>.
+        </p>
       </div>
     </section>
   );

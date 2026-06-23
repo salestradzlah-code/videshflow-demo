@@ -32,6 +32,7 @@ type ServiceCategory = {
   description: string;
   examples: string[];
   whenToResearch: string;
+  nextSteps: string[];
 };
 
 const GROUPS: ServiceGroup[] = ["Housing", "Moving and goods", "Connectivity and utilities", "Money and insurance", "Health and family", "Transport and admin"];
@@ -44,6 +45,12 @@ const categories: ServiceCategory[] = [
     description: "Packing, shipping, customs handling and destination delivery for your belongings.",
     examples: ["Door-to-door movers", "Air and sea freight", "Excess baggage services"],
     whenToResearch: "8 to 12 weeks before your move date.",
+    nextSteps: [
+      "Compare 2-3 mover quotes",
+      "Check insurance cover and customs handling",
+      "Confirm pickup and delivery windows",
+      "Book directly with provider only when ready",
+    ],
   },
   {
     title: "Temporary stay",
@@ -52,6 +59,12 @@ const categories: ServiceCategory[] = [
     description: "Short-term accommodation to bridge the gap before a long-term rental is signed.",
     examples: ["Serviced apartments", "Extended-stay hotels", "Corporate housing"],
     whenToResearch: "As soon as your arrival date is confirmed.",
+    nextSteps: [
+      "Shortlist 2-3 options",
+      "Check cancellation rules",
+      "Confirm commute and arrival timing",
+      "Book directly with provider only when ready",
+    ],
   },
   {
     title: "Long-term housing",
@@ -60,6 +73,12 @@ const categories: ServiceCategory[] = [
     description: "Rental or purchase research, including neighbourhoods, commute and lease terms.",
     examples: ["Rental portals", "Letting agents", "Neighbourhood comparisons"],
     whenToResearch: "Once you have a temporary stay booked and know your work or school location.",
+    nextSteps: [
+      "Understand local rental rules",
+      "Prepare tenant bio",
+      "Verify agent/licensing where applicable",
+      "Compare lease terms and deposit rules directly",
+    ],
   },
   {
     title: "SIM / eSIM and internet",
@@ -68,6 +87,12 @@ const categories: ServiceCategory[] = [
     description: "Local mobile connectivity and home broadband options for your destination.",
     examples: ["Prepaid and postpaid SIM plans", "eSIM providers", "Home broadband packages"],
     whenToResearch: "Before arrival, so you can activate connectivity on day one.",
+    nextSteps: [
+      "Compare prepaid vs postpaid plans",
+      "Check coverage and data allowance",
+      "Confirm activation requirements (ID, address)",
+      "Activate directly with provider before or on arrival",
+    ],
   },
   {
     title: "TV / cable / WiFi setup",
@@ -76,6 +101,12 @@ const categories: ServiceCategory[] = [
     description: "Home entertainment and WiFi installation once a lease is signed.",
     examples: ["Cable and streaming bundles", "Router and installation services"],
     whenToResearch: "Once your new address is confirmed.",
+    nextSteps: [
+      "Compare bundle pricing and contract length",
+      "Check installation lead time",
+      "Confirm equipment and router requirements",
+      "Book installation directly once lease is signed",
+    ],
   },
   {
     title: "Utilities",
@@ -84,6 +115,12 @@ const categories: ServiceCategory[] = [
     description: "Electricity, water and gas setup, transfer or cancellation at each address.",
     examples: ["New connection applications", "Final meter readings", "Transfer to new occupant"],
     whenToResearch: "When giving notice at your old address and signing at the new one.",
+    nextSteps: [
+      "Confirm provider for each utility at the new address",
+      "Submit new-connection or transfer application",
+      "Take final meter readings at the old address",
+      "Set up billing directly with provider",
+    ],
   },
   {
     title: "Banking and remittance",
@@ -92,6 +129,12 @@ const categories: ServiceCategory[] = [
     description: "Local account access, home-country OTP continuity and international transfers.",
     examples: ["Local bank accounts", "Remittance and FX providers", "Home SIM OTP continuity plans"],
     whenToResearch: "Before you travel and again within your first two weeks.",
+    nextSteps: [
+      "Compare account fees and remittance rates",
+      "Check documents required to open an account",
+      "Confirm home-country OTP continuity plan",
+      "Open an account or transfer directly with provider",
+    ],
   },
   {
     title: "Insurance",
@@ -100,6 +143,12 @@ const categories: ServiceCategory[] = [
     description: "Travel, health, renter, vehicle and pet insurance compared directly with providers.",
     examples: ["Travel and health insurance", "Renter's or home insurance", "Vehicle insurance"],
     whenToResearch: "Before departure for travel cover, then again after you settle into a home.",
+    nextSteps: [
+      "Review official guidance",
+      "Compare exclusions and waiting periods",
+      "Confirm provider/license directly",
+      "Keep policy documents in relocation folder",
+    ],
   },
   {
     title: "Healthcare and medicines",
@@ -108,6 +157,12 @@ const categories: ServiceCategory[] = [
     description: "Clinic registration, prescription continuity and emergency care access.",
     examples: ["GP or clinic registration", "Prescription transfer", "Emergency contact numbers"],
     whenToResearch: "Within your first two weeks, sooner for ongoing prescriptions.",
+    nextSteps: [
+      "Check official eligibility/registration rules",
+      "Find registered providers",
+      "Prepare prescriptions and medical records",
+      "Confirm emergency numbers",
+    ],
   },
   {
     title: "Schooling and childcare",
@@ -116,6 +171,12 @@ const categories: ServiceCategory[] = [
     description: "School admission timelines, childcare options and curriculum transition.",
     examples: ["School admission portals", "Childcare and nursery options", "Curriculum transcripts"],
     whenToResearch: "As early as possible — admission windows and waitlists move fast.",
+    nextSteps: [
+      "Check admission timelines and catchment rules",
+      "Shortlist 2-3 schools or childcare options",
+      "Prepare records, transcripts and vaccination history",
+      "Confirm directly with the admissions office",
+    ],
   },
   {
     title: "Pets",
@@ -124,6 +185,12 @@ const categories: ServiceCategory[] = [
     description: "Import rules, vaccination records and pet-friendly housing and transport.",
     examples: ["Import and quarantine rules", "Vaccination and microchip records", "Pet-friendly rentals"],
     whenToResearch: "8 to 12 weeks before travel — import rules can take time to satisfy.",
+    nextSteps: [
+      "Check import and quarantine rules early",
+      "Confirm vaccination and microchip requirements",
+      "Shortlist pet-friendly housing",
+      "Book transport directly with licensed providers",
+    ],
   },
   {
     title: "Vehicle and driving",
@@ -132,6 +199,12 @@ const categories: ServiceCategory[] = [
     description: "Licence conversion, IDP requirements and car rental or purchase.",
     examples: ["Driving licence conversion", "International driving permit", "Car rental or lease"],
     whenToResearch: "Before you need to drive — conversion rules vary widely by destination.",
+    nextSteps: [
+      "Check licence conversion rules for your destination",
+      "Apply for an international driving permit if needed",
+      "Compare rental or purchase options",
+      "Confirm directly with the licensing authority before driving",
+    ],
   },
   {
     title: "Furniture and appliances",
@@ -140,6 +213,12 @@ const categories: ServiceCategory[] = [
     description: "First-home setup, delivery timing and appliance compatibility.",
     examples: ["Furniture rental or purchase", "Appliance voltage compatibility", "Delivery scheduling"],
     whenToResearch: "Once your lease is signed and key collection date is known.",
+    nextSteps: [
+      "Confirm lease start and key collection date",
+      "Check appliance voltage/compatibility",
+      "Compare rental vs purchase costs",
+      "Schedule delivery directly with provider",
+    ],
   },
   {
     title: "Contract termination",
@@ -148,6 +227,12 @@ const categories: ServiceCategory[] = [
     description: "Closing out leases, subscriptions and service contracts at your old address.",
     examples: ["Lease termination notice", "Subscription cancellations", "Final billing confirmation"],
     whenToResearch: "As soon as your move date is confirmed, to meet notice periods.",
+    nextSteps: [
+      "Check notice periods for lease and subscriptions",
+      "Submit termination notices on time",
+      "Confirm final billing and refunds",
+      "Keep confirmation records for each contract",
+    ],
   },
   {
     title: "Official links",
@@ -156,6 +241,12 @@ const categories: ServiceCategory[] = [
     description: "Government and embassy sources for visa, tax, healthcare and residency rules.",
     examples: ["Immigration department portals", "Embassy and consulate pages", "Tax authority guidance"],
     whenToResearch: "Throughout your move — always verify rules directly before acting.",
+    nextSteps: [
+      "Identify which official source applies to your situation",
+      "Bookmark relevant government/embassy pages",
+      "Recheck rules close to your action date",
+      "Always verify directly before acting",
+    ],
   },
 ];
 
@@ -201,6 +292,17 @@ export function ServicesDirectory() {
             <p className="mt-4 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
               When to research: <span className="font-medium text-zinc-600">{category.whenToResearch}</span>
             </p>
+            <div className="mt-3 border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Next steps</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.nextSteps.map((step) => (
+                  <li key={step} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-emerald-600" />
+                    {step}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))}
       </div>
@@ -213,7 +315,8 @@ export function ServicesDirectory() {
         <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {actionLinkCategories.map((category) => (
             <div key={category.key} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-              <h3 className="text-base font-semibold text-zinc-900">{category.title}</h3>
+              <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-500">Research option</span>
+              <h3 className="mt-3 text-base font-semibold text-zinc-900">{category.title}</h3>
               <p className="mt-2 text-sm leading-6 text-zinc-600">{category.whatToDo}</p>
               <p className="mt-3 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
                 Where to start: <span className="font-medium text-zinc-600">{category.whereToStart}</span>
@@ -229,7 +332,14 @@ export function ServicesDirectory() {
           <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {singaporeOfficialLinkCategories.map((category) => (
               <div key={category.key} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-                <h3 className="text-base font-semibold text-zinc-900">{category.title}</h3>
+                <span className={
+                  category.url
+                    ? "inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-emerald-700"
+                    : "inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                }>
+                  {category.url ? "Official guidance" : "Research option"}
+                </span>
+                <h3 className="mt-3 text-base font-semibold text-zinc-900">{category.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-zinc-600">{category.whatToDo}</p>
                 <p className="mt-3 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
                   Where to start: <span className="font-medium text-zinc-600">{category.whereToStart}</span>

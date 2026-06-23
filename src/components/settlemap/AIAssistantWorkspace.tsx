@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Bot, CheckCircle2, ShieldAlert, Sparkles, User } from "lucide-react";
-import { AI_ASSISTANT_DISCLAIMER } from "@/lib/constants";
+import { AI_ASSISTANT_DISCLAIMER, AGENT_ROADMAP_CAPABILITIES, AGENT_ROADMAP_BOUNDARIES } from "@/lib/constants";
 import { InfoBanner } from "@/components/ui/InfoBanner";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
@@ -180,6 +180,33 @@ export function AIAssistantWorkspace() {
                 Get help
               </Link>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-10 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Roadmap — not active yet</p>
+          <h2 className="mt-2 text-xl font-semibold text-zinc-900">Future SettleMap Agent</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
+            Future AI capabilities may help users with planning tasks such as:
+          </p>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            {AGENT_ROADMAP_CAPABILITIES.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-amber-900">Current boundaries</p>
+            <ul className="mt-2 space-y-1.5">
+              {AGENT_ROADMAP_BOUNDARIES.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm leading-6 text-amber-950">
+                  <ShieldAlert className="mt-0.5 h-4 w-4 flex-none" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

@@ -55,3 +55,33 @@ export const PAYMENT_READINESS_NOTE =
   "Payments are not active yet. Early-access users will be contacted before any payment is requested.";
 
 export const SUPPORT_CONTACT_NOTE = "Official support email will be added before paid launch.";
+
+// V10.8: paid product clarity, resource action steps, and agentic roadmap readiness.
+export const PRICING_BOUNDARY_SHORT =
+  "Planning support only. SettleMap is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school/admission adviser, or government website. Always verify current requirements with official sources and qualified professionals.";
+
+export const PAID_NOT_INCLUDED = [
+  "No legal advice",
+  "No immigration advice",
+  "No property advice",
+  "No financial, tax, insurance, medical, or school/admission advice",
+  "No human review unless explicitly stated later",
+  "No booking, payment, submission, or provider contact by SettleMap yet",
+];
+
+export const AGENT_ROADMAP_CAPABILITIES = [
+  "Prepare route plans",
+  "Draft messages",
+  "Compare options",
+  "Prepare document checklists",
+  "Ask for approval before contacting providers",
+  "Ask for approval before bookings or payments",
+];
+
+export const AGENT_ROADMAP_BOUNDARIES = [
+  "Current version does not book services",
+  "Current version does not contact providers",
+  "Current version does not submit applications",
+  "Current version does not make payments",
+  "User approval will be required before any future external action",
+];

@@ -4,9 +4,10 @@ import { ArrowRight, AlertTriangle } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import {
   TALLY_FORM_URL,
-  PAID_SERVICES_DISCLAIMER,
   PAYMENT_READINESS_NOTE,
   SUPPORT_CONTACT_NOTE,
+  PRICING_BOUNDARY_SHORT,
+  PAID_NOT_INCLUDED,
 } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -36,10 +37,12 @@ const plans = [
     title: "Personalised route plan",
     price: "From S$19",
     features: [
-      "More detailed route plan",
-      "Housing / document / first-30-days checklist",
-      "Route-specific action guidance",
+      "Automated route-specific plan",
+      "90-day checklist",
+      "Official-source reminders",
+      "Housing / document / first-30-days steps",
       "Copy-ready scripts",
+      "Download/print-ready format planned",
     ],
     cta: "Join pilot interest list",
     href: "/early-access",
@@ -50,24 +53,27 @@ const plans = [
     title: "Premium relocation pack",
     price: "From S$49",
     features: [
+      "Everything in personalised route plan",
       "Detailed move checklist",
-      "Budgeting prompts",
-      "Official-source reminders",
+      "Budget and document templates",
       "First-week setup plan",
-      "Extra templates",
+      "Family / student / pet / senior add-ons where relevant",
+      "Extra copy-ready scripts",
     ],
     cta: "Join pilot interest list",
     href: "/early-access",
   },
   {
     key: "concierge",
-    label: "Pilot interest",
+    label: "Limited future pilot — not active yet",
     title: "Concierge planning call",
     price: "From S$79",
     features: [
+      "Limited future pilot",
       "Planning walkthrough",
       "Q&A on using SettleMap",
-      "Next-step checklist",
+      "Not active yet",
+      "No guarantee of availability",
     ],
     cta: "Request concierge interest",
     href: TALLY_FORM_URL,
@@ -129,7 +135,22 @@ export default function PricingPage() {
         </div>
 
         <div className="mt-8 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-          <p className="text-sm leading-7 text-zinc-700">{PAID_SERVICES_DISCLAIMER}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Not included in any paid pilot yet</p>
+          <ul className="mt-3 grid gap-2 text-sm leading-6 text-zinc-600 sm:grid-cols-2">
+            {PAID_NOT_INCLUDED.map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+          <p className="text-sm leading-7 text-zinc-700">{PRICING_BOUNDARY_SHORT}</p>
+          <Link href="/disclaimer" className="mt-2 inline-flex items-center text-sm font-semibold text-emerald-700 hover:text-emerald-800">
+            Read the full disclaimer <ArrowRight className="ml-1.5 h-4 w-4" />
+          </Link>
         </div>
 
         <p className="mt-6 text-sm text-zinc-500">{SUPPORT_CONTACT_NOTE}</p>
