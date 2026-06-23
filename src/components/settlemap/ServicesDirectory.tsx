@@ -22,7 +22,7 @@ import {
 import { InfoBanner } from "@/components/ui/InfoBanner";
 import { DIRECTORY_DISCLAIMER, RESOURCE_LINKS_DISCLAIMER, FUTURE_BOOKING_LINKS_TITLE, FUTURE_BOOKING_LINKS_NOTE } from "@/lib/constants";
 import { ACTION_LINKS_NOT_ENDORSEMENT, actionLinkCategories, OFFICIAL_LINKS_DISCLAIMER, singaporeOfficialLinkCategories } from "@/data/demoPlatform";
-import { ChecklistIllustration } from "@/components/illustrations/RelocationIllustrations";
+import Image from "next/image";
 
 type ServiceGroup = "Housing" | "Moving and goods" | "Connectivity and utilities" | "Money and insurance" | "Healthcare" | "Family and school" | "Transport and admin";
 
@@ -263,8 +263,14 @@ export function ServicesDirectory() {
     <div>
       <div className="grid gap-6 lg:grid-cols-[3fr_1fr] lg:items-center">
         <InfoBanner icon={<BadgeCheck className="h-5 w-5" />}>{DIRECTORY_DISCLAIMER}</InfoBanner>
-        <div className="hidden lg:block">
-          <ChecklistIllustration className="w-full max-w-[200px] justify-self-end" />
+        <div className="relative hidden aspect-[4/3] w-full max-w-[220px] justify-self-end overflow-hidden rounded-2xl shadow-sm lg:block">
+          <Image
+            src="/images/settlemap/services-research-directory.png"
+            alt="Relocation service research cards for housing, moving, banking, insurance and healthcare."
+            fill
+            sizes="220px"
+            className="object-cover"
+          />
         </div>
       </div>
 

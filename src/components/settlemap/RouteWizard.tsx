@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, Globe2, Plane, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
 import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
@@ -13,7 +14,7 @@ import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
 import { StepProgress } from "@/components/ui/StepProgress";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { RouteMapIllustration, AIPlanningIllustration, HousingIllustration } from "@/components/illustrations/RelocationIllustrations";
+import { HousingIllustration } from "@/components/illustrations/RelocationIllustrations";
 
 function classNames(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -824,8 +825,15 @@ function Hero() {
               </button>
             </div>
           </div>
-          <div className="hidden lg:block">
-            <RouteMapIllustration className="w-full max-w-md" />
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm lg:block">
+            <Image
+              src="/images/settlemap/hero-relocation-command-centre.png"
+              alt="Homepage hero: AI relocation command centre with route map, suitcase, checklist and assistant."
+              fill
+              priority
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover"
+            />
           </div>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -854,6 +862,15 @@ function ChooseMoveSituationSection() {
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader eyebrow="Get started" title="Choose your move situation" description="Pick the situation closest to yours — the plan adapts automatically." />
+        <div className="relative mt-6 aspect-[16/7] w-full overflow-hidden rounded-2xl shadow-sm sm:aspect-[16/5]">
+          <Image
+            src="/images/settlemap/student-relocation.png"
+            alt="Student relocation planning with laptop, suitcase, route map, housing key and checklist."
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {audiences.map((item) => (
             <div key={item.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
@@ -931,8 +948,14 @@ function AIPreviewSection() {
       <div className="mx-auto max-w-7xl rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm sm:p-9">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
           <div>
-            <div className="hidden sm:block sm:max-w-[180px]">
-              <AIPlanningIllustration className="w-full" />
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl shadow-sm">
+              <Image
+                src="/images/settlemap/ai-route-planner-tracker.png"
+                alt="AI relocation route plan with task tracker, timeline and move checklist."
+                fill
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+              />
             </div>
             <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">AI in SettleMap today</p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">An AI-first relocation platform, not just a checklist</h2>
@@ -1110,6 +1133,17 @@ function GetMoreHelpSection() {
             const onClick = card.event ? () => trackEvent(card.event!, { card: card.key }) : undefined;
             return (
               <div key={card.key} className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+                {card.key === "voice-guide" && (
+                  <div className="relative mb-4 aspect-[16/10] w-full overflow-hidden rounded-xl">
+                    <Image
+                      src="/images/settlemap/ai-voice-guide.png"
+                      alt="SettleMap Voice Guide with microphone, waveform, route map and checklist."
+                      fill
+                      sizes="(min-width: 1024px) 23vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">{card.label}</p>
                 <h3 className="mt-3 text-lg font-semibold text-zinc-900">{card.title}</h3>
                 {card.price && <p className="mt-1 text-sm font-semibold text-zinc-500">{card.price}</p>}
