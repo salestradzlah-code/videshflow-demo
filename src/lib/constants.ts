@@ -194,3 +194,31 @@ export const COMING_NEXT_ITEMS = [
   "Partner research links",
   "Multilingual support",
 ];
+
+// V11.5 Part 5 — short structured feedback field set. This mirrors what the real Tally form
+// asks; it is shown on-site as a preview only (no on-site submission), since the form itself
+// lives on Tally. Keep every field short — checkbox, 1-5 rating, or one short field. Only the
+// final comment is free text, and only one such box exists.
+export const FEEDBACK_WHO_IS_MOVING_OPTIONS = ["Student", "Working professional", "Family with children", "Domestic mover (within Singapore)", "Senior / retiree"];
+
+export const FEEDBACK_USEFUL_OPTIONS = ["Action plan / task list", "Official-source links", "Copy-paste scripts", "Services directory", "Route library", "AI Assistant chat"];
+
+export const FEEDBACK_MISSING_OPTIONS = ["More destinations/routes", "More detail per task", "Cost estimates", "Document checklist", "Local provider options", "Something else"];
+
+export const FEEDBACK_PLAN_INTEREST_OPTIONS = ["S$19 AI Route Plan", "S$49 Premium AI Pack", "Voice Guide", "Not sure yet"];
+
+// V11.5 Part 7 — pilot pricing is indicative; no live checkout exists yet.
+export const PILOT_PRICE_TESTING_NOTE =
+  "Pilot prices are indicative. Payment links will be tested privately before public launch. No live payments yet.";
+
+// V11.5 Part 8 — Security and Data Handling page content, plus the footer link label.
+export const SECURITY_DATA_PAGE_TITLE = "Security and data";
+
+export const SECURITY_DATA_POINTS = [
+  "No sensitive document upload is required to use SettleMap today.",
+  "Payments, when enabled, will be handled by Stripe. SettleMap does not store card details.",
+  "Feedback is collected through Tally, a third-party form provider.",
+  "Do not submit passport numbers, ID numbers, or sensitive medical or financial details through feedback forms.",
+  "SettleMap uses the planning details you enter (such as route, move type, and move date) only to generate your route checklist and to improve the product.",
+  "You remain responsible for verifying official requirements directly with the relevant government, employer, school, or provider.",
+];

@@ -4,6 +4,7 @@ import { ArrowRight, AlertTriangle } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import {
   PAYMENT_READINESS_NOTE,
+  PILOT_PRICE_TESTING_NOTE,
   SUPPORT_CONTACT_NOTE,
   PRICING_BOUNDARY_SHORT,
   FUTURE_BOOKING_LINKS_TITLE,
@@ -108,7 +109,10 @@ export default function PricingPage() {
 
         <div className="mt-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-950">
           <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
-          <p className="text-sm leading-6 font-medium">{PAYMENT_READINESS_NOTE}</p>
+          <div className="space-y-1.5">
+            <p className="text-sm leading-6 font-medium">{PAYMENT_READINESS_NOTE}</p>
+            <p className="text-sm leading-6 font-medium">{PILOT_PRICE_TESTING_NOTE}</p>
+          </div>
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">

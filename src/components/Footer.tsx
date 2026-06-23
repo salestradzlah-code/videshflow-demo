@@ -19,6 +19,7 @@ const planningLinks = [
   { href: "/partner-with-us", label: "Partner With Us" },
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/disclaimer", label: "Disclaimer" },
+  { href: "/security-and-data", label: "Security and data" },
 ];
 
 export function Footer() {

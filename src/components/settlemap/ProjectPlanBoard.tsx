@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { CheckCircle2, ChevronDown, ChevronRight, Clock3, Copy, Download, RefreshCcw, ShieldCheck } from "lucide-react";
+import { Fragment, useMemo, useState } from "react";
+import { CheckCircle2, ChevronDown, ChevronRight, Clock3, Copy, Download, RefreshCcw, ShieldCheck, Info } from "lucide-react";
 import Link from "next/link";
 import { singaporeOfficialLinkCategories, type MoveDateKey, type PlanSection } from "@/data/demoPlatform";
 import {
@@ -321,6 +321,9 @@ function RowsForSection({
   onNoteChange: (id: string, note: string) => void;
   scripts: Record<string, TaskScript>;
 }) {
+  const [openDrawers, setOpenDrawers] = useState<Record<string, boolean>>({});
+  const toggleDrawer = (id: string) => setOpenDrawers((prev) => ({ ...prev, [id]: !prev[id] }));
+
   return (
     <>
       <tr>
@@ -339,36 +342,106 @@ function RowsForSection({
         </td>
       </tr>
       {expanded &&
-        tasks.map((task) => (
-          <tr key={task.id} className="border-b border-zinc-100 align-top">
-            <td className="py-3 pr-3">
-              <StatusSelect status={task.status} onChange={(status) => onStatusChange(task.id, status)} />
-            </td>
-            <td className="max-w-xs py-3 pr-3">
-              <p className="font-semibold text-zinc-900">{task.title}</p>
-              <p className="mt-1 text-xs leading-5 text-zinc-500">{task.description}</p>
-              {task.nextStep && <p className="mt-1 text-xs font-semibold text-emerald-700">Next: {task.nextStep}</p>}
-            </td>
-            <td className="py-3 pr-3">
-              <TierBadge tier={task.resolvedTier} />
-            </td>
-            <td className="py-3 pr-3">
-              <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.priority}</span>
-            </td>
-            <td className="py-3 pr-3 text-xs text-zinc-600">
-              {task.dueLabel}
-              {task.dueDate ? <span className="block text-[11px] text-zinc-400">{task.dueDate}</span> : null}
-            </td>
-            <td className="py-3 pr-3 text-xs text-zinc-600">{task.owner}</td>
-            <td className="py-3 pr-3">
-              <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700">{task.category}</span>
-            </td>
-            <td className="py-3 pr-3">
-              <TaskAction task={task} onNoteChange={onNoteChange} onStatusChange={onStatusChange} scripts={scripts} />
-            </td>
-          </tr>
-        ))}
+        tasks.map((task) => {
+          const hasDrawer = Boolean(task.whereToGo || task.howTo || (task.whatToPrepare && task.whatToPrepare.length) || (task.providerQuestions && task.providerQuestions.length));
+          const drawerOpen = Boolean(openDrawers[task.id]);
+          return (
+            <Fragment key={task.id}>
+              <tr className="border-b border-zinc-100 align-top">
+                <td className="py-3 pr-3">
+                  <StatusSelect status={task.status} onChange={(status) => onStatusChange(task.id, status)} />
+                </td>
+                <td className="max-w-xs py-3 pr-3">
+                  <p className="font-semibold text-zinc-900">{task.title}</p>
+                  {task.nextStep && <p className="mt-1 text-xs font-semibold text-emerald-700">Next: {task.nextStep}</p>}
+                  {hasDrawer && (
+                    <button
+                      type="button"
+                      onClick={() => toggleDrawer(task.id)}
+                      className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-emerald-700"
+                    >
+                      {drawerOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                      How to do this
+                    </button>
+                  )}
+                </td>
+                <td className="py-3 pr-3">
+                  <TierBadge tier={task.resolvedTier} />
+                </td>
+                <td className="py-3 pr-3">
+                  <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.priority}</span>
+                </td>
+                <td className="py-3 pr-3 text-xs text-zinc-600">
+                  {task.dueLabel}
+                  {task.dueDate ? <span className="block text-[11px] text-zinc-400">{task.dueDate}</span> : null}
+                </td>
+                <td className="py-3 pr-3 text-xs text-zinc-600">{task.owner}</td>
+                <td className="py-3 pr-3">
+                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700">{task.category}</span>
+                </td>
+                <td className="py-3 pr-3">
+                  <TaskAction task={task} onNoteChange={onNoteChange} onStatusChange={onStatusChange} scripts={scripts} />
+                </td>
+              </tr>
+              {drawerOpen && (
+                <tr className="border-b border-zinc-100 bg-zinc-50/60">
+                  <td colSpan={8} className="px-3 py-4">
+                    <HowToDrawer task={task} />
+                  </td>
+                </tr>
+              )}
+            </Fragment>
+          );
+        })}
     </>
+  );
+}
+
+function HowToDrawer({ task }: { task: EnrichedTask }) {
+  return (
+    <div className="grid gap-3 text-xs leading-5 text-zinc-600 sm:grid-cols-2">
+      <p className="sm:col-span-2 text-zinc-700">{task.description}</p>
+      {task.whereToGo && (
+        <div>
+          <p className="font-semibold text-zinc-900">Where to go</p>
+          <p className="mt-0.5">{task.whereToGo}</p>
+        </div>
+      )}
+      {task.howTo && (
+        <div>
+          <p className="font-semibold text-zinc-900">How to do it</p>
+          <p className="mt-0.5">{task.howTo}</p>
+        </div>
+      )}
+      {task.whatToPrepare && task.whatToPrepare.length > 0 && (
+        <div>
+          <p className="font-semibold text-zinc-900">What to prepare</p>
+          <ul className="mt-0.5 list-disc space-y-0.5 pl-4">
+            {task.whatToPrepare.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {task.providerQuestions && task.providerQuestions.length > 0 && (
+        <div>
+          <p className="font-semibold text-zinc-900">Questions to ask the provider</p>
+          <ul className="mt-0.5 list-disc space-y-0.5 pl-4">
+            {task.providerQuestions.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {task.aiAssistIdea && (
+        <div className="sm:col-span-2 rounded-lg border border-dashed border-zinc-300 bg-white p-2.5">
+          <p className="flex items-center gap-1.5 font-semibold text-zinc-500">
+            <Info className="h-3.5 w-3.5" /> Future AI assist idea
+          </p>
+          <p className="mt-0.5">{task.aiAssistIdea}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -396,14 +469,30 @@ function TaskCard({
   onNoteChange: (id: string, note: string) => void;
   scripts: Record<string, TaskScript>;
 }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const hasDrawer = Boolean(task.whereToGo || task.howTo || (task.whatToPrepare && task.whatToPrepare.length) || (task.providerQuestions && task.providerQuestions.length));
   return (
     <div className="rounded-xl border border-zinc-200/80 bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <p className="break-words font-semibold text-zinc-900">{task.title}</p>
         <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.priority}</span>
       </div>
-      <p className="mt-2 break-words text-xs leading-5 text-zinc-500">{task.description}</p>
       {task.nextStep && <p className="mt-1.5 text-xs font-semibold text-emerald-700">Next: {task.nextStep}</p>}
+      {hasDrawer && (
+        <button
+          type="button"
+          onClick={() => setDrawerOpen((open) => !open)}
+          className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-emerald-700"
+        >
+          {drawerOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+          How to do this
+        </button>
+      )}
+      {drawerOpen && (
+        <div className="mt-2 rounded-lg bg-zinc-50/80 p-3">
+          <HowToDrawer task={task} />
+        </div>
+      )}
       <div className="mt-3 flex flex-wrap gap-2">
         <TierBadge tier={task.resolvedTier} />
         <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700">{task.category}</span>
@@ -497,9 +586,10 @@ function TaskAction({
         setCopied(false);
       }
     }
+    const showResearchBadge = task.sourceType === "Research option" || (!task.sourceType && task.ruleSensitive);
     return (
       <div className="space-y-1.5">
-        {task.ruleSensitive && <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-amber-800">Research option — not an endorsement</span>}
+        {showResearchBadge && <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-amber-800">Research option — not an endorsement</span>}
         <button type="button" onClick={handleCopy} className="inline-flex min-h-[2.5rem] items-center rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
           {copied ? (
             <>
@@ -507,7 +597,7 @@ function TaskAction({
             </>
           ) : (
             <>
-              <Copy className="mr-1.5 h-3.5 w-3.5" /> Copy script
+              <Copy className="mr-1.5 h-3.5 w-3.5" /> {task.buttonLabel ?? "Copy script"}
             </>
           )}
         </button>
@@ -518,9 +608,11 @@ function TaskAction({
   if (task.actionType === "Start research" && task.actionTarget) {
     return (
       <div className="space-y-1.5">
-        <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-amber-800">Research option — not an endorsement</span>
+        <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-amber-800">
+          {task.sourceType ?? "Research option"} — not an endorsement
+        </span>
         <Link href={task.actionTarget} className="block text-xs font-semibold text-emerald-700 underline hover:text-emerald-800">
-          Start research
+          {task.buttonLabel ?? "Start research"}
         </Link>
       </div>
     );

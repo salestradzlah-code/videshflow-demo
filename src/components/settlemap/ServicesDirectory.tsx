@@ -34,6 +34,13 @@ type ServiceCategory = {
   examples: string[];
   whenToResearch: string;
   nextSteps: string[];
+  // V11.5 Part 4 — give each category enough detail to act on: what to compare across
+  // providers, what to have ready, and what to ask before committing. "Research option" by
+  // default; set "Official source" only for genuine government/embassy categories.
+  whatToCompare: string[];
+  documentsNeeded: string[];
+  questionsToAsk: string[];
+  sourceType: "Official source" | "Research option";
 };
 
 const GROUPS: ServiceGroup[] = ["Housing", "Moving and goods", "Connectivity and utilities", "Money and insurance", "Healthcare", "Family and school", "Transport and admin"];
@@ -52,6 +59,10 @@ const categories: ServiceCategory[] = [
       "Confirm pickup and delivery windows",
       "Book directly with provider only when ready",
     ],
+    whatToCompare: ["Price per volume/weight", "Insurance cover and excess", "Packing and customs handling", "Delivery window and cancellation terms"],
+    documentsNeeded: ["Inventory list", "Pickup and delivery addresses", "Move date", "Photos of fragile/high-value items"],
+    questionsToAsk: ["Is the quote door-to-door or door-to-port?", "What is excluded from insurance cover?", "What happens if customs delays the shipment?"],
+    sourceType: "Research option",
   },
   {
     title: "Temporary stay",
@@ -66,6 +77,10 @@ const categories: ServiceCategory[] = [
       "Confirm commute and arrival timing",
       "Book directly with provider only when ready",
     ],
+    whatToCompare: ["Nightly/weekly rate vs long-stay rate", "What's included (utilities, WiFi, cleaning)", "Cancellation policy", "Distance to work/school"],
+    documentsNeeded: ["Arrival and departure dates", "Passport/ID for booking", "Payment method"],
+    questionsToAsk: ["Is a long-stay or weekly/monthly rate available?", "What is included in the rate?", "What is the cancellation policy?"],
+    sourceType: "Research option",
   },
   {
     title: "Long-term housing",
@@ -75,11 +90,15 @@ const categories: ServiceCategory[] = [
     examples: ["Rental portals", "Letting agents", "Neighbourhood comparisons"],
     whenToResearch: "Once you have a temporary stay booked and know your work or school location.",
     nextSteps: [
-      "Understand local rental rules",
+      "Check deposit, notice period and renewal rules for your destination before viewing",
       "Prepare tenant bio",
       "Verify agent/licensing where applicable",
       "Compare lease terms and deposit rules directly",
     ],
+    whatToCompare: ["Rent vs deposit and agent fee", "Lease length and renewal terms", "What's included (furnishing, utilities cap)", "Notice period to terminate"],
+    documentsNeeded: ["Proof of income/employment", "Passport/ID", "Tenant bio or reference letter", "Deposit funds"],
+    questionsToAsk: ["What is the deposit and is it refundable?", "Who handles repairs and how fast?", "What is the early-termination penalty?"],
+    sourceType: "Research option",
   },
   {
     title: "SIM / eSIM and internet",
@@ -89,11 +108,15 @@ const categories: ServiceCategory[] = [
     examples: ["Prepaid and postpaid SIM plans", "eSIM providers", "Home broadband packages"],
     whenToResearch: "Before arrival, so you can activate connectivity on day one.",
     nextSteps: [
-      "Compare prepaid vs postpaid plans",
+      "Compare prepaid vs postpaid plans on price, data allowance and contract length",
       "Check coverage and data allowance",
       "Confirm activation requirements (ID, address)",
       "Activate directly with provider before or on arrival",
     ],
+    whatToCompare: ["Prepaid vs postpaid price", "Data allowance and rollover", "Contract length and exit fee", "Network coverage in your area"],
+    documentsNeeded: ["Passport/ID", "Local address (for postpaid)", "Payment method"],
+    questionsToAsk: ["Can I switch from prepaid to postpaid later without penalty?", "Is there a lock-in contract?", "What is the data speed after the allowance is used?"],
+    sourceType: "Research option",
   },
   {
     title: "TV / cable / WiFi setup",
@@ -108,6 +131,10 @@ const categories: ServiceCategory[] = [
       "Confirm equipment and router requirements",
       "Book installation directly once lease is signed",
     ],
+    whatToCompare: ["Bundle price vs standalone broadband", "Contract length and exit fee", "Installation lead time", "Equipment/router included or rented"],
+    documentsNeeded: ["Lease address", "ID for account setup", "Move-in date"],
+    questionsToAsk: ["What is the earliest installation slot?", "Is the router included or charged separately?", "What happens if I move again before the contract ends?"],
+    sourceType: "Research option",
   },
   {
     title: "Utilities",
@@ -122,6 +149,10 @@ const categories: ServiceCategory[] = [
       "Take final meter readings at the old address",
       "Set up billing directly with provider",
     ],
+    whatToCompare: ["Connection fee vs transfer fee", "Activation lead time", "Deposit required (if any)", "Billing cycle and payment methods"],
+    documentsNeeded: ["New address proof", "Lease agreement", "ID", "Old address final meter readings"],
+    questionsToAsk: ["What is the earliest activation date?", "Is a deposit required and is it refundable?", "What is the process to close the old account?"],
+    sourceType: "Research option",
   },
   {
     title: "Banking and remittance",
@@ -136,6 +167,10 @@ const categories: ServiceCategory[] = [
       "Confirm home-country OTP continuity plan",
       "Open an account or transfer directly with provider",
     ],
+    whatToCompare: ["Monthly/account fees and minimum balance", "Remittance/FX rates and transfer fees", "Time to open account and get a card", "Digital banking features"],
+    documentsNeeded: ["Passport/ID", "Proof of address", "Pass or visa approval letter", "Employment letter or proof of income"],
+    questionsToAsk: ["What documents do you need to open an account?", "Is there a minimum balance or monthly fee?", "How long until the account and card are active?"],
+    sourceType: "Research option",
   },
   {
     title: "Insurance",
@@ -150,6 +185,10 @@ const categories: ServiceCategory[] = [
       "Confirm provider/license directly",
       "Keep policy documents in relocation folder",
     ],
+    whatToCompare: ["Premium vs coverage limit", "Exclusions and waiting periods", "Excess/deductible amount", "Claims process and turnaround"],
+    documentsNeeded: ["Passport/ID", "Existing medical history (if asked)", "Asset/property details for renter or vehicle cover"],
+    questionsToAsk: ["What is excluded from this policy?", "Is there a waiting period before claims are accepted?", "How are claims submitted and how long do they take?"],
+    sourceType: "Research option",
   },
   {
     title: "Healthcare and medicines",
@@ -164,6 +203,10 @@ const categories: ServiceCategory[] = [
       "Prepare prescriptions and medical records",
       "Confirm emergency numbers",
     ],
+    whatToCompare: ["Clinic/GP registration requirements", "Out-of-pocket cost vs insurance cover", "Distance and appointment wait time", "Prescription transfer process"],
+    documentsNeeded: ["Passport/ID", "Existing prescriptions", "Medical/vaccination records", "Insurance card if applicable"],
+    questionsToAsk: ["Are you accepting new patient registrations?", "Can you continue an existing prescription?", "What is the process for emergency care?"],
+    sourceType: "Research option",
   },
   {
     title: "Schooling and childcare",
@@ -178,6 +221,10 @@ const categories: ServiceCategory[] = [
       "Prepare records, transcripts and vaccination history",
       "Confirm directly with the admissions office",
     ],
+    whatToCompare: ["Admission deadlines and waitlist length", "Curriculum fit and transfer credits", "Fees and payment schedule", "Catchment or zoning rules"],
+    documentsNeeded: ["Academic transcripts and report cards", "Birth certificate/passport", "Vaccination/immunisation records", "Previous school reference letter"],
+    questionsToAsk: ["What documents are needed for transfer admission?", "Is there a waitlist and how long is it?", "Are previous transcripts accepted as-is or do they need translation?"],
+    sourceType: "Research option",
   },
   {
     title: "Pets",
@@ -192,6 +239,10 @@ const categories: ServiceCategory[] = [
       "Shortlist pet-friendly housing",
       "Book transport directly with licensed providers",
     ],
+    whatToCompare: ["Quarantine length and cost by destination", "Pet transport cost vs cabin/cargo rules", "Pet-friendly rental availability and deposit", "Vaccination/microchip lead time"],
+    documentsNeeded: ["Vaccination and microchip records", "Import permit (if required)", "Health certificate from vet", "Pet passport (where applicable)"],
+    questionsToAsk: ["What is the quarantine period and where does it happen?", "Which vaccinations are mandatory and by when?", "Is the rental pet-friendly and is there a pet deposit?"],
+    sourceType: "Research option",
   },
   {
     title: "Vehicle and driving",
@@ -206,6 +257,10 @@ const categories: ServiceCategory[] = [
       "Compare rental or purchase options",
       "Confirm directly with the licensing authority before driving",
     ],
+    whatToCompare: ["Licence conversion eligibility by home country", "IDP validity period", "Rental vs purchase cost over your stay length", "Insurance requirements"],
+    documentsNeeded: ["Home driving licence", "Passport/ID", "International driving permit (if applicable)", "Proof of address"],
+    questionsToAsk: ["Is my home licence eligible for direct conversion?", "How long is the international permit valid?", "What insurance is mandatory before driving?"],
+    sourceType: "Research option",
   },
   {
     title: "Furniture and appliances",
@@ -220,6 +275,10 @@ const categories: ServiceCategory[] = [
       "Compare rental vs purchase costs",
       "Schedule delivery directly with provider",
     ],
+    whatToCompare: ["Rental vs purchase cost over your stay length", "Voltage/plug compatibility", "Delivery and assembly lead time", "Warranty and return policy"],
+    documentsNeeded: ["Lease start/key collection date", "Delivery address", "Floor plan or room measurements"],
+    questionsToAsk: ["Is voltage/plug type compatible with my appliances?", "What is the delivery lead time?", "What is the return or exchange policy?"],
+    sourceType: "Research option",
   },
   {
     title: "Contract termination",
@@ -234,6 +293,10 @@ const categories: ServiceCategory[] = [
       "Confirm final billing and refunds",
       "Keep confirmation records for each contract",
     ],
+    whatToCompare: ["Notice period for each contract", "Early-termination penalty vs full notice", "Refund timeline for deposits", "Final billing cut-off date"],
+    documentsNeeded: ["Lease and contract copies", "Final meter readings", "Forwarding address for refunds/mail"],
+    questionsToAsk: ["What is the required notice period?", "Is there an early-termination fee?", "When and how will my deposit/refund be returned?"],
+    sourceType: "Research option",
   },
   {
     title: "Official links",
@@ -248,6 +311,10 @@ const categories: ServiceCategory[] = [
       "Recheck rules close to your action date",
       "Always verify directly before acting",
     ],
+    whatToCompare: ["Which agency/ministry covers your situation", "Processing time stated on the official page", "Fees stated on the official page", "Document checklist stated on the official page"],
+    documentsNeeded: ["Passport/ID", "Visa, pass or admission reference number", "Move date or target window"],
+    questionsToAsk: ["Is this the current version of the rule (check the page's last-updated date)?", "Does this apply to my specific pass/visa type?", "Is there a fee and how is it paid?"],
+    sourceType: "Official source",
   },
 ];
 
@@ -293,7 +360,18 @@ export function ServicesDirectory() {
       <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((category) => (
           <div key={category.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
-            <category.icon className="h-6 w-6 text-emerald-600" />
+            <div className="flex items-start justify-between gap-2">
+              <category.icon className="h-6 w-6 text-emerald-600" />
+              <span
+                className={
+                  category.sourceType === "Official source"
+                    ? "rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-white"
+                    : "rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-800"
+                }
+              >
+                {category.sourceType}
+              </span>
+            </div>
             <h3 className="mt-4 text-lg font-semibold text-zinc-900">{category.title}</h3>
             <p className="mt-2 text-sm leading-6 text-zinc-600">{category.description}</p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -302,7 +380,7 @@ export function ServicesDirectory() {
               ))}
             </div>
             <p className="mt-4 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
-              When to research: <span className="font-medium text-zinc-600">{category.whenToResearch}</span>
+              Best time to research: <span className="font-medium text-zinc-600">{category.whenToResearch}</span>
             </p>
             <div className="mt-3 border-t border-zinc-100 pt-3">
               <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Next steps</p>
@@ -311,6 +389,39 @@ export function ServicesDirectory() {
                   <li key={step} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
                     <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-emerald-600" />
                     {step}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-3 border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">What to compare</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.whatToCompare.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-3 border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Documents or info needed</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.documentsNeeded.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-3 border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Questions to ask the provider</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.questionsToAsk.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                    {item}
                   </li>
                 ))}
               </ul>

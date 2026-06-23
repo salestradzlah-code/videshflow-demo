@@ -79,11 +79,19 @@ const SCRIPT_TASK_MAP: Record<string, string> = {
   "addon-school-shortlist": "school",
   "family-schooling": "school",
   "addon-setup-school": "school",
+  "addon-school-records": "school",
+  "student-docs": "school",
   "addon-insurance-home": "insurer",
   "addon-setup-insurance": "insurer",
   "temporary-stay": "tempStay",
   "addon-setup-temp-stay": "tempStay",
   "addon-temp-stay-book": "tempStay",
+  // V11.5 Part 3 — give the previously link-only banking and utilities tasks a copy-paste
+  // provider script as well, so the action card reads as a concrete next step.
+  "banking-first-week": "banking",
+  "addon-setup-banking": "banking",
+  "domestic-utilities-broadband": "utilitiesTransfer",
+  "addon-setup-utilities": "utilitiesTransfer",
 };
 
 // Rule-sensitive tasks with no safe, confirmed official URL — always "Plan action", never a link.
@@ -108,7 +116,7 @@ const RULE_SENSITIVE_PLAN_ONLY_IDS = new Set([
 // Categories that map to one of the existing generic research categories (actionLinkCategories /
 // the Services Directory). These route internally to /services rather than to an unconfirmed
 // external link, per the "internal linking is acceptable for now" rule.
-const RESEARCH_CATEGORIES = new Set(["housing", "movers", "connectivity", "banking", "transport", "healthcare", "schooling", "pets", "new contracts to set up"]);
+const RESEARCH_CATEGORIES = new Set(["housing", "movers", "connectivity", "banking", "transport", "healthcare", "schooling", "pets", "new contracts to set up", "home setup", "utilities"]);
 
 const MARK_DONE_CATEGORIES = new Set(["existing contracts to terminate"]);
 
@@ -383,6 +391,16 @@ export function buildProjectScripts(inputs: ProjectScriptInputs): Record<string,
     tempStay: {
       title: "Ask temporary stay provider about long-stay rate",
       text: "Hi, could you confirm if a long-stay or weekly/monthly rate is available, what is included, and the cancellation policy?",
+    },
+    // V11.5 Part 3 — copy-paste scripts for banking and utilities so these read as a concrete
+    // next step rather than a generic "research this" link.
+    banking: {
+      title: "Ask bank about account opening for new arrivals",
+      text: "Hi, I am a new arrival and would like to open an account. Could you confirm the documents needed, any minimum balance or fees, and how long until the account and card are active?",
+    },
+    utilitiesTransfer: {
+      title: "Ask utility/broadband provider about transfer date",
+      text: "Hi, I would like to set up or transfer electricity, water, gas and broadband to my new address. Could you confirm the earliest activation date, any installation fee, and the closing process for my old address?",
     },
   };
 }

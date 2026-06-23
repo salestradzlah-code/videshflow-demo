@@ -76,6 +76,17 @@ export type TimelineTask = {
   nextStep?: string;
   tier?: TaskTier;
   section?: PlanSection;
+  // V11.5 additions — make action cards actionable (where to go, how to do it, what to
+  // prepare, suggested button label, source type, future AI assist idea). All optional so
+  // existing task literals remain valid without edits; ProjectPlanBoard.tsx renders these in
+  // a collapsed "How to do this" drawer when present.
+  whereToGo?: string;
+  howTo?: string;
+  whatToPrepare?: string[];
+  buttonLabel?: string;
+  sourceType?: "Official source" | "Research option";
+  providerQuestions?: string[];
+  aiAssistIdea?: string;
 };
 
 export const destinations = [
