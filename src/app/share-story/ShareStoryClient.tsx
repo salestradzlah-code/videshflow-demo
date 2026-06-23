@@ -8,13 +8,11 @@ import { DisclaimerBox } from "@/components/DisclaimerBox";
 import { TALLY_FORM_URL } from "@/lib/constants";
 
 const questions = [
-  "Your route — where did you move from and to?",
-  "Who is moving — solo, couple, family, student, senior, or other?",
-  "What looked useful in this demo?",
-  "What was missing?",
-  "What confused you?",
-  "Would you use this before a real move?",
-  "Would you pay for a detailed personalised plan?",
+  "Which route are you planning?",
+  "Are you a student, working professional, family with children, or domestic mover?",
+  "What task is most painful in this process?",
+  "Would you pay for a personalised plan?",
+  "Would you want concierge help?",
 ];
 
 export function ShareStoryClient() {
@@ -47,7 +45,7 @@ export function ShareStoryClient() {
         <div className="grid items-center gap-8 rounded-[2rem] bg-white p-8 shadow-sm sm:p-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Feedback request</p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Help shape SettleMap with your move experience</h1>
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Help shape SettleMap</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">
               This is an early feedback demo. Copy any question below and submit your answer through our feedback form, or use it as a starting point for a conversation with our team. Your experience helps the next family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
             </p>

@@ -7,7 +7,7 @@ import { addOnOptions, cookingOptions, destinations, documentCategories, domesti
 import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
 import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
 import { ProjectPlanBoard } from "@/components/settlemap/ProjectPlanBoard";
-import { DISCLAIMER_SHORT } from "@/lib/constants";
+import { DISCLAIMER_SHORT, TALLY_FORM_URL } from "@/lib/constants";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
 import { StepProgress } from "@/components/ui/StepProgress";
@@ -525,6 +525,10 @@ export function RouteWizard() {
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       <Hero />
+      <WhoItsForSection />
+      <HowItWorksSection />
+      <WhyDifferentSection />
+      <PositioningSection />
 
       {showSavedBanner && savedPlan && (
         <div className="px-4 sm:px-6 lg:px-8">
@@ -736,6 +740,9 @@ export function RouteWizard() {
 
       {!showDashboard && <PreSelectionGuide />}
 
+      <FutureBusinessModelSection />
+      <FeedbackCtaSection />
+
       {showDashboard && origin && destination && reason && profile && (
         <>
           <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} isDomestic={isDomestic} moveDateType={selection.moveDateType} moveDateValue={selection.moveDateValue} />
@@ -814,6 +821,174 @@ function Hero() {
               <p className="mt-2 text-sm font-semibold text-zinc-900">{stat.value}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhoItsForSection() {
+  const audiences = [
+    { title: "Students moving abroad", desc: "University admission, student visa, housing search, and settling into campus life.", icon: Plane },
+    { title: "Working professionals / EP holders", desc: "Job-based relocation, work pass paperwork, banking, and getting set up fast.", icon: Route },
+    { title: "Families relocating with children", desc: "School planning, family housing, healthcare, and building a routine together.", icon: ShieldCheck },
+    { title: "Domestic movers / returning home", desc: "Local moves and returns — lease handover, utilities, and local registrations, no visa steps.", icon: CalendarDays },
+  ];
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Who it's for" title="Who SettleMap is for" description="Built for four common relocation situations. Pick yours and the plan adapts." />
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {audiences.map((item) => (
+            <div key={item.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+              <item.icon className="h-6 w-6 text-emerald-600" />
+              <h3 className="mt-4 text-base font-semibold text-zinc-900">{item.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-600">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorksSection() {
+  const steps = [
+    { title: "1. Choose your route", desc: "Origin, destination, and reason for moving.", icon: Globe2 },
+    { title: "2. Build your relocation profile", desc: "Who is moving, pets, and any add-ons that apply.", icon: ShieldCheck },
+    { title: "3. Get a project-style move plan", desc: "A structured 90-day plan, not a generic checklist.", icon: Route },
+    { title: "4. Track tasks, action links and scripts", desc: "Work through tasks with status, notes, and copy-ready scripts.", icon: FileSearch },
+  ];
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="How it works" title="How SettleMap works" description="Four steps from route to a working plan." />
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((step) => (
+            <div key={step.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+              <step.icon className="h-6 w-6 text-emerald-600" />
+              <h3 className="mt-4 text-base font-semibold text-zinc-900">{step.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-600">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyDifferentSection() {
+  const points = [
+    { title: "Route-aware plans", desc: "Your plan changes based on origin, destination, reason, and who is moving — not one generic list.", icon: Globe2 },
+    { title: "Project-management style tracking", desc: "Tasks have status, owners, due windows, and notes — run like a project, not a blog post.", icon: CalendarDays },
+    { title: "Official-first guidance", desc: "Where possible, points to official government and institutional sources first.", icon: ShieldCheck },
+    { title: "Copy-ready scripts and rental readiness", desc: "Tenant bios, message scripts, and a rental safety checklist you can use immediately.", icon: Copy },
+  ];
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Why it's different" title="Why SettleMap is different" description="Built as a planning and tracking tool, not a content feed." />
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {points.map((point) => (
+            <div key={point.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+              <point.icon className="h-6 w-6 text-emerald-600" />
+              <h3 className="mt-4 text-base font-semibold text-zinc-900">{point.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-600">{point.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PositioningSection() {
+  const notPoints = ["Not just student housing", "Not just a checklist", "Not a travel agency", "Not a property agent", "Not a visa adviser"];
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm sm:p-9">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">What SettleMap is, and is not</p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">A relocation command centre for planning and tracking</h2>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {notPoints.map((point) => (
+            <span key={point} className="rounded-full bg-zinc-100 px-3.5 py-2 text-xs font-semibold text-zinc-600">{point}</span>
+          ))}
+        </div>
+        <p className="mt-5 max-w-3xl text-sm leading-7 text-zinc-600">
+          SettleMap brings the route, the people moving, the task plan, and the rental scripts into one place so you can plan and track a move — instead of piecing it together across forums, PDFs, and group chats.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function FutureBusinessModelSection() {
+  const items = [
+    "Affiliate or action links to relevant services",
+    "Partner leads for vetted relocation service providers",
+    "Paid, personalised relocation plans",
+    "Concierge support for hands-on help",
+    "B2B relocation packs for employers and agencies",
+  ];
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-7 sm:p-9">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Future business model — not active today</p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Ways SettleMap could grow into a paid product</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-zinc-600">
+          None of the items below are live yet. SettleMap does not currently have paid plans, partnerships, or official endorsements of any kind.
+        </p>
+        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+          {items.map((item) => (
+            <li key={item} className="flex items-start gap-2 rounded-xl bg-white p-4 text-sm leading-6 text-zinc-700 shadow-sm">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function FeedbackCtaSection() {
+  const questions = [
+    "Which route are you planning?",
+    "Are you a student, working professional, family with children, or domestic mover?",
+    "What task is most painful in this process?",
+    "Would you pay for a personalised plan?",
+    "Would you want concierge help?",
+  ];
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl bg-emerald-600 p-7 text-white shadow-sm sm:p-9">
+        <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Early feedback demo</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Help shape SettleMap</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-emerald-50">
+              This is an early prototype. Your answers directly shape what gets built next.
+            </p>
+            <a
+              href={TALLY_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-50"
+            >
+              Share feedback <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+          </div>
+          <ul className="space-y-2">
+            {questions.map((question) => (
+              <li key={question} className="rounded-xl bg-white/10 p-3.5 text-sm leading-6 text-emerald-50">{question}</li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

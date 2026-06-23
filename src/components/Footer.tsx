@@ -48,7 +48,7 @@ export function Footer() {
               </Link>
             ))}
             <a href={TALLY_FORM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white">
-              Feedback
+              Help shape SettleMap
             </a>
           </div>
         </div>
