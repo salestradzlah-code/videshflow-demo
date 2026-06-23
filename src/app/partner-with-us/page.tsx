@@ -28,11 +28,14 @@ export default function PartnerWithUsPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Partner with SettleMap</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">For relocation service providers</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            SettleMap may later list service categories and provider options for users to research. Providers can express interest in future listings or referral lead discussions.
+            SettleMap is exploring future partner research links only. Registering interest does not create a partnership, endorsement, listing, ranking or guarantee. Future partner links, if any, may be labelled as research options, partner links or affiliate links. Official source links are never paid placements.
+          </p>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500">
+            Partner interest form coming soon. For now, use the feedback form and select partner interest if available.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a href={PARTNER_FORM_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#123638] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#0c2829]">
-              Register partner interest
+              Register partner interest (current feedback form)
             </a>
             <Link href="/services" className="rounded-full border border-black/10 px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
               View service categories

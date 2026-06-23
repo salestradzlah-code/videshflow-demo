@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import {
-  TALLY_FORM_URL,
   PAYMENT_READINESS_NOTE,
   SUPPORT_CONTACT_NOTE,
   PRICING_BOUNDARY_SHORT,
@@ -49,8 +48,8 @@ const plans = [
       "Copy-ready scripts",
       "Printable/downloadable format planned",
     ],
-    cta: "Register interest",
-    href: TALLY_FORM_URL,
+    cta: "Register interest in AI route plan",
+    href: "/early-access",
   },
   {
     key: "premium-ai-pack",
@@ -67,8 +66,8 @@ const plans = [
       "Additional scripts",
       "Family/student/pet/senior add-ons where relevant",
     ],
-    cta: "Register interest",
-    href: TALLY_FORM_URL,
+    cta: "Register interest in Premium AI relocation pack",
+    href: "/early-access",
   },
   {
     key: "voice-guide",
@@ -83,8 +82,8 @@ const plans = [
       "Script ideas",
       "Official-source reminders",
     ],
-    cta: "Join voice guide waitlist",
-    href: TALLY_FORM_URL,
+    cta: "Join Voice Guide waitlist",
+    href: "/early-access",
   },
 ];
 

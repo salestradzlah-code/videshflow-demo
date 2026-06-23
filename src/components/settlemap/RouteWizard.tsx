@@ -1070,8 +1070,8 @@ function GetMoreHelpSection() {
       title: "Personalised route plan",
       price: "From S$19",
       copy: "Automated route-specific plan, 90-day checklist, official-source reminders, housing/document/first-30-days steps, copy-ready scripts. Download/print-ready format planned.",
-      cta: "Join pilot interest list",
-      href: TALLY_FORM_URL,
+      cta: "Register interest in AI route plan",
+      href: "/early-access",
       event: "paid_plan_interest_clicked" as const,
     },
     {
@@ -1090,8 +1090,8 @@ function GetMoreHelpSection() {
       title: "SettleMap Voice Guide",
       price: "Coming soon, or pilot pricing to be decided",
       copy: "A future AI-guided voice walkthrough that helps you understand your relocation plan, ask planning questions, prioritise next steps and prepare checklist notes. Not available today, and not legal, immigration, tax, property, financial, medical, insurance or school advice.",
-      cta: "Join voice guide waitlist",
-      href: TALLY_FORM_URL,
+      cta: "Join Voice Guide waitlist",
+      href: "/early-access",
       event: "voice_guide_interest_clicked" as const,
     },
   ];
@@ -1171,15 +1171,13 @@ function PartnerInterestSection() {
               SettleMap is exploring future partner leads with relocation-adjacent service categories. Registering interest does not create an active partnership or listing.
             </p>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">{REFERRAL_RESEARCH_NOTE}</p>
-            <a
-              href={TALLY_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/partner-with-us"
               onClick={() => trackEvent("partner_interest_clicked", { source: "homepage_partner_section" })}
               className="mt-6 inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
             >
-              Register partner interest <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
+              Partner with SettleMap <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
             <p className="mt-5 max-w-2xl text-xs leading-6 text-zinc-500">{PARTNER_DISCLAIMER}</p>
             <p className="mt-2 max-w-2xl text-xs leading-6 text-zinc-500">{AFFILIATE_DISCLOSURE_FULL}</p>
           </div>

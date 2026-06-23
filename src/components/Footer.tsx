@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AFFILIATE_DISCLOSURE_NOTE, DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL, LANGUAGE_TRANSLATE_NOTE } from "@/lib/constants";
 
 const exploreLinks = [
-  { href: "/#route-selector", label: "Build My Move Plan" },
+  { href: "/", label: "Build My Move Plan" },
   { href: "/countries", label: "Route Library" },
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/get-help", label: "Get Help" },

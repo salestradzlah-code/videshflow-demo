@@ -84,35 +84,70 @@ export function EarlyAccessClient() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          <a
-            href={EARLY_ACCESS_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => openForm("paid_plan_interest_clicked", { source: "early_access_page" })}
-            className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
-          >
-            Register interest in a paid plan (S$19 / S$49)
-          </a>
-          <a
-            href={EARLY_ACCESS_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => openForm("voice_guide_interest_clicked", { source: "early_access_page" })}
-            className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
-          >
-            Join SettleMap Voice Guide waitlist
-          </a>
-          <a
-            href={EARLY_ACCESS_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => openForm("partner_interest_clicked", { source: "early_access_page" })}
-            className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
-          >
-            Register interest in partner recommendations
-          </a>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2">
+          <div className="rounded-2xl border border-black/10 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9a6a20]">AI route plan interest</p>
+            <h3 className="mt-2 text-lg font-semibold text-[#172326]">AI-generated route plan (from S$19)</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Register interest in the future self-serve AI-generated route plan. This is the current feedback form — no payment is collected here.</p>
+            <a
+              href={EARLY_ACCESS_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => openForm("paid_plan_interest_clicked", { source: "early_access_page", plan: "ai-route-plan" })}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#123638] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0c2829]"
+            >
+              Register interest in AI route plan <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+
+          <div className="rounded-2xl border border-black/10 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9a6a20]">Premium AI relocation pack interest</p>
+            <h3 className="mt-2 text-lg font-semibold text-[#172326]">Premium AI relocation pack (from S$49)</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Register interest in the future premium pack. This is the current feedback form — no payment is collected here.</p>
+            <a
+              href={EARLY_ACCESS_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => openForm("paid_plan_interest_clicked", { source: "early_access_page", plan: "premium-ai-pack" })}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#123638] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0c2829]"
+            >
+              Register interest in Premium AI relocation pack <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+
+          <div className="rounded-2xl border border-black/10 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9a6a20]">SettleMap Voice Guide waitlist</p>
+            <h3 className="mt-2 text-lg font-semibold text-[#172326]">SettleMap Voice Guide</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Join the waitlist for the future voice-guided walkthrough. Not available today — this is the current waitlist/feedback form.</p>
+            <a
+              href={EARLY_ACCESS_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => openForm("voice_guide_interest_clicked", { source: "early_access_page" })}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#123638] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0c2829]"
+            >
+              Join Voice Guide waitlist <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+
+          <div className="rounded-2xl border border-black/10 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">General feedback</p>
+            <h3 className="mt-2 text-lg font-semibold text-[#172326]">Help shape SettleMap</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Have a different question, idea, or issue? Use the same current feedback form below.</p>
+            <a
+              href={EARLY_ACCESS_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => openForm("early_access_clicked", { source: "early_access_page", type: "general_feedback" })}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-[#123638] hover:bg-slate-50"
+            >
+              Give product feedback <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
         </div>
+        <p className="mt-4 max-w-3xl text-xs leading-6 text-slate-500">
+          Partner or referral interest? Use the <a href="/partner-with-us" className="font-semibold text-[#123638] underline hover:no-underline">Partner With Us</a> page instead of this form.
+        </p>
 
         <p className="mt-8 max-w-3xl text-xs leading-6 text-slate-500">{COMMERCIAL_LINKS_NOTE}</p>
         <div className="mt-6"><DisclaimerBox /></div>

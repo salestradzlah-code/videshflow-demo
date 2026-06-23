@@ -159,7 +159,7 @@ export default async function CountryDetailPage({ params }: { params: Promise<{ 
               <p className="mt-2 text-sm leading-6 text-slate-600">Use official sources for current rules and process details.</p>
               <div className="mt-4 space-y-3">
                 {country.officialLinks.map((link) => (
-                  <a key={link.url} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 p-3 text-sm font-medium text-[#123638] hover:bg-slate-50">
+                  <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 p-3 text-sm font-medium text-[#123638] hover:bg-slate-50">
                     {link.label}
                     <ExternalLink className="h-4 w-4 flex-none" />
                   </a>
