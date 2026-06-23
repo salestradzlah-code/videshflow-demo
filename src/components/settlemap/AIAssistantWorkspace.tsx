@@ -98,7 +98,7 @@ export function AIAssistantWorkspace() {
         <SectionHeader
           eyebrow="AI relocation assistant"
           title="Ask practical relocation questions in one place"
-          description="A demo of how SettleMap's AI-first assistant will guide planning questions, route guides, and service categories. Click a question to add a sample checklist-style answer to the conversation."
+          description="A preview of how SettleMap's AI-first assistant will guide planning questions, route guides, and service categories. Click a question to add a sample checklist-style answer to the conversation."
         />
 
         <div className="mt-6">

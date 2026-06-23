@@ -47,7 +47,7 @@ export function ShareStoryClient() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Feedback request</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Help shape SettleMap</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              This is an early feedback demo. Copy any question below and submit your answer through our feedback form, or use it as a starting point for a conversation with our team. Your experience helps the next family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
+              This is an early feedback prototype. Copy any question below and submit your answer through our feedback form, or use it as a starting point for a conversation with our team. Your experience helps the next family avoid confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
             </p>
             <a
               href={TALLY_FORM_URL}

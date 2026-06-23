@@ -67,7 +67,7 @@ export default function AboutPage() {
           <div className="rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Early feedback stage</p>
             <p className="mt-3 text-sm leading-7 text-zinc-600">
-              This is an early feedback demo, not a finished product. We are starting with a focused route library, an adaptive planning wizard, and safe public-source guidance — more routes and features will follow based on tester feedback.
+              This is an early feedback prototype, not a finished product. We are starting with a focused route library, an adaptive planning wizard, and safe public-source guidance — more routes and features will follow based on tester feedback.
             </p>
           </div>
         </div>

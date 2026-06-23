@@ -32,7 +32,7 @@ const plans = [
   },
   {
     key: "personalised",
-    label: "Pilot waitlist",
+    label: "Pilot interest list",
     title: "Personalised route plan",
     price: "From S$19",
     features: [
@@ -41,12 +41,12 @@ const plans = [
       "Route-specific action guidance",
       "Copy-ready scripts",
     ],
-    cta: "Join pilot waitlist",
+    cta: "Join pilot interest list",
     href: "/early-access",
   },
   {
     key: "premium",
-    label: "Pilot waitlist",
+    label: "Pilot interest list",
     title: "Premium relocation pack",
     price: "From S$49",
     features: [
@@ -56,7 +56,7 @@ const plans = [
       "First-week setup plan",
       "Extra templates",
     ],
-    cta: "Join pilot waitlist",
+    cta: "Join pilot interest list",
     href: "/early-access",
   },
   {
@@ -81,7 +81,7 @@ export default function PricingPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Plans and pilots</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">Pricing</h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
-          SettleMap's project planner is free today. The plans below are pilot waitlists and price signals only — nothing
+          SettleMap's project planner is free today. The plans below are pilot interest lists and price signals only — nothing
           here charges a card.
         </p>
 

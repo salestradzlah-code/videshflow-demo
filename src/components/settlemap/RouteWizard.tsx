@@ -639,7 +639,7 @@ export function RouteWizard() {
                       <ChoiceCard key={item.key} label={item.label} active={selection.profileKey === item.key} onClick={() => updateSelection("profileKey", item.key as ProfileKey)} />
                     ))}
                   </div>
-                  <p className="mt-5 text-xs leading-6 text-zinc-500">Only share what you are comfortable sharing. This demo stores progress in your browser only.</p>
+                  <p className="mt-5 text-xs leading-6 text-zinc-500">Only share what you are comfortable sharing. This tool stores progress in your browser only.</p>
                 </WizardStep>
               )}
 
@@ -803,7 +803,7 @@ function Hero() {
           </div>
           <h1 className="mt-7 text-5xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Map your move. Settle with confidence.</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">
-            SettleMap helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in. This is an early feedback demo.
+            SettleMap helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in. This is an early feedback prototype.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <button
@@ -982,7 +982,7 @@ function GetMoreHelpSection() {
       title: "Personalised route plan",
       price: "From S$19",
       copy: "A more detailed plan for your route, timeline, housing, documents and first 30 days.",
-      cta: "Join paid-plan waitlist",
+      cta: "Join pilot interest list",
       href: TALLY_FORM_URL,
       event: "paid_plan_interest_clicked" as const,
     },
@@ -1114,7 +1114,7 @@ function FeedbackCtaSection() {
       <div className="mx-auto max-w-7xl rounded-xl bg-emerald-600 p-7 text-white shadow-sm sm:p-9">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Early feedback demo</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Early feedback prototype</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Help shape SettleMap</h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-emerald-50">
               This is an early prototype. Your answers directly shape what gets built next.
@@ -1618,7 +1618,7 @@ function Dashboard({ origin, destination, reason, profile, progress, completed, 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <MiniMetric label="Route" value={routeLabel} />
               <MiniMetric label="Starter kit" value={destination.starterPath ? "Available" : "General guide"} />
-              <MiniMetric label="Demo mode" value="Local progress" />
+              <MiniMetric label="Privacy" value="Local progress only" />
             </div>
           </div>
         </div>
@@ -1701,7 +1701,7 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
           <h2 className="text-2xl font-semibold text-zinc-900">AI document checklist</h2>
         </div>
       </div>
-      <p className="mt-4 text-sm leading-7 text-zinc-600">Demo mode for {routeLabel}. Upload UI is mocked. This demo never sends files anywhere.</p>
+      <p className="mt-4 text-sm leading-7 text-zinc-600">Mock mode for {routeLabel}. Upload UI is mocked. This prototype never sends files anywhere.</p>
       <label className="mt-6 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center transition-all duration-200 ease-in-out hover:border-emerald-400">
         <UploadCloud className="h-8 w-8 text-emerald-600" />
         <span className="mt-3 text-sm font-semibold text-zinc-900">Drop passport, visa, offer, school or rental files</span>
@@ -1727,7 +1727,7 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
 
 function ChatbotMock({ routeLabel, reason, profile }: { routeLabel: string; reason: string; profile: string }) {
   const [messages, setMessages] = useState([
-    { from: "bot", text: "I can help you convert this relocation route into checklist-style planning guidance. I am a mock assistant in this demo." },
+    { from: "bot", text: "I can help you convert this relocation route into checklist-style planning guidance. I am a mock assistant in this prototype." },
   ]);
   const [input, setInput] = useState("");
 
@@ -1831,7 +1831,7 @@ function ArchitectureSection() {
             <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">{DISCLAIMER_SHORT}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {["No forced login", "Dashboard hidden until route is selected", "Mock OCR for demo speed", "API-ready chatbot UI", "Route-first service research", "Safe non-advisory wording"].map((item) => (
+            {["No forced login", "Dashboard hidden until route is selected", "Mock OCR for preview speed", "API-ready chatbot UI", "Route-first service research", "Safe non-advisory wording"].map((item) => (
               <div key={item} className="rounded-xl border border-white/10 bg-white/10 p-4 text-sm font-semibold text-white/90">
                 <CheckCircle2 className="mb-3 h-5 w-5 text-white" />
                 {item}

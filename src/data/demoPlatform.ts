@@ -367,7 +367,7 @@ export const platformStats = [
   { label: "Route paths", value: "100+", icon: Globe2 },
   { label: "90-day tasks", value: "Adaptive", icon: FileCheck2 },
   { label: "Service categories", value: "25+", icon: Wrench },
-  { label: "Demo mode", value: "No login", icon: ShieldCheck },
+  { label: "No login needed", value: "Browser only", icon: ShieldCheck },
 ];
 
 export const documentCategories = [

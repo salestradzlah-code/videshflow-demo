@@ -1,7 +1,10 @@
 export const SITE_NAME = "SettleMap";
-export const SITE_URL = "https://settlemap-demo.vercel.app";
+export const SITE_URL = "https://settlemap.app";
 
-// Live feedback channel for the early public demo. All feedback and waitlist CTAs point here.
+// Previous Vercel preview URL. Kept working as a fallback only — never presented as the main public site.
+export const VERCEL_DEMO_URL = "https://settlemap-demo.vercel.app";
+
+// Live feedback channel for early access. All feedback and waitlist CTAs point here.
 export const TALLY_FORM_URL = "https://tally.so/r/Pd46qP";
 export const WAITLIST_FORM_URL = TALLY_FORM_URL;
 
@@ -16,14 +19,14 @@ export const PARTNER_FORM_URL = TALLY_FORM_URL;
 export const EARLY_ACCESS_FORM_URL = TALLY_FORM_URL;
 
 // No fake contact inbox is shown publicly. Use the feedback form instead.
-export const CONTACT_NOTE = "Use the feedback form to contact us during this early demo.";
+export const CONTACT_NOTE = "Use the feedback form to contact us during early access.";
 
 export const DISCLAIMER_SHORT =
   "SettleMap is an early feedback prototype, not a finished product. It is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Always verify current requirements with official sources and qualified professionals.";
 
 export const OPERATOR_LINE = "SettleMap is operated by TRADZLAH LLP, Singapore UEN T20LL0224L.";
 
-export const BETA_NOTE = "Early feedback demo — please do not treat this as professional advice.";
+export const BETA_NOTE = "SettleMap early access — planning support only, not professional advice.";
 
 export const DIRECTORY_DISCLAIMER =
   "Service listings and categories are for research convenience only. They are not endorsements, guarantees, official recommendations, or promises of service quality, pricing, licensing, availability, or outcomes. Verify directly before engaging any provider.";

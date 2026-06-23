@@ -92,7 +92,7 @@ export function EarlyAccessClient() {
             onClick={() => openForm("paid_plan_interest_clicked", { source: "early_access_page" })}
             className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
           >
-            I would pay S$19 / S$49 for a plan
+            Register interest in a paid plan (S$19 / S$49)
           </a>
           <a
             href={EARLY_ACCESS_FORM_URL}
@@ -101,7 +101,7 @@ export function EarlyAccessClient() {
             onClick={() => openForm("concierge_interest_clicked", { source: "early_access_page" })}
             className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
           >
-            I want a concierge call
+            Request concierge interest
           </a>
           <a
             href={EARLY_ACCESS_FORM_URL}
@@ -110,7 +110,7 @@ export function EarlyAccessClient() {
             onClick={() => openForm("partner_interest_clicked", { source: "early_access_page" })}
             className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
           >
-            I want partner / service recommendations
+            Register interest in partner recommendations
           </a>
         </div>
 

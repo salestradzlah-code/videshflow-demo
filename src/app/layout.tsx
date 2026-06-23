@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: SITE_URL,
+  },
   title: {
     default: `${SITE_NAME} | Map your move. Settle with confidence.`,
     template: `%s | ${SITE_NAME}`,
