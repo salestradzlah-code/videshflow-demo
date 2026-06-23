@@ -2,7 +2,7 @@
 // into a project-plan style model: status, owner, stage, due labels, action type and copy scripts.
 // Everything here is computed from the existing task fields (id/category/title/phase/priority) —
 // no changes were needed to the underlying task data, and nothing is sent to a server.
-import type { TimelineTask, MoveDateKey } from "@/data/demoPlatform";
+import type { TimelineTask, MoveDateKey, TaskTier, PlanSection } from "@/data/demoPlatform";
 
 export type TaskStatus = "Not started" | "In progress" | "Waiting" | "Done" | "Not applicable";
 
@@ -92,7 +92,6 @@ const RULE_SENSITIVE_PLAN_ONLY_IDS = new Set([
   "addon-senior-coverage",
   "addon-medication-supply",
   "retirement-healthcare",
-  "retirement-income",
   "addon-setup-driving",
   "addon-vehicle-new",
   "business-setup",
@@ -148,6 +147,71 @@ export function getTaskActionInfo(task: TimelineTask): TaskActionInfo {
   }
   return { actionType: "Plan action", ruleSensitive: false };
 }
+
+// --- V11.3 tier and section fallback heuristics -------------------------
+// Most task literals in relocationTimeline.ts now set tier/section explicitly on the tasks
+// that were renamed or merged for V11.3. Everything else (the long tail of add-on tasks)
+// falls back to these heuristics so the whole plan still gets a tier and a collapsible
+// section without having to touch every task literal individually.
+export function getTaskTier(task: TimelineTask): TaskTier {
+  if (task.tier) return task.tier;
+  if (task.priority === "High") return "Core";
+  if (task.priority === "Medium") return "Recommended";
+  return "Optional";
+}
+
+const SECTION_CATEGORY_MAP: Record<string, PlanSection> = {
+  documents: "Documents",
+  housing: "Housing",
+  movers: "Housing",
+  "singapore rental checklist": "Housing",
+  money: "Money and banking",
+  budget: "Money and banking",
+  banking: "Money and banking",
+  "income planning": "Money and banking",
+  "insurance planning": "Money and banking",
+  connectivity: "Arrival week",
+  "official sources": "Official checks",
+};
+
+export function getPlanSection(task: TimelineTask, tier: TaskTier): PlanSection {
+  if (tier === "Optional") return "Optional extras";
+  if (task.section) return task.section;
+  if (task.id === "route-specific-starter-kit") return "Start here";
+  if (task.id === "official-route-check") return "Official checks";
+
+  const category = task.category.toLowerCase();
+  if (SECTION_CATEGORY_MAP[category]) return SECTION_CATEGORY_MAP[category];
+
+  if (task.phase === "Before you move") return "Documents";
+  if (task.phase === "Days 1 to 7") return "Arrival week";
+  if (task.phase === "Days 8 to 30") return "First 30 days";
+  return "First 30 days";
+}
+
+export const PLAN_SECTION_ORDER: PlanSection[] = [
+  "Start here",
+  "Official checks",
+  "Documents",
+  "Housing",
+  "Money and banking",
+  "Arrival week",
+  "First 30 days",
+  "Optional extras",
+];
+
+// Default expand/collapse state per the V11.3 spec — only "Start here" and "Official checks"
+// start open, everything else (including Optional extras) starts collapsed.
+export const PLAN_SECTION_DEFAULT_EXPANDED: Record<PlanSection, boolean> = {
+  "Start here": true,
+  "Official checks": true,
+  Documents: false,
+  Housing: false,
+  "Money and banking": false,
+  "Arrival week": false,
+  "First 30 days": false,
+  "Optional extras": false,
+};
 
 // --- Due labels --------------------------------------------------------
 export type DueInfo = { label: string; date?: string };
@@ -208,6 +272,8 @@ export type EnrichedTask = TimelineTask & {
   scriptKey?: string;
   ruleSensitive: boolean;
   note: string;
+  resolvedTier: TaskTier;
+  resolvedSection: PlanSection;
 };
 
 export function buildEnrichedTasks(
@@ -222,6 +288,8 @@ export function buildEnrichedTasks(
     const owner = getTaskOwner(task);
     const actionInfo = getTaskActionInfo(task);
     const dueInfo = getDueInfo(task, moveDateType, moveDateValue);
+    const resolvedTier = getTaskTier(task);
+    const resolvedSection = getPlanSection(task, resolvedTier);
     return {
       ...task,
       stage,
@@ -235,6 +303,8 @@ export function buildEnrichedTasks(
       scriptKey: actionInfo.scriptKey,
       ruleSensitive: actionInfo.ruleSensitive,
       note: taskNotes[task.id] ?? "",
+      resolvedTier,
+      resolvedSection,
     };
   });
 }

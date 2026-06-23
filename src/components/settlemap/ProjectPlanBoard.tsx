@@ -1,13 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2, ChevronDown, Clock3, Copy, RefreshCcw, ShieldCheck } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, Clock3, Copy, Download, RefreshCcw, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { singaporeOfficialLinkCategories, type MoveDateKey } from "@/data/demoPlatform";
+import { singaporeOfficialLinkCategories, type MoveDateKey, type PlanSection } from "@/data/demoPlatform";
 import {
   buildEnrichedTasks,
   getNextDueTask,
-  TASK_STAGES,
+  PLAN_SECTION_DEFAULT_EXPANDED,
+  PLAN_SECTION_ORDER,
   TASK_STATUSES,
   type EnrichedTask,
   type TaskScript,
@@ -26,6 +27,62 @@ const FILTERS: FilterKey[] = ["All", "High priority", "Before move", "Arrival we
 
 const PRIVACY_COPY =
   "SettleMap helps you plan and track. It does not verify service providers, official rules, contracts, fees, visas, taxes, schools, insurance, healthcare or housing eligibility. Always verify rule-sensitive matters with official sources.";
+
+// V11.3 — plain-text checklist export. Client-side only (Blob + temporary link), no server
+// round trip, so this stays quick and safe to ship alongside the rest of the plan.
+function downloadPlanChecklist(tasks: EnrichedTask[], format: "csv" | "md") {
+  const rows = tasks.map((task) => ({
+    section: task.resolvedSection,
+    title: task.title,
+    tier: task.resolvedTier,
+    stage: task.stage,
+    priority: task.priority,
+    owner: task.owner,
+    nextStep: task.nextStep ?? "Plan this step.",
+  }));
+
+  let content: string;
+  let mime: string;
+  let extension: string;
+
+  if (format === "csv") {
+    const header = ["Section", "Title", "Tier", "Stage", "Priority", "Owner", "Next step"];
+    const escapeCell = (value: string) => `"${value.replace(/"/g, '""')}"`;
+    content = [header, ...rows.map((row) => [row.section, row.title, row.tier, row.stage, row.priority, row.owner, row.nextStep])]
+      .map((row) => row.map((cell) => escapeCell(String(cell))).join(","))
+      .join("\n");
+    mime = "text/csv;charset=utf-8";
+    extension = "csv";
+  } else {
+    const bySection = new Map<string, typeof rows>();
+    for (const row of rows) {
+      const list = bySection.get(row.section) ?? [];
+      list.push(row);
+      bySection.set(row.section, list);
+    }
+    const lines: string[] = ["# SettleMap relocation checklist", ""];
+    for (const [section, sectionRows] of bySection) {
+      lines.push(`## ${section}`, "");
+      for (const row of sectionRows) {
+        lines.push(`- [ ] **${row.title}** (${row.tier}, ${row.priority} priority, owner: ${row.owner}) — ${row.nextStep}`);
+      }
+      lines.push("");
+    }
+    content = lines.join("\n");
+    mime = "text/markdown;charset=utf-8";
+    extension = "md";
+  }
+
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `settlemap-checklist.${extension}`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 export function ProjectPlanBoard({
   tasks,
@@ -49,6 +106,11 @@ export function ProjectPlanBoard({
   scripts: Record<string, TaskScript>;
 }) {
   const [filter, setFilter] = useState<FilterKey>("All");
+  const [expandedSections, setExpandedSections] = useState<Record<PlanSection, boolean>>(PLAN_SECTION_DEFAULT_EXPANDED);
+
+  function toggleSection(section: PlanSection) {
+    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  }
 
   const enriched = useMemo(
     () => buildEnrichedTasks(tasks, taskStatuses, taskNotes, moveDateType, moveDateValue),
@@ -80,13 +142,16 @@ export function ProjectPlanBoard({
     }
   }, [enriched, filter]);
 
-  const grouped = useMemo(() => {
-    const map = new Map<TaskStage, EnrichedTask[]>();
-    for (const stage of TASK_STAGES) map.set(stage, []);
+  // V11.3 — the action plan is now grouped into named, collapsible sections (Start here,
+  // Official checks, Documents, Housing, Money and banking, Arrival week, First 30 days,
+  // Optional extras) so the user never sees the full task list at once.
+  const groupedBySection = useMemo(() => {
+    const map = new Map<PlanSection, EnrichedTask[]>();
+    for (const section of PLAN_SECTION_ORDER) map.set(section, []);
     for (const task of filtered) {
-      const list = map.get(task.stage) ?? [];
+      const list = map.get(task.resolvedSection) ?? [];
       list.push(task);
-      map.set(task.stage, list);
+      map.set(task.resolvedSection, list);
     }
     return map;
   }, [filtered]);
@@ -120,29 +185,47 @@ export function ProjectPlanBoard({
       <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-zinc-400">{progressPercent}% done</p>
 
       {/* Filters */}
-      <div className="mt-6 flex flex-wrap gap-2">
-        {FILTERS.map((item) => (
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2">
+          {FILTERS.map((item) => (
+            <button
+              key={item}
+              onClick={() => setFilter(item)}
+              className={classNames(
+                "rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ease-in-out",
+                filter === item ? "bg-emerald-600 text-white shadow-sm" : "border border-zinc-200/80 bg-white text-zinc-600 hover:border-zinc-300"
+              )}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-2">
           <button
-            key={item}
-            onClick={() => setFilter(item)}
-            className={classNames(
-              "rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ease-in-out",
-              filter === item ? "bg-emerald-600 text-white shadow-sm" : "border border-zinc-200/80 bg-white text-zinc-600 hover:border-zinc-300"
-            )}
+            type="button"
+            onClick={() => downloadPlanChecklist(enriched, "csv")}
+            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-300"
           >
-            {item}
+            <Download className="h-3.5 w-3.5" /> CSV
           </button>
-        ))}
+          <button
+            type="button"
+            onClick={() => downloadPlanChecklist(enriched, "md")}
+            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-300"
+          >
+            <Download className="h-3.5 w-3.5" /> Markdown
+          </button>
+        </div>
       </div>
 
-      {/* Desktop table */}
+      {/* Desktop table — grouped into collapsible sections */}
       <div className="mt-7 hidden overflow-x-auto md:block">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-zinc-200 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
               <th className="py-2 pr-3">Status</th>
               <th className="py-2 pr-3">Task</th>
-              <th className="py-2 pr-3">Stage</th>
+              <th className="py-2 pr-3">Tier</th>
               <th className="py-2 pr-3">Priority</th>
               <th className="py-2 pr-3">Due</th>
               <th className="py-2 pr-3">Owner</th>
@@ -151,11 +234,21 @@ export function ProjectPlanBoard({
             </tr>
           </thead>
           <tbody>
-            {TASK_STAGES.map((stage) => {
-              const stageTasks = grouped.get(stage) ?? [];
-              if (stageTasks.length === 0) return null;
+            {PLAN_SECTION_ORDER.map((section) => {
+              const sectionTasks = groupedBySection.get(section) ?? [];
+              if (sectionTasks.length === 0) return null;
+              const isExpanded = expandedSections[section];
               return (
-                <RowsForStage key={stage} stage={stage} tasks={stageTasks} onStatusChange={onStatusChange} onNoteChange={onNoteChange} scripts={scripts} />
+                <RowsForSection
+                  key={section}
+                  section={section}
+                  tasks={sectionTasks}
+                  expanded={isExpanded}
+                  onToggle={() => toggleSection(section)}
+                  onStatusChange={onStatusChange}
+                  onNoteChange={onNoteChange}
+                  scripts={scripts}
+                />
               );
             })}
           </tbody>
@@ -163,21 +256,34 @@ export function ProjectPlanBoard({
         {filtered.length === 0 && <p className="py-6 text-sm text-zinc-500">No tasks match this filter.</p>}
       </div>
 
-      {/* Mobile cards */}
-      <div className="mt-7 space-y-7 md:hidden">
-        {TASK_STAGES.map((stage) => {
-          const stageTasks = grouped.get(stage) ?? [];
-          if (stageTasks.length === 0) return null;
+      {/* Mobile cards — same collapsible sections */}
+      <div className="mt-7 space-y-5 md:hidden">
+        {PLAN_SECTION_ORDER.map((section) => {
+          const sectionTasks = groupedBySection.get(section) ?? [];
+          if (sectionTasks.length === 0) return null;
+          const isExpanded = expandedSections[section];
           return (
-            <div key={stage}>
-              <h3 className="flex items-center gap-2 text-base font-semibold text-zinc-900">
-                <Clock3 className="h-4 w-4 text-emerald-600" /> {stage}
-              </h3>
-              <div className="mt-3 space-y-3">
-                {stageTasks.map((task) => (
-                  <TaskCard key={task.id} task={task} onStatusChange={onStatusChange} onNoteChange={onNoteChange} scripts={scripts} />
-                ))}
-              </div>
+            <div key={section} className="rounded-xl border border-zinc-200/80">
+              <button
+                type="button"
+                onClick={() => toggleSection(section)}
+                className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left"
+              >
+                <span className="flex items-center gap-2 text-base font-semibold text-zinc-900">
+                  <Clock3 className="h-4 w-4 text-emerald-600" /> {section}
+                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                    {sectionTasks.length} {sectionTasks.length === 1 ? "task" : "tasks"}
+                  </span>
+                </span>
+                {isExpanded ? <ChevronDown className="h-4 w-4 text-zinc-500" /> : <ChevronRight className="h-4 w-4 text-zinc-500" />}
+              </button>
+              {isExpanded && (
+                <div className="space-y-3 border-t border-zinc-100 px-4 py-3">
+                  {sectionTasks.map((task) => (
+                    <TaskCard key={task.id} task={task} onStatusChange={onStatusChange} onNoteChange={onNoteChange} scripts={scripts} />
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
@@ -198,15 +304,19 @@ function SummaryStat({ label, value, small }: { label: string; value: string; sm
   );
 }
 
-function RowsForStage({
-  stage,
+function RowsForSection({
+  section,
   tasks,
+  expanded,
+  onToggle,
   onStatusChange,
   onNoteChange,
   scripts,
 }: {
-  stage: TaskStage;
+  section: PlanSection;
   tasks: EnrichedTask[];
+  expanded: boolean;
+  onToggle: () => void;
   onStatusChange: (id: string, status: TaskStatus) => void;
   onNoteChange: (id: string, note: string) => void;
   scripts: Record<string, TaskScript>;
@@ -214,35 +324,64 @@ function RowsForStage({
   return (
     <>
       <tr>
-        <td colSpan={8} className="pb-1 pt-5 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">{stage}</td>
+        <td colSpan={8} className="pb-1 pt-5">
+          <button
+            type="button"
+            onClick={onToggle}
+            className="flex w-full items-center gap-2 text-left text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700"
+          >
+            {expanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+            {section}
+            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal text-emerald-700">
+              {tasks.length} {tasks.length === 1 ? "task" : "tasks"}
+            </span>
+          </button>
+        </td>
       </tr>
-      {tasks.map((task) => (
-        <tr key={task.id} className="border-b border-zinc-100 align-top">
-          <td className="py-3 pr-3">
-            <StatusSelect status={task.status} onChange={(status) => onStatusChange(task.id, status)} />
-          </td>
-          <td className="max-w-xs py-3 pr-3">
-            <p className="font-semibold text-zinc-900">{task.title}</p>
-            <p className="mt-1 text-xs leading-5 text-zinc-500">{task.description}</p>
-          </td>
-          <td className="py-3 pr-3 text-xs text-zinc-600">{task.stage}</td>
-          <td className="py-3 pr-3">
-            <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.priority}</span>
-          </td>
-          <td className="py-3 pr-3 text-xs text-zinc-600">
-            {task.dueLabel}
-            {task.dueDate ? <span className="block text-[11px] text-zinc-400">{task.dueDate}</span> : null}
-          </td>
-          <td className="py-3 pr-3 text-xs text-zinc-600">{task.owner}</td>
-          <td className="py-3 pr-3">
-            <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700">{task.category}</span>
-          </td>
-          <td className="py-3 pr-3">
-            <TaskAction task={task} onNoteChange={onNoteChange} onStatusChange={onStatusChange} scripts={scripts} />
-          </td>
-        </tr>
-      ))}
+      {expanded &&
+        tasks.map((task) => (
+          <tr key={task.id} className="border-b border-zinc-100 align-top">
+            <td className="py-3 pr-3">
+              <StatusSelect status={task.status} onChange={(status) => onStatusChange(task.id, status)} />
+            </td>
+            <td className="max-w-xs py-3 pr-3">
+              <p className="font-semibold text-zinc-900">{task.title}</p>
+              <p className="mt-1 text-xs leading-5 text-zinc-500">{task.description}</p>
+              {task.nextStep && <p className="mt-1 text-xs font-semibold text-emerald-700">Next: {task.nextStep}</p>}
+            </td>
+            <td className="py-3 pr-3">
+              <TierBadge tier={task.resolvedTier} />
+            </td>
+            <td className="py-3 pr-3">
+              <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.priority}</span>
+            </td>
+            <td className="py-3 pr-3 text-xs text-zinc-600">
+              {task.dueLabel}
+              {task.dueDate ? <span className="block text-[11px] text-zinc-400">{task.dueDate}</span> : null}
+            </td>
+            <td className="py-3 pr-3 text-xs text-zinc-600">{task.owner}</td>
+            <td className="py-3 pr-3">
+              <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700">{task.category}</span>
+            </td>
+            <td className="py-3 pr-3">
+              <TaskAction task={task} onNoteChange={onNoteChange} onStatusChange={onStatusChange} scripts={scripts} />
+            </td>
+          </tr>
+        ))}
     </>
+  );
+}
+
+function TierBadge({ tier }: { tier: EnrichedTask["resolvedTier"] }) {
+  return (
+    <span
+      className={classNames(
+        "rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em]",
+        tier === "Core" ? "bg-zinc-900 text-white" : tier === "Recommended" ? "bg-emerald-50 text-emerald-700" : "bg-zinc-100 text-zinc-500"
+      )}
+    >
+      {tier}
+    </span>
   );
 }
 
@@ -264,7 +403,9 @@ function TaskCard({
         <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.priority}</span>
       </div>
       <p className="mt-2 break-words text-xs leading-5 text-zinc-500">{task.description}</p>
+      {task.nextStep && <p className="mt-1.5 text-xs font-semibold text-emerald-700">Next: {task.nextStep}</p>}
       <div className="mt-3 flex flex-wrap gap-2">
+        <TierBadge tier={task.resolvedTier} />
         <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700">{task.category}</span>
         <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{task.owner}</span>
         <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">
@@ -425,7 +566,7 @@ function TaskAction({
           <p className="text-xs font-semibold text-zinc-500">Verify from official website</p>
         </>
       )}
-      {!task.ruleSensitive && <p className="text-xs text-zinc-500">Plan this step.</p>}
+      {!task.ruleSensitive && <p className="text-xs text-zinc-500">{task.nextStep ?? "Plan this step."}</p>}
       <ShieldCheck className="hidden h-0 w-0" />
     </div>
   );

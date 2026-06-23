@@ -4,110 +4,122 @@ const baseTasks: TimelineTask[] = [
   {
     id: "official-route-check",
     phase: "Before you move",
-    title: "Verify official route requirements",
-    description: "Check official government, school, employer or immigration sources for the selected origin and destination before relying on any third-party advice.",
+    title: "Check official requirements",
+    description: "Review official government, school, employer or regulator sources for the selected origin and destination before relying on any third-party advice.",
+    nextStep: "Open official sources and save key deadlines.",
     timing: "T-60 to T-30",
     priority: "High",
     category: "Official sources",
+    tier: "Core",
+    section: "Official checks",
   },
   {
     id: "document-folder",
     phase: "Before you move",
-    title: "Create one relocation document folder",
-    description: "Organise passports, approvals, certificates, medical records, school papers, employment documents and digital backups.",
+    title: "Create document folder",
+    description: "Organise passports, approvals, certificates, medical records, school papers, employment documents and digital backups in one place.",
+    nextStep: "Create document folder.",
     timing: "T-45",
     priority: "High",
     category: "Documents",
+    tier: "Core",
+    section: "Documents",
   },
   {
     id: "temporary-stay",
     phase: "Before you move",
-    title: "Book temporary stay before long rental",
-    description: "Use hotels, serviced apartments or short stays until you understand commute, school, budget and neighbourhood reality.",
+    title: "Book temporary stay",
+    description: "Use a hotel, serviced apartment or short stay until you understand commute, school, budget and neighbourhood reality before signing a long lease.",
+    nextStep: "Compare three options.",
     timing: "T-30",
     priority: "High",
     category: "Housing",
+    tier: "Core",
+    section: "Housing",
   },
   {
     id: "budget-buffer",
     phase: "Before you move",
-    title: "Build first 60-day cash buffer",
-    description: "Plan for deposits, transport, food, furniture, school, SIM, broadband, document charges and emergency costs.",
+    title: "Plan first month budget",
+    description: "Estimate deposits, transport, food, furniture, school, SIM, broadband, document charges and emergency costs, then set a simple weekly tracking habit from day one.",
+    nextStep: "Estimate first month costs.",
     timing: "T-30",
     priority: "High",
     category: "Money",
+    tier: "Core",
+    section: "Money and banking",
   },
   {
     id: "arrival-connectivity",
     phase: "Days 1 to 7",
     title: "Get connected on arrival",
     description: "Set up local SIM or eSIM, internet access, maps, emergency numbers, local transport app and family communication plan.",
+    nextStep: "Save emergency contacts.",
     timing: "Day 1",
     priority: "High",
     category: "Connectivity",
+    tier: "Core",
+    section: "Arrival week",
   },
   {
     id: "banking-first-week",
     phase: "Days 1 to 7",
-    title: "Start banking and payments setup",
+    title: "Set up local banking",
     description: "Research local banking, payment apps, remittance, cards and salary account steps. Verify requirements with the bank directly.",
+    nextStep: "Prepare provider questions.",
     timing: "Day 2 to 7",
     priority: "High",
     category: "Banking",
-  },
-  {
-    id: "commute-test",
-    phase: "Days 1 to 7",
-    title: "Test commute and neighbourhood reality",
-    description: "Do a real commute test to work, school or university before locking housing decisions.",
-    timing: "Day 3 to 7",
-    priority: "Medium",
-    category: "Transport",
+    tier: "Core",
+    section: "Money and banking",
   },
   {
     id: "rental-search",
     phase: "Days 8 to 30",
-    title: "Shortlist long-term housing",
-    description: "Compare rent, commute, deposits, safety, school access, groceries and local rules before signing.",
+    title: "Compare housing areas",
+    description: "Test the commute to work, school or university and compare rent, deposits, safety, school access and groceries across two or three areas before signing a long-term lease.",
+    nextStep: "Compare three options.",
     timing: "Week 2 to 4",
     priority: "High",
     category: "Housing",
+    tier: "Core",
+    section: "Housing",
   },
   {
     id: "home-setup",
     phase: "Days 8 to 30",
-    title: "Set up home basics",
-    description: "Plan furniture, appliances, mattress, kitchen basics, WiFi, utilities, cleaning, repairs and delivery windows.",
+    title: "Set up home and health basics",
+    description: "Plan furniture, appliances, WiFi, utilities and delivery windows, and register with a nearby clinic or pharmacy. Verify medical requirements directly.",
+    nextStep: "Prepare provider questions.",
     timing: "Week 2 to 4",
     priority: "Medium",
     category: "Home setup",
-  },
-  {
-    id: "local-health",
-    phase: "Days 8 to 30",
-    title: "Set healthcare and emergency basics",
-    description: "Research clinics, insurance, prescriptions, emergency numbers and nearby pharmacies. Verify medical requirements directly.",
-    timing: "Week 2 to 4",
-    priority: "Medium",
-    category: "Healthcare",
+    tier: "Recommended",
+    section: "First 30 days",
   },
   {
     id: "community-map",
     phase: "Days 31 to 90",
     title: "Build community and routine",
     description: "Find local communities, cultural groups, places of worship, neighbourhood groups, expat/returnee networks, parent groups, professional circles, groceries and weekend routines.",
+    nextStep: "Add to calendar.",
     timing: "Month 2",
     priority: "Medium",
     category: "Community",
+    tier: "Recommended",
+    section: "First 30 days",
   },
   {
     id: "review-costs",
     phase: "Days 31 to 90",
-    title: "Review real cost versus assumptions",
+    title: "Review cost versus budget",
     description: "Compare actual rent, food, transport, school, insurance and setup spending against the original move budget.",
+    nextStep: "Estimate first month costs.",
     timing: "Month 2 to 3",
     priority: "Medium",
     category: "Money",
+    tier: "Recommended",
+    section: "Money and banking",
   },
 ];
 
@@ -115,11 +127,14 @@ const domesticBaseTasks: TimelineTask[] = [
   {
     id: "lease-handover",
     phase: "Before you move",
-    title: "Plan lease handover and notice periods",
-    description: "Confirm notice period, deposit return conditions, handover inspection and any cleaning or repair obligations on the current address.",
+    title: "Plan lease handover and utilities",
+    description: "Confirm notice period, deposit return conditions, handover inspection, repair obligations, and the closure or transfer date for electricity, water, gas and internet at the current address.",
+    nextStep: "Add to calendar.",
     timing: "T-30",
     priority: "High",
     category: "Housing",
+    tier: "Core",
+    section: "Housing",
   },
   {
     id: "movers-quotes-domestic",
@@ -129,15 +144,6 @@ const domesticBaseTasks: TimelineTask[] = [
     timing: "T-21",
     priority: "High",
     category: "Movers",
-  },
-  {
-    id: "utilities-transfer",
-    phase: "Before you move",
-    title: "Transfer or close out utilities",
-    description: "Plan electricity, water, gas, internet and home insurance closure at the old address and setup at the new one.",
-    timing: "T-14",
-    priority: "High",
-    category: "Utilities",
   },
   {
     id: "address-change",
@@ -160,20 +166,14 @@ const domesticBaseTasks: TimelineTask[] = [
   {
     id: "local-registrations",
     phase: "Days 8 to 30",
-    title: "Complete local registrations",
-    description: "Check local council, town or city registrations, parking permits and any address-linked local services.",
+    title: "Complete registrations and home setup",
+    description: "Check local council, town or city registrations and parking permits, and decide what to store, sell, donate or move into the new home.",
+    nextStep: "Download checklist.",
     timing: "Week 2 to 4",
     priority: "Medium",
     category: "Registrations",
-  },
-  {
-    id: "storage-furniture",
-    phase: "Days 8 to 30",
-    title: "Sort storage and furniture decisions",
-    description: "Decide what to store, sell, donate or move, and book storage or furniture delivery slots accordingly.",
-    timing: "Week 2 to 4",
-    priority: "Medium",
-    category: "Home setup",
+    tier: "Recommended",
+    section: "First 30 days",
   },
   {
     id: "local-transport-domestic",
@@ -220,20 +220,16 @@ const petAddOns: Record<PetKey, TimelineTask[]> = {
 
 const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
   job: [
-    { id: "job-offer-reality", phase: "Before you move", title: "Check salary against real setup costs", description: "Compare salary, rent, tax direction, transport, school, insurance and deposits before finalising the move plan.", timing: "T-45", priority: "High", category: "Offer decision" },
-    { id: "office-readiness", phase: "Before you move", title: "Prepare office clothing and work basics", description: "Plan formal wear, shoes, laptop accessories, commute, first-week office expectations and local business etiquette.", timing: "T-20", priority: "Medium", category: "Work" },
+    { id: "job-offer-reality", phase: "Before you move", title: "Check salary and work readiness", description: "Compare salary against rent, tax direction, transport, school and insurance, and prepare formal wear, laptop accessories and first-week office expectations.", nextStep: "Estimate first month costs.", timing: "T-45", priority: "High", category: "Offer decision", tier: "Core" },
   ],
   corporate: [
-    { id: "relocation-package", phase: "Before you move", title: "Decode employer relocation package", description: "Separate employer-covered items from family-owned tasks: flights, hotel, movers, school search, spouse support and deposits.", timing: "T-45", priority: "High", category: "Employer" },
-    { id: "mover-survey", phase: "Before you move", title: "Request mover survey and written quote", description: "Compare packing, customs, insurance, storage, destination delivery, stairs, lift and hidden charges.", timing: "T-35", priority: "High", category: "Movers" },
+    { id: "relocation-package", phase: "Before you move", title: "Decode relocation package and movers", description: "Separate employer-covered items from family-owned tasks (flights, hotel, movers, school search, spouse support, deposits) and request a written mover survey with packing, customs and insurance terms.", nextStep: "Compare three options.", timing: "T-45", priority: "High", category: "Employer", tier: "Core" },
   ],
   student: [
-    { id: "student-docs", phase: "Before you move", title: "Lock university and student documents", description: "Organise admission letter, financial proof, transcripts, accommodation, insurance, visa or pass steps and emergency contacts.", timing: "T-45", priority: "High", category: "Student" },
-    { id: "student-budget", phase: "Days 1 to 7", title: "Set student budget and transport routine", description: "Track rent, food, transport, mobile, study material, health cover and one-time setup costs from week one.", timing: "Day 1 to 7", priority: "Medium", category: "Budget" },
+    { id: "student-docs", phase: "Before you move", title: "Lock student documents", description: "Organise admission letter, financial proof, transcripts, accommodation, insurance, visa or pass steps and emergency contacts.", nextStep: "Create document folder.", timing: "T-45", priority: "High", category: "Student", tier: "Core", section: "Documents" },
   ],
   family: [
-    { id: "family-schooling", phase: "Before you move", title: "Start school and childcare research", description: "Check school calendars, records, vaccination notes, catchments, transport and childcare waitlists before arrival.", timing: "T-60", priority: "High", category: "Schooling" },
-    { id: "family-groceries", phase: "Days 1 to 7", title: "Map groceries, clinic and family basics", description: "Find nearest supermarket, cultural food and community options, clinic, pharmacy, playground and safe transport routine.", timing: "Day 1 to 7", priority: "Medium", category: "Family" },
+    { id: "family-schooling", phase: "Before you move", title: "Start school and childcare research", description: "Check school calendars, records, vaccination notes, catchments, transport and childcare waitlists before arrival.", nextStep: "Compare three options.", timing: "T-60", priority: "High", category: "Schooling", tier: "Core" },
   ],
   pr: [
     { id: "long-term-docs", phase: "Before you move", title: "Plan long-term settlement documents", description: "Prepare certificates, financial records, medical records, education documents, insurance and family files for settlement.", timing: "T-60", priority: "High", category: "Settlement" },
@@ -248,18 +244,15 @@ const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
     { id: "expense-tracking", phase: "Days 1 to 7", title: "Set simple expense tracking", description: "Track reimbursable and personal expenses from day one to avoid assignment confusion.", timing: "Day 1", priority: "Medium", category: "Money" },
   ],
   returning: [
-    { id: "reverse-relocation", phase: "Before you move", title: "Treat return home as a full relocation", description: "Check housing, NRI banking, tax residency caution, school transfer, documents, movers, SIM and healthcare continuity.", timing: "T-45", priority: "High", category: "Returning home" },
-    { id: "local-reintegration", phase: "Days 31 to 90", title: "Rebuild local systems and routines", description: "Settle banking, local ID, utilities, domestic help, commute, community, school and healthcare routines.", timing: "Month 2 to 3", priority: "Medium", category: "Routine" },
+    { id: "reverse-relocation", phase: "Before you move", title: "Restart home-country systems", description: "Check housing, banking, tax residency caution and school transfer, then rebuild local ID, commute, community and healthcare routines that lapsed while you were away.", nextStep: "Create document folder.", timing: "T-45", priority: "High", category: "Returning home", tier: "Core" },
   ],
   landed: [
     { id: "already-landed-triage", phase: "Days 1 to 7", title: "Run first-week triage", description: "Prioritise SIM, bank, temporary stay, house search, groceries, emergency contacts, WiFi and local transport.", timing: "Today", priority: "High", category: "Arrival" },
     { id: "catch-up-plan", phase: "Days 8 to 30", title: "Catch up missed pre-move tasks", description: "Backfill documents, insurance, banking, housing, school, utilities and local registrations that were not completed before arrival.", timing: "Week 2", priority: "High", category: "Catch-up" },
   ],
   retirement: [
-    { id: "retirement-healthcare", phase: "Before you move", title: "Check healthcare access and long-term insurance", description: "Research healthcare system access, long-term insurance options, and prescription or medicine continuity for the destination.", timing: "T-60", priority: "High", category: "Healthcare" },
-    { id: "retirement-income", phase: "Before you move", title: "Plan pension and retirement income logistics", description: "Understand how pension or retirement income transfers, and note tax or residency caution points to confirm with qualified professionals.", timing: "T-45", priority: "High", category: "Income planning" },
-    { id: "retirement-housing-comfort", phase: "Days 8 to 30", title: "Prioritise housing comfort and accessibility", description: "Check accessibility, transport ease, single-level living options and proximity to healthcare and daily needs.", timing: "Week 2 to 4", priority: "Medium", category: "Housing" },
-    { id: "retirement-community", phase: "Days 31 to 90", title: "Build a community and social routine", description: "Find local clubs, faith communities, hobby groups and a steady weekly routine to support wellbeing.", timing: "Month 2 to 3", priority: "Medium", category: "Community" },
+    { id: "retirement-healthcare", phase: "Before you move", title: "Check healthcare and pension logistics", description: "Research healthcare system access, long-term insurance, prescription continuity, and how pension or retirement income transfers. Confirm tax or residency points with qualified professionals.", nextStep: "Prepare provider questions.", timing: "T-60", priority: "High", category: "Healthcare", tier: "Core" },
+    { id: "retirement-housing-comfort", phase: "Days 8 to 30", title: "Prioritise housing comfort", description: "Check accessibility, transport ease, single-level living options and proximity to healthcare, then find local clubs, faith communities and hobby groups for a steady weekly routine.", nextStep: "Compare three options.", timing: "Week 2 to 4", priority: "Medium", category: "Housing", tier: "Recommended" },
   ],
   domestic: [
     { id: "domestic-school-transfer", phase: "Days 1 to 7", title: "Confirm school transfer is on track", description: "Follow up on transfer records and new-school enrolment steps if children are part of the move.", timing: "Day 1 to 7", priority: "Medium", category: "Schooling" },
@@ -280,9 +273,7 @@ const profileAddOns: Record<ProfileKey, TimelineTask[]> = {
   familyChildren: [
     { id: "children-routine", phase: "Days 8 to 30", title: "Build children’s school and activity routine", description: "Coordinate school records, transport, childcare, playgroups, healthcare and family-friendly neighbourhood research.", timing: "Week 2 to 4", priority: "High", category: "Children" },
   ],
-  student: [
-    { id: "student-life", phase: "Days 8 to 30", title: "Set student life routine", description: "Plan accommodation, campus transport, budget, groceries, health cover, study schedule and local support.", timing: "Week 2", priority: "Medium", category: "Student" },
-  ],
+  student: [],
   seniors: [
     { id: "senior-access", phase: "Before you move", title: "Plan senior medical and accessibility needs", description: "Check medicines, prescriptions, accessibility, transport, nearby clinic, insurance and emergency contacts.", timing: "T-30", priority: "High", category: "Seniors" },
   ],
@@ -382,20 +373,31 @@ const singaporeRentalChecklist: TimelineTask[] = [
 // move profile instead of always sounding family/community-oriented (e.g. for a solo or
 // student mover). Title only; the task id, phase and category are unchanged.
 const COMMUNITY_TASK_TITLE_BY_PROFILE: Partial<Record<ProfileKey, string>> = {
-  student: "Build campus and local routine",
+  student: "Set campus routine",
   solo: "Build local routine and support network",
   familyChild: "Build family routine, school rhythm and local support",
   familyChildren: "Build family routine, school rhythm and local support",
 };
 
+// V11.3 — student-life and campus routine were two separate tasks; merged into the single
+// "Set campus routine" community task below, so the description needs the campus-specific
+// content folded in (accommodation, transport, budget, study schedule, local support).
+const COMMUNITY_TASK_DESCRIPTION_BY_PROFILE: Partial<Record<ProfileKey, string>> = {
+  student: "Plan campus transport, study schedule and budget alongside finding local communities, cultural groups, groceries and weekend routines.",
+};
+
 function withRouteContext(task: TimelineTask, originLabel: string, destinationLabel: string, profileKey?: ProfileKey): TimelineTask {
-  const title = task.id === "community-map" && profileKey && COMMUNITY_TASK_TITLE_BY_PROFILE[profileKey]
+  const isCommunityTask = task.id === "community-map";
+  const title = isCommunityTask && profileKey && COMMUNITY_TASK_TITLE_BY_PROFILE[profileKey]
     ? COMMUNITY_TASK_TITLE_BY_PROFILE[profileKey]!
     : task.title;
+  const baseDescription = isCommunityTask && profileKey && COMMUNITY_TASK_DESCRIPTION_BY_PROFILE[profileKey]
+    ? COMMUNITY_TASK_DESCRIPTION_BY_PROFILE[profileKey]!
+    : task.description;
   return {
     ...task,
     title,
-    description: task.description.replace("selected origin and destination", `${originLabel} to ${destinationLabel}`),
+    description: baseDescription.replace("selected origin and destination", `${originLabel} to ${destinationLabel}`),
   };
 }
 
@@ -450,8 +452,13 @@ export function buildTimeline(
 
   // V10.1 Fix 1 — domestic school-transfer tasks should only appear when children are
   // actually part of the move, not for every domestic relocation (e.g. Solo, Couple).
+  // V11.3 — people returning to their home country already know the area, so a temporary
+  // stay search and a separate end-of-period cost review are not core actions for them.
+  const isReturning = reasonKey === "returning" && !isDomestic;
   const baseSet = (isDomestic ? domesticBaseTasks : baseTasks).filter(
-    (task) => hasChildrenContext || task.id !== "school-transfer-domestic",
+    (task) =>
+      (hasChildrenContext || task.id !== "school-transfer-domestic") &&
+      (!isReturning || (task.id !== "temporary-stay" && task.id !== "review-costs")),
   );
   const reasonTasks = reasonAddOns[reason.key].filter(
     (task) => hasChildrenContext || task.id !== "domestic-school-transfer",

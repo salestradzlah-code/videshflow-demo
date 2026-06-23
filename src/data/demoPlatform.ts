@@ -47,6 +47,23 @@ export type AddOnKey =
 
 export type TimelinePhase = "Before you move" | "Days 1 to 7" | "Days 8 to 30" | "Days 31 to 90";
 
+// V11.3 — task tier shown in the action plan UI. Falls back to a priority-based heuristic
+// (High -> Core, Medium -> Recommended, Low -> Optional) in src/lib/projectPlan.ts when a task
+// does not set this explicitly, so existing task literals do not all need to be touched.
+export type TaskTier = "Core" | "Recommended" | "Optional";
+
+// V11.3 — named action-plan section used for collapsible grouping. Falls back to a
+// phase/category-based heuristic in src/lib/projectPlan.ts when not set explicitly.
+export type PlanSection =
+  | "Start here"
+  | "Official checks"
+  | "Documents"
+  | "Housing"
+  | "Money and banking"
+  | "Arrival week"
+  | "First 30 days"
+  | "Optional extras";
+
 export type TimelineTask = {
   id: string;
   phase: TimelinePhase;
@@ -55,6 +72,10 @@ export type TimelineTask = {
   timing: string;
   priority: "High" | "Medium" | "Low";
   category: string;
+  // V11.3 additions — optional so existing task literals remain valid without edits.
+  nextStep?: string;
+  tier?: TaskTier;
+  section?: PlanSection;
 };
 
 export const destinations = [
