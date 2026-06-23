@@ -40,6 +40,9 @@ export function EarlyAccessClient() {
             We have not built paid AI plans, the Voice Guide, or partner listings yet. This page captures interest so we know
             what to prioritise first. There is no backend here, so every link below opens the same short feedback form.
           </p>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500">
+            Dedicated early access forms are coming soon. For now, use the general SettleMap feedback form and mention whether you are interested in AI route plan, Premium pack or Voice Guide.
+          </p>
           <a
             href={EARLY_ACCESS_FORM_URL}
             target="_blank"

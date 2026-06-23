@@ -31,7 +31,7 @@ export default function PartnerWithUsPage() {
             SettleMap is exploring future partner research links only. Registering interest does not create a partnership, endorsement, listing, ranking or guarantee. Future partner links, if any, may be labelled as research options, partner links or affiliate links. Official source links are never paid placements.
           </p>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500">
-            Partner interest form coming soon. For now, use the feedback form and select partner interest if available.
+            Dedicated partner intake form coming soon. For now, use the general SettleMap feedback form and mention partner interest in your response.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a href={PARTNER_FORM_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#123638] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#0c2829]">

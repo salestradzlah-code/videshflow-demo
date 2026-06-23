@@ -852,7 +852,7 @@ function Hero() {
 
 function ChooseMoveSituationSection() {
   const audiences = [
-    { title: "Moving abroad for university", desc: "University admission, student visa, housing search, and settling into campus life.", icon: Plane },
+    { title: "Moving abroad for university", desc: "Track student move preparation, housing research, document readiness, arrival tasks and official source reminders. Always check visa, immigration and admission requirements directly with official sources and the university.", icon: Plane },
     { title: "Moving for work", desc: "Job-based relocation, work pass paperwork, banking, and getting set up fast.", icon: Route },
     { title: "Moving with family", desc: "School planning, family housing, healthcare, and building a routine together.", icon: ShieldCheck },
     { title: "Moving home or within a city", desc: "Local moves and returns — lease handover, utilities, and local registrations, no visa steps.", icon: CalendarDays },
@@ -862,13 +862,13 @@ function ChooseMoveSituationSection() {
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader eyebrow="Get started" title="Choose your move situation" description="Pick the situation closest to yours — the plan adapts automatically." />
-        <div className="relative mt-6 aspect-[16/7] w-full overflow-hidden rounded-2xl shadow-sm sm:aspect-[16/5]">
+        <div className="relative mt-6 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#f8f6f1] shadow-sm sm:aspect-[16/6]">
           <Image
             src="/images/settlemap/student-relocation.png"
             alt="Student relocation planning with laptop, suitcase, route map, housing key and checklist."
             fill
             sizes="100vw"
-            className="object-cover"
+            className="object-contain sm:object-cover"
           />
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
