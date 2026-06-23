@@ -43,3 +43,12 @@ export const PARTNER_DISCLAIMER =
 
 export const COMMERCIAL_LINKS_NOTE =
   "SettleMap is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website. Pricing signals, plans and commercial links shown here are research options and future plans, not endorsements or active offers. Always verify current requirements with official sources directly. Any future affiliate or partner links will be clearly disclosed.";
+
+// V10.5: payment policy readiness.
+export const PAID_SERVICES_DISCLAIMER =
+  "This is planning support only. SettleMap does not provide legal, immigration, tax, property, financial, insurance, medical, school/admission or travel advice.";
+
+export const PAYMENT_READINESS_NOTE =
+  "Payments are not active yet. Early-access users will be contacted before any payment is requested.";
+
+export const SUPPORT_CONTACT_NOTE = "Official support email will be added before paid launch.";

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PAID_SERVICES_DISCLAIMER } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Disclaimer",
@@ -55,6 +56,11 @@ const sections = [
     id: "user-responsibility",
     title: "10. User responsibility",
     body: "You are responsible for verifying information before acting on it and for any decisions made using this platform. SettleMap and its operators are not liable for outcomes resulting from reliance on prototype content.",
+  },
+  {
+    id: "paid-services",
+    title: "11. Paid services (pilot)",
+    body: PAID_SERVICES_DISCLAIMER + " Any future paid plan or concierge pilot will provide planning support and templates only. It will not replace licensed professional advice.",
   },
 ];
 

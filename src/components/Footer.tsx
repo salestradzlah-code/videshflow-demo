@@ -14,6 +14,8 @@ const exploreLinks = [
 const planningLinks = [
   { href: "/before-you-fly", label: "Before You Move" },
   { href: "/home-setup", label: "Home Setup" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/refund-policy", label: "Refund Policy" },
   { href: "/partner-with-us", label: "Partner With Us" },
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/disclaimer", label: "Disclaimer" },
