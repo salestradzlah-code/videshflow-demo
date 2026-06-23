@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Handshake, ShieldCheck } from "lucide-react";
-import { PARTNER_FORM_URL } from "@/lib/constants";
+import { PARTNER_FORM_URL, PARTNER_DISCLAIMER } from "@/lib/constants";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 
 export const metadata: Metadata = {
@@ -31,9 +31,9 @@ export default function PartnerWithUsPage() {
             SettleMap may later list service categories and provider options for users to research. Providers can express interest in future listings or referral lead discussions.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href={PARTNER_FORM_URL} className="rounded-full bg-[#123638] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#0c2829]">
-              Submit provider interest
-            </Link>
+            <a href={PARTNER_FORM_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#123638] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#0c2829]">
+              Register partner interest
+            </a>
             <Link href="/services" className="rounded-full border border-black/10 px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
               View service categories
             </Link>
@@ -41,12 +41,10 @@ export default function PartnerWithUsPage() {
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-          <div id="partner-form-coming-soon" className="rounded-[2rem] border border-dashed border-[#123638]/30 bg-[#123638]/5 p-8">
+          <div className="rounded-[2rem] border border-dashed border-[#123638]/30 bg-[#123638]/5 p-8">
             <Handshake className="h-7 w-7 text-[#123638]" />
-            <h2 className="mt-5 text-2xl font-semibold text-[#172326]">Partner form coming soon</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-600">
-              A Tally or CRM form will be connected here. Until then, this CTA remains on-page and does not open a broken external link.
-            </p>
+            <h2 className="mt-5 text-2xl font-semibold text-[#172326]">Partner interest, not a live listing</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">{PARTNER_DISCLAIMER}</p>
           </div>
 
           <div className="rounded-[2rem] bg-white p-8 shadow-sm">

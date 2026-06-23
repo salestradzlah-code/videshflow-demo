@@ -8,6 +8,7 @@ const navItems = [
   { href: "/countries", label: "Route Library" },
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/services", label: "Services" },
+  { href: "/early-access", label: "Early Access" },
   { href: "/share-story", label: "Stories" },
   { href: "/about", label: "About" },
   { href: "/disclaimer", label: "Disclaimer" },

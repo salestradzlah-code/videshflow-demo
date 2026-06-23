@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL } from "@/lib/constants";
+import { AFFILIATE_DISCLOSURE_NOTE, DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL } from "@/lib/constants";
 
 const exploreLinks = [
   { href: "/#route-selector", label: "Build My Move Plan" },
@@ -8,6 +8,7 @@ const exploreLinks = [
   { href: "/get-help", label: "Get Help" },
   { href: "/services", label: "Services Directory" },
   { href: "/reference-links", label: "Reference Links" },
+  { href: "/early-access", label: "Early Access" },
 ];
 
 const planningLinks = [
@@ -38,6 +39,7 @@ export function Footer() {
             to support multiple languages over time.
           </p>
           <p className="mt-4 max-w-2xl text-xs leading-5 text-zinc-500">{OPERATOR_LINE}</p>
+          <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">{AFFILIATE_DISCLOSURE_NOTE}</p>
         </div>
         <div>
           <p className="font-semibold">Explore</p>

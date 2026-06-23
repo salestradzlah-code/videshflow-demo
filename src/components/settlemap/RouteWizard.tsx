@@ -7,7 +7,8 @@ import { addOnOptions, cookingOptions, destinations, documentCategories, domesti
 import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
 import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
 import { ProjectPlanBoard } from "@/components/settlemap/ProjectPlanBoard";
-import { DISCLAIMER_SHORT, TALLY_FORM_URL } from "@/lib/constants";
+import { DISCLAIMER_SHORT, TALLY_FORM_URL, COMMERCIAL_LINKS_NOTE, PARTNER_DISCLAIMER } from "@/lib/constants";
+import { trackEvent } from "@/lib/analytics";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
 import { StepProgress } from "@/components/ui/StepProgress";
@@ -514,6 +515,10 @@ export function RouteWizard() {
 
   function confirmRoute() {
     setConfirmed(true);
+    trackEvent("route_started", { route: routeLabel });
+    if (isRouteReady) {
+      trackEvent("project_plan_created", { route: routeLabel });
+    }
   }
 
   useEffect(() => {
@@ -741,6 +746,7 @@ export function RouteWizard() {
       {!showDashboard && <PreSelectionGuide />}
 
       <FutureBusinessModelSection />
+      <PartnerInterestSection />
       <FeedbackCtaSection />
 
       {showDashboard && origin && destination && reason && profile && (
@@ -772,6 +778,7 @@ export function RouteWizard() {
           </section>
 
           <ServicesSection />
+          <GetMoreHelpSection />
           <RealStoriesSection />
           <ArchitectureSection />
         </>
@@ -928,22 +935,23 @@ function PositioningSection() {
 
 function FutureBusinessModelSection() {
   const items = [
-    "Affiliate or action links to relevant services",
-    "Partner leads for vetted relocation service providers",
-    "Paid, personalised relocation plans",
-    "Concierge support for hands-on help",
-    "B2B relocation packs for employers and agencies",
+    "Free planner",
+    "Affiliate / action links",
+    "Paid personalised plans",
+    "Concierge pilot",
+    "Partner leads",
+    "Future B2B HR packs",
   ];
 
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-7 sm:p-9">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Future business model — not active today</p>
-        <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Ways SettleMap could grow into a paid product</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Business model options — not all active today</p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Monetisation readiness</h2>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-zinc-600">
-          None of the items below are live yet. SettleMap does not currently have paid plans, partnerships, or official endorsements of any kind.
+          This is a map of how SettleMap could grow into a paid product, not a list of active offers. SettleMap does not currently have paid plans, partnerships, or official endorsements of any kind.
         </p>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <li key={item} className="flex items-start gap-2 rounded-xl bg-white p-4 text-sm leading-6 text-zinc-700 shadow-sm">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
@@ -951,6 +959,142 @@ function FutureBusinessModelSection() {
             </li>
           ))}
         </ul>
+      </div>
+    </section>
+  );
+}
+
+function GetMoreHelpSection() {
+  const cards = [
+    {
+      key: "free",
+      label: "Current free product",
+      title: "Free relocation project plan",
+      price: null as string | null,
+      copy: "Build a route, generate a project-style task list and track progress in your browser, free.",
+      cta: "Start free plan",
+      href: "/#route-selector",
+      event: null as null | "action_link_clicked",
+    },
+    {
+      key: "personalised",
+      label: "Coming soon",
+      title: "Personalised route plan",
+      price: "From S$19",
+      copy: "A more detailed plan for your route, timeline, housing, documents and first 30 days.",
+      cta: "Join paid-plan waitlist",
+      href: TALLY_FORM_URL,
+      event: "paid_plan_interest_clicked" as const,
+    },
+    {
+      key: "premium",
+      label: "Coming soon",
+      title: "Premium relocation pack",
+      price: "From S$49",
+      copy: "Includes checklists, scripts, official-source reminders, budgeting prompts and first-week setup plan.",
+      cta: "Request early access",
+      href: "/early-access",
+      event: "paid_plan_interest_clicked" as const,
+    },
+    {
+      key: "concierge",
+      label: "Pilot interest",
+      title: "Concierge planning call",
+      price: "From S$79",
+      copy: "A planning walkthrough for your route. Not legal, immigration, tax, property, financial, medical, insurance or school advice.",
+      cta: "Request concierge interest",
+      href: TALLY_FORM_URL,
+      event: "concierge_interest_clicked" as const,
+    },
+  ];
+
+  return (
+    <section id="get-more-help" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader
+          eyebrow="Plans and pilots"
+          title="Need more than a checklist?"
+          description="These are research-stage plans, not active purchases. Nothing here charges a card today — interest links go to a short feedback form."
+        />
+        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {cards.map((card) => {
+            const isExternal = card.href.startsWith("http");
+            const onClick = card.event ? () => trackEvent(card.event!, { card: card.key }) : undefined;
+            return (
+              <div key={card.key} className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">{card.label}</p>
+                <h3 className="mt-3 text-lg font-semibold text-zinc-900">{card.title}</h3>
+                {card.price && <p className="mt-1 text-sm font-semibold text-zinc-500">{card.price}</p>}
+                <p className="mt-2 flex-1 text-sm leading-6 text-zinc-600">{card.copy}</p>
+                {isExternal ? (
+                  <a
+                    href={card.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={onClick}
+                    className="mt-5 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
+                  >
+                    {card.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
+                ) : (
+                  <Link
+                    href={card.href}
+                    onClick={onClick}
+                    className="mt-5 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
+                  >
+                    {card.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-6 max-w-3xl text-xs leading-6 text-zinc-500">{COMMERCIAL_LINKS_NOTE}</p>
+      </div>
+    </section>
+  );
+}
+
+function PartnerInterestSection() {
+  const partners = [
+    "Temporary stay providers",
+    "Serviced apartments",
+    "Co-living operators",
+    "Movers",
+    "Student accommodation providers",
+    "eSIM / SIM providers",
+    "Remittance providers",
+    "Insurance providers",
+    "Relocation consultants",
+  ];
+
+  return (
+    <section id="partner-with-settlemap" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl bg-white p-7 shadow-sm sm:p-9">
+        <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Future partner leads</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Partner with SettleMap</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-600">
+              SettleMap is exploring future partner leads with relocation-adjacent service categories. Registering interest does not create an active partnership or listing.
+            </p>
+            <a
+              href={TALLY_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("partner_interest_clicked", { source: "homepage_partner_section" })}
+              className="mt-6 inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
+            >
+              Register partner interest <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+            <p className="mt-5 max-w-2xl text-xs leading-6 text-zinc-500">{PARTNER_DISCLAIMER}</p>
+          </div>
+          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {partners.map((partner) => (
+              <li key={partner} className="rounded-xl bg-zinc-50 p-3.5 text-sm leading-6 text-zinc-700">{partner}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
@@ -1199,6 +1343,7 @@ function TenantBioPreview({ accommodation, destinationLabel, destinationKey }: {
     try {
       await navigator.clipboard.writeText(bioText);
       setCopyState("copied");
+      trackEvent("tenant_bio_copied", { destination: destinationLabel });
       setTimeout(() => setCopyState("idle"), 2500);
     } catch {
       setCopyState("failed");
@@ -1515,7 +1660,11 @@ function RouteStarterKit({ origin, destination, reasonFocus, profileFocus, route
       </div>
 
       {destination.starterPath ? (
-        <Link href={destination.starterPath} className="mt-6 inline-flex items-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
+        <Link
+          href={destination.starterPath}
+          onClick={() => trackEvent("action_link_clicked", { source: "route_starter_kit", route: routeLabel })}
+          className="mt-6 inline-flex items-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
+        >
           Open route starter kit <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       ) : (
