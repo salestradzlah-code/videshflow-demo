@@ -153,6 +153,17 @@ const corridors: Corridor[] = [
     focus: ["Visa route", "City selection", "School zones", "Banking"],
     href: "/start?from=india&to=australia&reason=family",
   },
+  {
+    id: "india-canada",
+    route: "India to Canada",
+    whoFor: "Families with school-age children planning a move together",
+    moveType: "Family move",
+    category: "Family Moves",
+    processingSpeed: "8 to 16 weeks",
+    complexity: "Medium",
+    focus: ["Housing research", "School timing", "Healthcare setup", "Official source checks"],
+    href: "/start?from=india&to=canada&reason=family",
+  },
 ];
 
 const complexityStyles: Record<Complexity, string> = {

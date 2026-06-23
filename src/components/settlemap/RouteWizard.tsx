@@ -257,18 +257,27 @@ export function RouteWizard() {
   const [savedPlan, setSavedPlan] = useState<SavedPlan | null>(null);
   const [showSavedBanner, setShowSavedBanner] = useState(false);
   const [resumedFromSave, setResumedFromSave] = useState(false);
+  const [savedPlanChecked, setSavedPlanChecked] = useState(false);
+  const [noSavedPlanMessage, setNoSavedPlanMessage] = useState(false);
 
   // V9.2 Part 5 — check for a saved plan once on mount. Resuming or starting new is the user's choice.
+  // V11.4 Fix 2 — track that the check has run so a deliberate "resume" attempt with nothing
+  // saved can show a clear message instead of silently doing nothing or dropping back to a blank builder.
   useEffect(() => {
     const found = loadSavedPlan();
     if (found) {
       setSavedPlan(found);
       setShowSavedBanner(true);
     }
+    setSavedPlanChecked(true);
   }, []);
 
   function resumeSavedPlan() {
-    if (!savedPlan) return;
+    if (!savedPlan) {
+      setNoSavedPlanMessage(true);
+      return;
+    }
+    setNoSavedPlanMessage(false);
     setSelection(savedPlan.selection);
     setStep(savedPlan.step ?? 1);
     setConfirmed(Boolean(savedPlan.confirmed));
@@ -295,6 +304,7 @@ export function RouteWizard() {
     } catch {}
     setSavedPlan(null);
     setShowSavedBanner(false);
+    setNoSavedPlanMessage(false);
     setSelection(initialSelection);
     setTaskStatuses({});
     setTaskNotes({});
@@ -303,8 +313,15 @@ export function RouteWizard() {
     setResumedFromSave(false);
   }
 
+  // V11.4 Fix 2 — only apply a Route Library query-string prefill once the saved-plan check above
+  // has finished AND the saved-plan banner isn't waiting on the user. This stops a Route Library
+  // link from silently overwriting an existing saved plan in storage before the user has chosen
+  // to resume it or start fresh — that overwrite was the root cause of "resume sends back to the
+  // builder" (the next visit's resume loaded the half-filled prefill instead of the real saved plan).
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!savedPlanChecked) return;
+    if (showSavedBanner) return;
     const params = new URLSearchParams(window.location.search);
     const fromParam = normalizeDestinationParam(params.get("from"));
     const toParam = normalizeDestinationParam(params.get("to"));
@@ -328,7 +345,7 @@ export function RouteWizard() {
 
     if (matchedFrom && matchedTo && matchedReason) setStep(3);
     else if (matchedFrom && matchedTo) setStep(2);
-  }, []);
+  }, [savedPlanChecked, showSavedBanner]);
 
   const isRouteReady = Boolean(selection.fromKey && selection.toKey && selection.reasonKey && selection.profileKey);
   const showDashboard = confirmed && isRouteReady;
@@ -427,8 +444,12 @@ export function RouteWizard() {
   }, [taskStatuses, taskNotes, isRouteReady, progressStorageKey]);
 
   // V9.2 Part 5 — persist the full plan (route, profile, accommodation, progress, step) in this browser only.
+  // V11.4 Fix 2 — wait until the saved-plan banner has been dismissed (Resume or Start new) before
+  // writing anything. Without this, a fresh wizard interaction or a Route Library prefill could
+  // overwrite an existing saved plan in storage before the user chose what to do with it.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (showSavedBanner) return;
     if (!selection.fromKey && !selection.toKey) return;
     try {
       const existingRaw = localStorage.getItem(SAVED_PLAN_KEY);
@@ -446,7 +467,7 @@ export function RouteWizard() {
       };
       localStorage.setItem(SAVED_PLAN_KEY, JSON.stringify(plan));
     } catch {}
-  }, [selection, step, completedIds, taskStatuses, taskNotes, confirmed]);
+  }, [selection, step, completedIds, taskStatuses, taskNotes, confirmed, showSavedBanner]);
 
   const projectScripts = useMemo(() => {
     const moveInWindowLabel = labelFor(moveInWindowOptions, selection.accommodation.moveInWindow);
@@ -550,6 +571,14 @@ export function RouteWizard() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {noSavedPlanMessage && (
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mt-2 max-w-5xl rounded-xl border border-zinc-200 bg-zinc-50 px-5 py-4 sm:px-6">
+            <p className="text-sm font-semibold text-zinc-700">No saved plan found. Start a new move plan.</p>
           </div>
         </div>
       )}
