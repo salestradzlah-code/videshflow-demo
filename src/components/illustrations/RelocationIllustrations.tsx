@@ -93,3 +93,51 @@ export function SuitcaseIllustration({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function AIPlanningIllustration({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 240 200"
+      className={className}
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="240" height="200" rx="24" fill="#f8f6f1" />
+      <rect x="56" y="50" width="128" height="92" rx="14" fill="#ffffff" stroke="#123638" strokeWidth="3" />
+      <path d="M76 78h60" stroke="#e5e9e8" strokeWidth="8" strokeLinecap="round" />
+      <path d="M76 98h88" stroke="#e5e9e8" strokeWidth="8" strokeLinecap="round" />
+      <path d="M76 118h44" stroke="#e5e9e8" strokeWidth="8" strokeLinecap="round" />
+      <path
+        d="M168 36l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"
+        fill="#10b981"
+      />
+      <path
+        d="M196 56l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"
+        fill="#10b981"
+        opacity="0.7"
+      />
+      <circle cx="120" cy="166" r="10" fill="#0c2829" />
+      <path d="M104 166h-12 M148 166h12" stroke="#0c2829" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function HousingIllustration({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 240 200"
+      className={className}
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="240" height="200" rx="24" fill="#f8f6f1" />
+      <path d="M60 110l60-46 60 46" stroke="#0c2829" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="72" y="106" width="96" height="64" rx="6" fill="#ffffff" stroke="#123638" strokeWidth="3" />
+      <rect x="112" y="134" width="20" height="36" rx="2" fill="#10b981" />
+      <rect x="86" y="120" width="18" height="18" rx="3" fill="#e5e9e8" />
+      <rect x="136" y="120" width="18" height="18" rx="3" fill="#e5e9e8" />
+      <circle cx="186" cy="60" r="14" fill="none" stroke="#10b981" strokeWidth="3" />
+      <path d="M196 70l10 10" stroke="#10b981" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}

@@ -7,10 +7,10 @@ import {
   PAYMENT_READINESS_NOTE,
   SUPPORT_CONTACT_NOTE,
   PRICING_BOUNDARY_SHORT,
-  PRICING_NOT_INCLUDED_TITLE,
-  PRICING_NOT_INCLUDED,
   FUTURE_BOOKING_LINKS_TITLE,
   FUTURE_BOOKING_LINKS_NOTE,
+  SETTLEMAP_HELPS_WITH,
+  SETTLEMAP_DOES_NOT_DO,
 } from "@/lib/constants";
 import { SuitcaseIllustration } from "@/components/illustrations/RelocationIllustrations";
 
@@ -151,16 +151,29 @@ export default function PricingPage() {
           })}
         </div>
 
-        <div className="mt-8 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">{PRICING_NOT_INCLUDED_TITLE}</p>
-          <ul className="mt-3 grid gap-2 text-sm leading-6 text-zinc-600 sm:grid-cols-2">
-            {PRICING_NOT_INCLUDED.map((item) => (
-              <li key={item} className="flex items-start gap-2">
-                <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-400" />
-                {item}
-              </li>
-            ))}
-          </ul>
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">What SettleMap helps with</p>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-600">
+              {SETTLEMAP_HELPS_WITH.map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-emerald-600" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">What SettleMap does not do</p>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-600">
+              {SETTLEMAP_DOES_NOT_DO.map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div className="mt-6 rounded-xl border border-dashed border-zinc-300 bg-white p-6 shadow-sm">

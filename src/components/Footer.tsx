@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AFFILIATE_DISCLOSURE_NOTE, DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL } from "@/lib/constants";
+import { AFFILIATE_DISCLOSURE_NOTE, DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL, LANGUAGE_TRANSLATE_NOTE } from "@/lib/constants";
 
 const exploreLinks = [
   { href: "/#route-selector", label: "Build My Move Plan" },
@@ -36,10 +36,7 @@ export function Footer() {
             stories.
           </p>
           <p className="mt-4 max-w-2xl text-xs leading-5 text-zinc-500">{DISCLAIMER_SHORT}</p>
-          <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">
-            Prefer another language? Use your browser translation feature for now. The future AI assistant is planned
-            to support multiple languages over time.
-          </p>
+          <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">{LANGUAGE_TRANSLATE_NOTE}</p>
           <p className="mt-4 max-w-2xl text-xs leading-5 text-zinc-500">{OPERATOR_LINE}</p>
           <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">{AFFILIATE_DISCLOSURE_NOTE}</p>
         </div>

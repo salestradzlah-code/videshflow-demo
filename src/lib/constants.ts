@@ -153,3 +153,44 @@ export const SUPPORT_CANNOT_HELP = [
 ];
 
 export const SUPPORT_CURRENT_STATUS_NOTE = "Current status: early feedback prototype.";
+
+// V11: AI-first homepage story, referral/partner disclosure language, and language readiness.
+
+export const SETTLEMAP_HELPS_WITH = [
+  "Planning and task organisation",
+  "Official-source reminders",
+  "Research links",
+  "Copy-ready scripts",
+  "Tenant Bio where applicable",
+  "Future AI-generated plans and Voice Guide",
+];
+
+export const SETTLEMAP_DOES_NOT_DO = [
+  "We do not provide legal, immigration, tax, property, financial, insurance, medical or school/admission advice.",
+  "We do not guarantee approvals, prices, availability, licensing, quality or outcomes.",
+  "We do not contact providers, book services, make payments or submit applications today.",
+  "Where professional help is needed, SettleMap may show research options or partner contacts, but users must verify and engage directly.",
+];
+
+export const REFERRAL_RESEARCH_NOTE =
+  "Where professional help may be useful, SettleMap may show relevant agencies, providers or partner contacts as research options. These are not endorsements or guarantees. Users must verify credentials, fees, terms and suitability directly.";
+
+export const AFFILIATE_DISCLOSURE_FULL =
+  "Some future links may be affiliate or partner links. If you choose to book directly with a third-party provider through those links, SettleMap may earn a commission at no extra cost to you. Official-source links are never paid placements.";
+
+export const LANGUAGE_TRANSLATE_NOTE =
+  "Prefer another language? Use your browser translation feature for now. Native multilingual support is planned.";
+
+export const LANGUAGE_HELP_PAGE_NOTE =
+  "Chrome, Safari and Edge can translate SettleMap into German, Italian, Hindi, Tamil and other languages using browser translation.";
+
+export const AI_APPROVAL_RULE_VISIBLE =
+  "SettleMap AI may prepare and suggest actions. You must approve before any external contact, booking, payment, submission or personal-data sharing.";
+
+export const COMING_NEXT_ITEMS = [
+  "AI-generated route plan",
+  "Premium AI relocation pack",
+  "SettleMap Voice Guide",
+  "Partner research links",
+  "Multilingual support",
+];
