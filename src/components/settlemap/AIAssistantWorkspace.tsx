@@ -2,10 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Bot, CheckCircle2, ShieldAlert, Sparkles, User } from "lucide-react";
-import { AI_ASSISTANT_DISCLAIMER, AGENT_ROADMAP_CAPABILITIES, AGENT_ROADMAP_BOUNDARIES } from "@/lib/constants";
+import { ArrowRight, Bot, CheckCircle2, Mic, ShieldAlert, Sparkles, User } from "lucide-react";
+import {
+  AI_ASSISTANT_DISCLAIMER,
+  AGENTIC_APPROVAL_RULE,
+  AGENTIC_ROADMAP_PHASES,
+  AI_CURRENT_BOUNDARIES,
+  VOICE_GUIDE_DELIVERABLES,
+} from "@/lib/constants";
 import { InfoBanner } from "@/components/ui/InfoBanner";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { VoiceGuideIllustration } from "@/components/illustrations/RelocationIllustrations";
 
 type DemoQuestion = {
   prompt: string;
@@ -183,26 +190,110 @@ export function AIAssistantWorkspace() {
           </div>
         </div>
 
-        <div className="mt-10 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Roadmap — not active yet</p>
-          <h2 className="mt-2 text-xl font-semibold text-zinc-900">Future SettleMap Agent</h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
-            Future AI capabilities may help users with planning tasks such as:
-          </p>
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-            {AGENT_ROADMAP_CAPABILITIES.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-amber-900">Current boundaries</p>
-            <ul className="mt-2 space-y-1.5">
-              {AGENT_ROADMAP_BOUNDARIES.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm leading-6 text-amber-950">
-                  <ShieldAlert className="mt-0.5 h-4 w-4 flex-none" />
+        <div className="mt-10 space-y-6">
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Available now</p>
+            <h2 className="mt-2 text-xl font-semibold text-zinc-900">Current SettleMap AI planning layer</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
+              What the planning layer does today:
+            </p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {[
+                "Route-aware planning",
+                "Task explanations",
+                "Checklist guidance",
+                "Copy-ready scripts",
+                "Official-source reminders",
+                "Browser-only progress today",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Coming soon — not active yet</p>
+            <h2 className="mt-2 text-xl font-semibold text-zinc-900">AI chatbot</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
+              A future chatbot is planned to provide:
+            </p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {[
+                "Relocation Q&A",
+                "Answers grounded in SettleMap content and approved official links",
+                "Multilingual support planned",
+                "Citations/source links planned",
+                "Safe handoff to official sources",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
+                  <Sparkles className="mt-0.5 h-4 w-4 flex-none text-zinc-400" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+            <div className="grid gap-6 lg:grid-cols-[2fr_1fr] lg:items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Coming soon — waitlist only</p>
+                <h2 className="mt-2 flex items-center gap-2 text-xl font-semibold text-zinc-900">
+                  <Mic className="h-5 w-5 text-emerald-600" /> SettleMap Voice Guide
+                </h2>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
+                  A future voice-guided walkthrough that asks planning questions, helps prioritise next steps, generates a
+                  session summary, creates checklist notes, and suggests scripts. Requires user consent for voice
+                  processing. Not available today.
+                </p>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {VOICE_GUIDE_DELIVERABLES.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/pricing" className="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:text-emerald-800">
+                  Join the Voice Guide waitlist <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Link>
+              </div>
+              <div className="hidden lg:block">
+                <VoiceGuideIllustration className="w-full" />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Roadmap — not active yet</p>
+            <h2 className="mt-2 text-xl font-semibold text-zinc-900">Future agentic AI roadmap</h2>
+            <ul className="mt-4 space-y-3">
+              {AGENTIC_ROADMAP_PHASES.map((item) => (
+                <li key={item.phase} className="flex items-start gap-3 rounded-lg bg-zinc-50 p-3">
+                  <span className="mt-0.5 flex-none rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">{item.phase}</span>
+                  <span className="text-sm leading-6 text-zinc-700">
+                    <span className="font-semibold text-zinc-900">{item.title}.</span> {item.description}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+              <p className="flex items-start gap-2 text-sm font-semibold leading-6 text-amber-950">
+                <ShieldAlert className="mt-0.5 h-4 w-4 flex-none" />
+                {AGENTIC_APPROVAL_RULE}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">Current boundaries</p>
+            <h2 className="mt-2 text-xl font-semibold text-zinc-900">What this version does not do</h2>
+            <ul className="mt-4 space-y-1.5">
+              {AI_CURRENT_BOUNDARIES.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
+                  <ShieldAlert className="mt-0.5 h-4 w-4 flex-none text-zinc-400" />
                   {item}
                 </li>
               ))}

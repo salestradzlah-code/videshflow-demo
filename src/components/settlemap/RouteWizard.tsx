@@ -13,6 +13,7 @@ import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
 import { StepProgress } from "@/components/ui/StepProgress";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { RouteMapIllustration } from "@/components/illustrations/RelocationIllustrations";
 
 function classNames(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -796,28 +797,33 @@ function Hero() {
     <section className="relative overflow-hidden px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
       <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_12%_12%,rgba(16,185,129,0.12),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(5,150,105,0.10),transparent_30%)]" />
       <div className="mx-auto max-w-7xl">
-        <div className="max-w-4xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
-            <Sparkles className="h-4 w-4 text-emerald-600" />
-            SettleMap · Map your move. Settle with confidence.
+        <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+              <Sparkles className="h-4 w-4 text-emerald-600" />
+              SettleMap · Map your move. Settle with confidence.
+            </div>
+            <h1 className="mt-7 text-5xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Map your move. Settle with confidence.</h1>
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">
+              SettleMap helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in. This is an early feedback prototype.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <button
+                onClick={() => scrollTo("route-selector")}
+                className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
+              >
+                Build my move plan
+              </button>
+              <button
+                onClick={() => scrollTo("sample-routes")}
+                className="rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300"
+              >
+                Explore sample routes
+              </button>
+            </div>
           </div>
-          <h1 className="mt-7 text-5xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Map your move. Settle with confidence.</h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">
-            SettleMap helps you plan your relocation in 90 days — from country, city, reason, family needs, pets, documents, housing, money, health, and settling in. This is an early feedback prototype.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <button
-              onClick={() => scrollTo("route-selector")}
-              className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
-            >
-              Build my move plan
-            </button>
-            <button
-              onClick={() => scrollTo("sample-routes")}
-              className="rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300"
-            >
-              Explore sample routes
-            </button>
+          <div className="hidden lg:block">
+            <RouteMapIllustration className="w-full max-w-md" />
           </div>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -937,8 +943,8 @@ function FutureBusinessModelSection() {
   const items = [
     "Free planner",
     "Affiliate / action links",
-    "Paid personalised plans",
-    "Concierge pilot",
+    "Paid AI-generated plans",
+    "SettleMap Voice Guide",
     "Partner leads",
     "Future B2B HR packs",
   ];
@@ -997,14 +1003,14 @@ function GetMoreHelpSection() {
       event: "paid_plan_interest_clicked" as const,
     },
     {
-      key: "concierge",
-      label: "Limited future pilot — not active yet",
-      title: "Concierge planning call",
-      price: "From S$79",
-      copy: "A planning walkthrough and Q&A on using SettleMap. Not active yet, no guarantee of availability. Not legal, immigration, tax, property, financial, medical, insurance or school advice.",
-      cta: "Request concierge interest",
+      key: "voice-guide",
+      label: "Coming soon / waitlist only",
+      title: "SettleMap Voice Guide",
+      price: "Coming soon, or pilot pricing to be decided",
+      copy: "A future AI-guided voice walkthrough that helps you understand your relocation plan, ask planning questions, prioritise next steps and prepare checklist notes. Not available today, and not legal, immigration, tax, property, financial, medical, insurance or school advice.",
+      cta: "Join voice guide waitlist",
       href: TALLY_FORM_URL,
-      event: "concierge_interest_clicked" as const,
+      event: "voice_guide_interest_clicked" as const,
     },
   ];
 
@@ -1109,8 +1115,8 @@ function FeedbackCtaSection() {
     "Which route are you planning?",
     "Are you a student, working professional, family with children, or domestic mover?",
     "What task is most painful in this process?",
-    "Would you pay for a personalised plan?",
-    "Would you want concierge help?",
+    "Would you pay for an AI-generated plan?",
+    "Would you use an AI Voice Guide walkthrough?",
   ];
 
   return (

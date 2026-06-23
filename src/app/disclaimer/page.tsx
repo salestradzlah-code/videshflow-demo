@@ -60,7 +60,7 @@ const sections = [
   {
     id: "paid-services",
     title: "11. Paid services (pilot)",
-    body: PAID_SERVICES_DISCLAIMER + " Any future paid plan or concierge pilot will provide planning support and templates only. It will not replace licensed professional advice.",
+    body: PAID_SERVICES_DISCLAIMER + " Any future paid plan or AI Voice Guide pilot will provide AI-generated, self-serve planning support and templates only, with no human review. It will not replace licensed professional advice.",
   },
 ];
 

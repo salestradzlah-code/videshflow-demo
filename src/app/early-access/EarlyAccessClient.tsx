@@ -11,9 +11,9 @@ const captureFields = [
   "Moving month",
   "User segment: student, working professional, family, domestic mover, or HR/company",
   "Most painful task in your move",
-  "Would you pay S$19 for a personalised plan?",
-  "Would you pay S$49 for a premium plan?",
-  "Interested in a concierge call?",
+  "Would you pay S$19 for an AI-generated route plan?",
+  "Would you pay S$49 for a premium AI relocation pack?",
+  "Interested in the SettleMap Voice Guide waitlist?",
   "Interested in partner / service recommendations?",
 ];
 
@@ -37,7 +37,7 @@ export function EarlyAccessClient() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Early access</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">SettleMap early access</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            We have not built paid plans, concierge calls, or partner listings yet. This page captures interest so we know
+            We have not built paid AI plans, the Voice Guide, or partner listings yet. This page captures interest so we know
             what to prioritise first. There is no backend here, so every link below opens the same short feedback form.
           </p>
           <a
@@ -98,10 +98,10 @@ export function EarlyAccessClient() {
             href={EARLY_ACCESS_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => openForm("concierge_interest_clicked", { source: "early_access_page" })}
+            onClick={() => openForm("voice_guide_interest_clicked", { source: "early_access_page" })}
             className="rounded-2xl border border-black/10 bg-white p-5 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50"
           >
-            Request concierge interest
+            Join SettleMap Voice Guide waitlist
           </a>
           <a
             href={EARLY_ACCESS_FORM_URL}

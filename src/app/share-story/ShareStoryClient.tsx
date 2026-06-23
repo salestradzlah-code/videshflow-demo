@@ -12,7 +12,7 @@ const questions = [
   "Are you a student, working professional, family with children, or domestic mover?",
   "What task is most painful in this process?",
   "Would you pay for a personalised plan?",
-  "Would you want concierge help?",
+  "Would you want an AI Voice Guide walkthrough?",
 ];
 
 export function ShareStoryClient() {

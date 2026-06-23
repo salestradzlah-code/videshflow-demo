@@ -60,15 +60,6 @@ export const SUPPORT_CONTACT_NOTE = "Official support email will be added before
 export const PRICING_BOUNDARY_SHORT =
   "Planning support only. SettleMap is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school/admission adviser, or government website. Always verify current requirements with official sources and qualified professionals.";
 
-export const PAID_NOT_INCLUDED = [
-  "No legal advice",
-  "No immigration advice",
-  "No property advice",
-  "No financial, tax, insurance, medical, or school/admission advice",
-  "No human review unless explicitly stated later",
-  "No booking, payment, submission, or provider contact by SettleMap yet",
-];
-
 export const AGENT_ROADMAP_CAPABILITIES = [
   "Prepare route plans",
   "Draft messages",
@@ -85,3 +76,80 @@ export const AGENT_ROADMAP_BOUNDARIES = [
   "Current version does not make payments",
   "User approval will be required before any future external action",
 ];
+
+// V10.9: consolidated launch readiness.
+export const PRICING_NOT_INCLUDED_TITLE = "Not included in any current or future pilot unless explicitly stated.";
+
+export const PRICING_NOT_INCLUDED = [
+  "No human review",
+  "No legal advice",
+  "No immigration advice",
+  "No tax or financial advice",
+  "No property advice",
+  "No insurance advice",
+  "No medical advice",
+  "No school/admission advice",
+  "No provider contact by SettleMap today",
+  "No booking by SettleMap today",
+  "No payments made by SettleMap today",
+  "No applications submitted by SettleMap today",
+  "No guarantee of visa approval, housing availability, school admission, insurance acceptance, price, quality, licensing, service availability or outcome",
+];
+
+// Kept for backward compatibility with any older references; mirrors the verbatim V10.9 list above.
+export const PAID_NOT_INCLUDED = PRICING_NOT_INCLUDED;
+
+export const AGENTIC_APPROVAL_RULE =
+  "SettleMap AI may prepare and suggest actions. You must approve before any external contact, booking, payment, submission or personal-data sharing.";
+
+export const AGENTIC_ROADMAP_PHASES = [
+  { phase: "Phase 1", title: "Drafts and checklists only", description: "AI drafts and checklists only." },
+  { phase: "Phase 2", title: "Compares research options", description: "AI compares research options." },
+  { phase: "Phase 3", title: "Prepares messages", description: "AI prepares emails/messages." },
+  { phase: "Phase 4", title: "Contacts providers with approval", description: "AI contacts providers only after user approval." },
+  { phase: "Phase 5", title: "Assists bookings/payments with approval", description: "AI assists bookings/payments only after explicit user approval." },
+];
+
+export const AI_CURRENT_BOUNDARIES = [
+  "Current version does not contact providers",
+  "Current version does not book hotels, flights, SIMs or services",
+  "Current version does not make payments",
+  "Current version does not submit forms",
+  "Current version does not provide professional advice",
+  "Current version does not process live voice sessions",
+];
+
+export const VOICE_GUIDE_DELIVERABLES = [
+  "Voice-guided plan walkthrough",
+  "Guided planning questions",
+  "Next-step summary",
+  "Script ideas",
+  "Official-source reminders",
+];
+
+export const RESOURCE_LINKS_DISCLAIMER =
+  "Service listings and external links are for research convenience only. They are not endorsements, guarantees, official recommendations, or promises of service quality, pricing, licensing, availability, or outcomes. Verify directly before engaging any provider.";
+
+export const FUTURE_BOOKING_LINKS_TITLE = "Future booking and research links.";
+
+export const FUTURE_BOOKING_LINKS_NOTE =
+  "Some future links may be affiliate or partner links. If you choose to book directly with a third-party provider through those links, SettleMap may earn a commission at no extra cost to you. Official-source links are never paid placements.";
+
+export const SUPPORT_CAN_HELP_LATER = [
+  "Billing",
+  "Technical issue",
+  "Product feedback",
+];
+
+export const SUPPORT_CANNOT_HELP = [
+  "Legal advice",
+  "Immigration advice",
+  "Tax advice",
+  "Property advice",
+  "Financial advice",
+  "Insurance advice",
+  "Medical advice",
+  "School/admission advice",
+];
+
+export const SUPPORT_CURRENT_STATUS_NOTE = "Current status: early feedback prototype.";

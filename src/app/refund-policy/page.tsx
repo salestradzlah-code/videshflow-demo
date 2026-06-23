@@ -4,7 +4,7 @@ import { TALLY_FORM_URL, SUPPORT_CONTACT_NOTE, PAYMENT_READINESS_NOTE } from "@/
 
 export const metadata: Metadata = {
   title: "Refund Policy",
-  description: "SettleMap refund policy for future paid plans and concierge pilots.",
+  description: "SettleMap refund policy for future paid AI plans and the Voice Guide pilot.",
 };
 
 const sections = [
@@ -19,9 +19,9 @@ const sections = [
     body: "If a paid plan has not yet been delivered, the customer may request cancellation or a refund within 7 days of payment.",
   },
   {
-    id: "concierge-calls",
-    title: "3. Concierge calls",
-    body: "Concierge calls may be rescheduled once if requested at least 24 hours before the scheduled call. Completed calls are non-refundable.",
+    id: "voice-guide-pilot",
+    title: "3. SettleMap Voice Guide pilot",
+    body: "If a future SettleMap Voice Guide pilot session is scheduled, it may be rescheduled once if requested at least 24 hours in advance. Completed sessions are non-refundable. The Voice Guide is not available today.",
   },
   {
     id: "non-delivery",

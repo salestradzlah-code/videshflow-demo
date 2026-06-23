@@ -13,7 +13,7 @@ export type SettleMapEvent =
   | "action_link_clicked"
   | "early_access_clicked"
   | "paid_plan_interest_clicked"
-  | "concierge_interest_clicked"
+  | "voice_guide_interest_clicked"
   | "partner_interest_clicked";
 
 export type SettleMapEventProps = Record<string, string | number | boolean | null | undefined>;

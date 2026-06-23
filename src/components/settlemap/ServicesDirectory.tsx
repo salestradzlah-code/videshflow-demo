@@ -20,10 +20,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { InfoBanner } from "@/components/ui/InfoBanner";
-import { DIRECTORY_DISCLAIMER } from "@/lib/constants";
+import { DIRECTORY_DISCLAIMER, RESOURCE_LINKS_DISCLAIMER, FUTURE_BOOKING_LINKS_TITLE, FUTURE_BOOKING_LINKS_NOTE } from "@/lib/constants";
 import { ACTION_LINKS_NOT_ENDORSEMENT, actionLinkCategories, OFFICIAL_LINKS_DISCLAIMER, singaporeOfficialLinkCategories } from "@/data/demoPlatform";
+import { ChecklistIllustration } from "@/components/illustrations/RelocationIllustrations";
 
-type ServiceGroup = "Housing" | "Moving and goods" | "Connectivity and utilities" | "Money and insurance" | "Health and family" | "Transport and admin";
+type ServiceGroup = "Housing" | "Moving and goods" | "Connectivity and utilities" | "Money and insurance" | "Healthcare" | "Family and school" | "Transport and admin";
 
 type ServiceCategory = {
   title: string;
@@ -35,7 +36,7 @@ type ServiceCategory = {
   nextSteps: string[];
 };
 
-const GROUPS: ServiceGroup[] = ["Housing", "Moving and goods", "Connectivity and utilities", "Money and insurance", "Health and family", "Transport and admin"];
+const GROUPS: ServiceGroup[] = ["Housing", "Moving and goods", "Connectivity and utilities", "Money and insurance", "Healthcare", "Family and school", "Transport and admin"];
 
 const categories: ServiceCategory[] = [
   {
@@ -153,7 +154,7 @@ const categories: ServiceCategory[] = [
   {
     title: "Healthcare and medicines",
     icon: HeartPulse,
-    group: "Health and family",
+    group: "Healthcare",
     description: "Clinic registration, prescription continuity and emergency care access.",
     examples: ["GP or clinic registration", "Prescription transfer", "Emergency contact numbers"],
     whenToResearch: "Within your first two weeks, sooner for ongoing prescriptions.",
@@ -167,7 +168,7 @@ const categories: ServiceCategory[] = [
   {
     title: "Schooling and childcare",
     icon: GraduationCap,
-    group: "Health and family",
+    group: "Family and school",
     description: "School admission timelines, childcare options and curriculum transition.",
     examples: ["School admission portals", "Childcare and nursery options", "Curriculum transcripts"],
     whenToResearch: "As early as possible — admission windows and waitlists move fast.",
@@ -181,7 +182,7 @@ const categories: ServiceCategory[] = [
   {
     title: "Pets",
     icon: PawPrint,
-    group: "Health and family",
+    group: "Family and school",
     description: "Import rules, vaccination records and pet-friendly housing and transport.",
     examples: ["Import and quarantine rules", "Vaccination and microchip records", "Pet-friendly rentals"],
     whenToResearch: "8 to 12 weeks before travel — import rules can take time to satisfy.",
@@ -260,7 +261,12 @@ export function ServicesDirectory() {
 
   return (
     <div>
-      <InfoBanner icon={<BadgeCheck className="h-5 w-5" />}>{DIRECTORY_DISCLAIMER}</InfoBanner>
+      <div className="grid gap-6 lg:grid-cols-[3fr_1fr] lg:items-center">
+        <InfoBanner icon={<BadgeCheck className="h-5 w-5" />}>{DIRECTORY_DISCLAIMER}</InfoBanner>
+        <div className="hidden lg:block">
+          <ChecklistIllustration className="w-full max-w-[200px] justify-self-end" />
+        </div>
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {(["All", ...GROUPS] as const).map((group) => (
@@ -360,6 +366,13 @@ export function ServicesDirectory() {
             ))}
           </div>
           <p className="mt-4 text-xs leading-5 text-zinc-500">{OFFICIAL_LINKS_DISCLAIMER}</p>
+        </div>
+
+        <p className="mt-6 max-w-3xl text-xs leading-5 text-zinc-500">{RESOURCE_LINKS_DISCLAIMER}</p>
+
+        <div className="mt-10 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{FUTURE_BOOKING_LINKS_TITLE}</p>
+          <p className="mt-3 text-sm leading-6 text-zinc-600">{FUTURE_BOOKING_LINKS_NOTE}</p>
         </div>
       </div>
     </div>
