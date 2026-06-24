@@ -343,7 +343,7 @@ function RowsForSection({
       </tr>
       {expanded &&
         tasks.map((task) => {
-          const hasDrawer = Boolean(task.whereToGo || task.howTo || (task.whatToPrepare && task.whatToPrepare.length) || (task.providerQuestions && task.providerQuestions.length));
+          const hasDrawer = Boolean(task.whereToGo || task.howTo || (task.whatToPrepare && task.whatToPrepare.length) || (task.providerQuestions && task.providerQuestions.length) || task.doThisBefore || task.dependsOn || task.whyItMatters);
           const drawerOpen = Boolean(openDrawers[task.id]);
           return (
             <Fragment key={task.id}>
@@ -441,6 +441,26 @@ function HowToDrawer({ task }: { task: EnrichedTask }) {
           <p className="mt-0.5">{task.aiAssistIdea}</p>
         </div>
       )}
+      {(task.doThisBefore || task.dependsOn || task.whyItMatters) && (
+        <div className="sm:col-span-2 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-amber-900">
+          <p className="font-semibold">This task depends on something else</p>
+          {task.doThisBefore && (
+            <p className="mt-1">
+              <span className="font-semibold">Do this before:</span> {task.doThisBefore}
+            </p>
+          )}
+          {task.dependsOn && (
+            <p className="mt-1">
+              <span className="font-semibold">Depends on:</span> {task.dependsOn}
+            </p>
+          )}
+          {task.whyItMatters && (
+            <p className="mt-1">
+              <span className="font-semibold">Why this matters:</span> {task.whyItMatters}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -470,7 +490,7 @@ function TaskCard({
   scripts: Record<string, TaskScript>;
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const hasDrawer = Boolean(task.whereToGo || task.howTo || (task.whatToPrepare && task.whatToPrepare.length) || (task.providerQuestions && task.providerQuestions.length));
+  const hasDrawer = Boolean(task.whereToGo || task.howTo || (task.whatToPrepare && task.whatToPrepare.length) || (task.providerQuestions && task.providerQuestions.length) || task.doThisBefore || task.dependsOn || task.whyItMatters);
   return (
     <div className="rounded-xl border border-zinc-200/80 bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">

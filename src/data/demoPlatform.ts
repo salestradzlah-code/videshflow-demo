@@ -87,6 +87,12 @@ export type TimelineTask = {
   sourceType?: "Official source" | "Research option";
   providerQuestions?: string[];
   aiAssistIdea?: string;
+  // V11.8 additions — optional dependency note shown in the "How to do this" drawer when a task
+  // relies on another task being done first (e.g. banking setup often needs a local number and
+  // address). All optional so existing task literals remain valid without edits.
+  dependsOn?: string;
+  doThisBefore?: string;
+  whyItMatters?: string;
 };
 
 export const destinations = [
@@ -567,6 +573,112 @@ export const singaporeOfficialLinkCategories: ActionLinkCategory[] = [
     // each have their own MOM page), so this stays verify-only rather than risk linking the wrong one.
   },
 ];
+
+// V11.8 — "Apps to prepare" categories per destination. These are common app categories worth
+// researching before or soon after arrival, not a mandatory or endorsed list. Example app names
+// are illustrative only (well-known, widely reported as commonly used in that market) and are
+// not recommendations — always check what is current and suitable before installing anything.
+export type AppEcosystemGuide = {
+  mapsTransport: string[];
+  localPayments: string[];
+  foodGrocery: string[];
+  rideHailing: string[];
+  emergencyContacts: string[];
+  officialServices?: string[];
+};
+
+export const appEcosystemGuide: Record<DestinationKey, AppEcosystemGuide> = {
+  india: {
+    mapsTransport: ["Google Maps", "City transit apps (metro/bus)"],
+    localPayments: ["UPI apps (e.g. bank apps, common UPI apps)", "Your bank's mobile app"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Common ride-hailing apps"],
+    emergencyContacts: ["112 India emergency helpline (verify current number locally)"],
+    officialServices: ["DigiLocker", "mAadhaar (where applicable)"],
+  },
+  singapore: {
+    mapsTransport: ["Google Maps or Citymapper-style transit apps", "SimplyGo / transit card app"],
+    localPayments: ["PayNow-enabled bank apps", "Common e-wallet apps"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Grab or other licensed ride-hailing apps"],
+    emergencyContacts: ["999 police, 995 ambulance/fire (verify current numbers)"],
+    officialServices: ["Singpass app", "HDB / URA portals (browser, not app-only)"],
+  },
+  "united-kingdom": {
+    mapsTransport: ["Google Maps", "Citymapper or local transit apps"],
+    localPayments: ["Your UK bank's mobile app", "Common contactless payment apps"],
+    foodGrocery: ["Food delivery apps", "Supermarket delivery apps"],
+    rideHailing: ["Uber or other licensed ride-hailing apps"],
+    emergencyContacts: ["999 emergency, 111 NHS non-emergency (verify current numbers)"],
+    officialServices: ["GOV.UK app / website", "NHS app"],
+  },
+  "united-states": {
+    mapsTransport: ["Google Maps", "Local transit authority app"],
+    localPayments: ["Your US bank's mobile app", "Common payment apps (e.g. Zelle-style transfers)"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Uber or Lyft, or other licensed ride-hailing apps"],
+    emergencyContacts: ["911 emergency (verify local non-emergency line too)"],
+    officialServices: ["State DMV app/site where available"],
+  },
+  canada: {
+    mapsTransport: ["Google Maps", "Local transit authority app"],
+    localPayments: ["Your Canadian bank's mobile app", "Interac e-Transfer enabled banking app"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Uber or other licensed ride-hailing apps"],
+    emergencyContacts: ["911 emergency (verify local non-emergency line too)"],
+    officialServices: ["Provincial health card / services portal"],
+  },
+  australia: {
+    mapsTransport: ["Google Maps", "State transit app (e.g. myki/Opal-style apps)"],
+    localPayments: ["Your Australian bank's mobile app", "Common payment apps"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Uber or other licensed ride-hailing apps"],
+    emergencyContacts: ["000 emergency (verify local non-emergency line too)"],
+    officialServices: ["myGov account/app"],
+  },
+  "united-arab-emirates": {
+    mapsTransport: ["Google Maps", "RTA / local transit app where applicable"],
+    localPayments: ["Your UAE bank's mobile app", "Common e-wallet apps"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Careem, Uber or other licensed ride-hailing apps"],
+    emergencyContacts: ["999 police, 998 ambulance, 997 fire (verify current numbers)"],
+    officialServices: ["UAE Pass app"],
+  },
+  "germany-eu": {
+    mapsTransport: ["Google Maps", "Local transit app (city-specific)"],
+    localPayments: ["Your bank's mobile app", "Common EU payment/transfer apps"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Uber or other licensed ride-hailing/taxi apps"],
+    emergencyContacts: ["112 EU-wide emergency number (verify local non-emergency line too)"],
+    officialServices: ["Local municipality registration portal where available"],
+  },
+  "saudi-gulf": {
+    mapsTransport: ["Google Maps", "Local transit/taxi app where applicable"],
+    localPayments: ["Your bank's mobile app", "Common e-wallet apps"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Careem, Uber or other licensed ride-hailing apps"],
+    emergencyContacts: ["999 or 911 depending on country (verify current local number)"],
+    officialServices: ["National ID / government services app where applicable"],
+  },
+  portugal: {
+    mapsTransport: ["Google Maps", "Local transit app (city-specific)"],
+    localPayments: ["Your bank's mobile app", "MB WAY or other common local payment apps"],
+    foodGrocery: ["Food delivery apps", "Grocery delivery apps"],
+    rideHailing: ["Uber, Bolt or other licensed ride-hailing apps"],
+    emergencyContacts: ["112 emergency number"],
+    officialServices: ["AT / Finanças portal where applicable"],
+  },
+  other: {
+    mapsTransport: ["A reliable maps/navigation app", "Local transit app if available"],
+    localPayments: ["Your bank's mobile app", "Common local e-wallet apps"],
+    foodGrocery: ["Food delivery apps if available", "Grocery delivery apps if available"],
+    rideHailing: ["A licensed ride-hailing or taxi app for the area"],
+    emergencyContacts: ["The local emergency number — confirm on arrival"],
+  },
+};
+
+export const APP_CATEGORIES_DISCLAIMER =
+  "Common app categories to research, not a mandatory or endorsed list. App names shown are examples only. Confirm what is current, licensed and suitable for you before installing or registering.";
 
 export const ACTION_LINKS_NOT_ENDORSEMENT =
   "These categories are research starting points, not endorsements or recommendations. SettleMap does not verify listings, agents, landlords, visas, taxes, insurance, schools or service providers. Always verify rule-sensitive matters with official sources.";

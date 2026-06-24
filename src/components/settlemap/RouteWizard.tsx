@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, Globe2, Plane, Route, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
-import { addOnOptions, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
+import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, ListOrdered, Luggage, MapPin, Globe2, Plane, Route, ShieldCheck, Smartphone, Sparkles, UploadCloud } from "lucide-react";
+import { addOnOptions, APP_CATEGORIES_DISCLAIMER, appEcosystemGuide, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
 import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
 import { ProjectPlanBoard } from "@/components/settlemap/ProjectPlanBoard";
@@ -785,6 +785,8 @@ export function RouteWizard() {
       {showDashboard && origin && destination && reason && profile && (
         <>
           <Dashboard origin={origin} destination={destination} reason={reason} profile={profile} progress={progress} completed={completedIds.length} total={timeline.length} routeLabel={routeLabel} isDomestic={isDomestic} moveDateType={selection.moveDateType} moveDateValue={selection.moveDateValue} />
+
+          <RouteSequenceGuide origin={origin} destination={destination} profile={profile} isDomestic={isDomestic} />
 
           <section id="timeline-dashboard" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.28fr_0.72fr]">
@@ -1818,6 +1820,257 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">{label}</p>
       <p className="mt-2 text-sm font-semibold text-zinc-900">{value}</p>
     </div>
+  );
+}
+
+function GuideCard({ icon, eyebrow, title, description, children }: { icon: ReactNode; eyebrow: string; title: string; description?: string; children: ReactNode }) {
+  return (
+    <div className="rounded-xl border border-zinc-200 bg-white p-6 sm:p-7">
+      <div className="flex items-center gap-2">
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">{icon}</span>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">{eyebrow}</p>
+      </div>
+      <h3 className="mt-3 text-lg font-semibold text-zinc-900">{title}</h3>
+      {description && <p className="mt-2 text-sm leading-6 text-zinc-600">{description}</p>}
+      <div className="mt-4">{children}</div>
+    </div>
+  );
+}
+
+function OrderOfOperations({ isDomestic, destinationLabel }: { isDomestic: boolean; destinationLabel: string }) {
+  const steps = isDomestic
+    ? [
+        { title: "Keep your existing access", body: "Keep your current number, banking access and ID documents active while you sort out the move. Do not cancel anything until the new setup works." },
+        { title: "Confirm local SIM or plan changes (if moving area)", body: "If you are changing telecom zones or providers, check what changes before you switch." },
+        { title: "Secure a temporary stay or confirm your address", body: `Lock in where you will stay first in ${destinationLabel} so you have an address to use for other steps.` },
+        { title: "Prepare bank/account documents", body: "Gather ID, address proof and any documents your bank may ask for if you are updating address or branch details." },
+        { title: "Set up local ID/app access where applicable", body: "Update address-linked government or service accounts only after your address is confirmed." },
+        { title: "Move to long-term housing only after checks", body: "Compare areas and run the safety/lease checks below before signing anything long-term." },
+      ]
+    : [
+        { title: "Keep your home-country access", body: "Keep your home number, banking apps and key documents active and reachable. Do this before you fly." },
+        { title: "Get a local SIM or eSIM", body: `Arrange local data/calling for ${destinationLabel} so you are reachable and can use maps, payments and ride apps on arrival.` },
+        { title: "Secure a temporary stay or confirmed address", body: "Book a temporary stay or confirm an address. Many other steps, including banking, depend on having one." },
+        { title: "Prepare bank/account documents", body: "Gather passport/ID, address proof and pass/visa documents most banks ask for before opening an account." },
+        { title: "Set up local ID/app access where applicable", body: "Register for local government, transport or payment accounts only once your number, address and ID are ready." },
+        { title: "Move to long-term housing only after checks", body: "Use a temporary stay to compare areas and run safety/lease checks before committing to a long lease." },
+      ];
+
+  return (
+    <GuideCard
+      icon={<ListOrdered className="h-4 w-4" />}
+      eyebrow="Setup sequence"
+      title="What to do first, in order"
+      description="A general sequence many people follow. This is not regulated advice — confirm exact requirements with the relevant bank, telecom provider or government service."
+    >
+      <ol className="space-y-3">
+        {steps.map((step, index) => (
+          <li key={step.title} className="flex gap-3 rounded-lg bg-zinc-50 p-3">
+            <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-semibold text-white">{index + 1}</span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-900">{step.title}</p>
+              <p className="mt-1 text-sm leading-6 text-zinc-600">{step.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </GuideCard>
+  );
+}
+
+function IndiaOtpGuide() {
+  const items = [
+    "Keep your Indian number active before departure.",
+    "Check a roaming plan or minimum recharge plan with your telecom provider so the number does not get deactivated.",
+    "Keep banking apps logged in and updated before you lose easy access to your Indian SIM.",
+    "Add a backup email or alternate OTP method where your bank allows it.",
+    "Avoid sharing OTPs with anyone, including people offering to help with setup.",
+    "Verify directly with your bank or telecom provider for the exact steps to keep access while abroad.",
+  ];
+
+  return (
+    <GuideCard
+      icon={<Smartphone className="h-4 w-4" />}
+      eyebrow="India-specific"
+      title="Keep Indian SIM and OTP access"
+      description="SettleMap does not recommend specific telecom or bank products. Confirm exact steps with your own bank or telecom provider."
+    >
+      <ul className="space-y-2">
+        {items.map((item) => (
+          <li key={item} className="flex gap-2 text-sm leading-6 text-zinc-700">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </GuideCard>
+  );
+}
+
+function AppEcosystemChecklist({ destination }: { destination: Destination }) {
+  const guide = appEcosystemGuide[destination.key as DestinationKey] ?? appEcosystemGuide.other;
+  const groups: Array<{ label: string; items: string[] }> = [
+    { label: "Maps and transport", items: guide.mapsTransport },
+    { label: "Local payments", items: guide.localPayments },
+    { label: "Food / grocery", items: guide.foodGrocery },
+    { label: "Ride hailing", items: guide.rideHailing },
+    { label: "Emergency contacts", items: guide.emergencyContacts },
+  ];
+  if (guide.officialServices && guide.officialServices.length) {
+    groups.push({ label: "Government or official services", items: guide.officialServices });
+  }
+
+  return (
+    <GuideCard
+      icon={<MapPin className="h-4 w-4" />}
+      eyebrow="Apps to prepare"
+      title={`Common app categories for ${destination.label}`}
+      description={APP_CATEGORIES_DISCLAIMER}
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        {groups.map((group) => (
+          <div key={group.label} className="rounded-lg bg-zinc-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">{group.label}</p>
+            <ul className="mt-2 space-y-1">
+              {group.items.map((item) => (
+                <li key={item} className="text-sm leading-6 text-zinc-700">{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </GuideCard>
+  );
+}
+
+function PackingGuide({ isStudent }: { isStudent: boolean }) {
+  const bring = [
+    "Documents in carry-on: passport, pass/visa approval, offer letter or contract, photos, insurance papers.",
+    "Medicines with prescription, in original packaging, with a doctor's note if possible.",
+    "Power adapters and a universal travel adapter.",
+    "First week of clothes suited to the local climate.",
+    "Basic food or comfort items if allowed by customs and airline rules.",
+  ];
+  const buyLocally = [
+    "Bedding, large kitchenware and other bulky household items.",
+    "Most toiletries and everyday groceries.",
+    "Local SIM card or eSIM (covered in the setup sequence above).",
+    "Furniture and appliances, once your stay is confirmed.",
+  ];
+
+  return (
+    <GuideCard
+      icon={<Luggage className="h-4 w-4" />}
+      eyebrow="Packing"
+      title={isStudent ? "What students typically pack vs buy after arrival" : "What to pack vs buy after arrival"}
+      description="A general starting checklist, not customs or legal advice. Airline baggage limits and customs rules vary by country and change over time."
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">Bring with you</p>
+          <ul className="mt-2 space-y-2">
+            {bring.map((item) => (
+              <li key={item} className="text-sm leading-6 text-zinc-700">{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">Better bought locally</p>
+          <ul className="mt-2 space-y-2">
+            {buyLocally.map((item) => (
+              <li key={item} className="text-sm leading-6 text-zinc-700">{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+        <p className="flex items-center gap-2 font-semibold"><AlertTriangle className="h-4 w-4" /> Baggage and customs reminder</p>
+        <p className="mt-1">Check your airline's baggage allowance and the destination's customs rules before packing food, medicine or restricted items. SettleMap does not provide customs or legal advice.</p>
+      </div>
+    </GuideCard>
+  );
+}
+
+function FirstSevenDaysChecklist({ isDomestic, destinationLabel }: { isDomestic: boolean; destinationLabel: string }) {
+  const days = [
+    { label: "Day 1", body: isDomestic ? `Arrival and settling in at your temporary stay in ${destinationLabel}; confirm your number and data still work.` : `Arrival, getting your local SIM/data sorted, and checking in to your temporary stay in ${destinationLabel}.` },
+    { label: "Day 2 – 3", body: "Sort out local transport, find nearby food/grocery options and save emergency contacts." },
+    { label: "Day 3 – 5", body: "Research banks/providers, gather documents and start any local setup that needs an address or ID." },
+    { label: "Day 5 – 7", body: "Begin housing viewings, compare services and start settling into a routine." },
+  ];
+
+  return (
+    <GuideCard
+      icon={<CalendarDays className="h-4 w-4" />}
+      eyebrow="First week"
+      title="First 7 days checklist"
+      description="A general pace many people follow in the first week. Adjust to your own pass/visa conditions and appointment availability."
+    >
+      <ul className="space-y-3">
+        {days.map((day) => (
+          <li key={day.label} className="rounded-lg bg-zinc-50 p-3">
+            <p className="text-sm font-semibold text-zinc-900">{day.label}</p>
+            <p className="mt-1 text-sm leading-6 text-zinc-600">{day.body}</p>
+          </li>
+        ))}
+      </ul>
+    </GuideCard>
+  );
+}
+
+function NeighbourhoodResearchPrompts() {
+  const prompts = [
+    "Compare commute time to work or campus across a few candidate areas.",
+    "Compare rent ranges for the unit type you need.",
+    "Check grocery and daily essentials access nearby.",
+    "Check public transport links and travel time to places you visit often.",
+    "Check distance to school or campus if relevant to your household.",
+    "Check lease rules, minimum stay and renewal terms before committing.",
+  ];
+
+  return (
+    <GuideCard
+      icon={<Globe2 className="h-4 w-4" />}
+      eyebrow="Singapore — area research"
+      title="Questions to research before choosing an area"
+      description="SettleMap does not recommend specific neighbourhoods as best. Use these prompts to compare areas yourself or with a licensed agent."
+    >
+      <ul className="space-y-2">
+        {prompts.map((prompt) => (
+          <li key={prompt} className="flex gap-2 text-sm leading-6 text-zinc-700">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+            <span>{prompt}</span>
+          </li>
+        ))}
+      </ul>
+    </GuideCard>
+  );
+}
+
+function RouteSequenceGuide({ origin, destination, profile, isDomestic }: { origin: Destination | null; destination: Destination | null; profile: Profile | null; isDomestic: boolean }) {
+  if (!destination) return null;
+  const isIndiaOrigin = !isDomestic && origin?.key === "india";
+  const isStudent = profile?.key === "student";
+  const isSingapore = destination.key === "singapore";
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader
+          eyebrow="Setup sequence"
+          title="What to do first, in order"
+          description="General guidance built from common relocation questions. Not legal, immigration, tax, financial, medical, insurance, housing or school admission advice — always confirm details with the official source."
+        />
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <OrderOfOperations isDomestic={isDomestic} destinationLabel={destination.label} />
+          {isIndiaOrigin && <IndiaOtpGuide />}
+          <AppEcosystemChecklist destination={destination} />
+          <PackingGuide isStudent={isStudent} />
+          <FirstSevenDaysChecklist isDomestic={isDomestic} destinationLabel={destination.label} />
+          {isSingapore && <NeighbourhoodResearchPrompts />}
+        </div>
+      </div>
+    </section>
   );
 }
 
