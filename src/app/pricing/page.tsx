@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, AlertTriangle, CheckCircle2, Lock, GraduationCap } from "lucide-react";
+import { ArrowRight, CheckCircle2, ExternalLink, GraduationCap, ShieldCheck } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import {
-  PAYMENT_READINESS_NOTE,
-  PILOT_PRICE_TESTING_NOTE,
   SUPPORT_CONTACT_NOTE,
   PRICING_BOUNDARY_SHORT,
   FUTURE_BOOKING_LINKS_TITLE,
@@ -16,8 +14,12 @@ import { SuitcaseIllustration } from "@/components/illustrations/RelocationIllus
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "SettleMap plans and pilot pricing. Free route plan plus early-access paid pilot for students and professionals. No public checkout active yet.",
+  description: "SettleMap Student Move Pack — S$19 early access. Route-aware 90-day plan, SIM/OTP checklist, packing guide, parent handover checklist and provider scripts.",
 };
+
+const STRIPE_LINK =
+  process.env.NEXT_PUBLIC_STRIPE_STUDENT_MOVE_PACK_PAYMENT_LINK ??
+  "https://buy.stripe.com/bJe7sKcJs90l7csgrK1gs00";
 
 const studentPackFeatures = [
   "90-day route-aware project plan",
@@ -46,25 +48,14 @@ export default function PricingPage() {
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-[3fr_1fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Plans and pilots</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Plans and pricing</p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">Pricing</h1>
             <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
-              SettleMap's route planner is free. The early-access pilot is a private, limited programme for selected testers.
-              No card is charged publicly today.
+              The route planner is free. The Student Move Pack is S$19 early access — pay securely via Stripe, no account needed.
             </p>
           </div>
           <div className="hidden lg:block">
             <SuitcaseIllustration className="w-full max-w-[200px] justify-self-end" />
-          </div>
-        </div>
-
-        {/* Payment readiness warning */}
-        <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-950">
-          <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
-          <div className="space-y-1">
-            <p className="text-sm font-semibold leading-6">{PAYMENT_READINESS_NOTE}</p>
-            <p className="text-sm leading-6">{PILOT_PRICE_TESTING_NOTE}</p>
-            <p className="text-sm leading-6">Payments will only be enabled after test payment, refund wording and delivery details are confirmed. For now, selected early-access users may be invited privately.</p>
           </div>
         </div>
 
@@ -93,17 +84,17 @@ export default function PricingPage() {
             </Link>
           </div>
 
-          {/* Student Move Pack — early access pilot */}
+          {/* Student Move Pack — ACTIVE */}
           <div className="relative flex flex-col rounded-xl border-2 border-emerald-400 bg-white p-6 shadow-md">
             <div className="absolute -top-3 left-6">
-              <span className="rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">Private early-access pilot</span>
+              <span className="rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">Early access · Open now</span>
             </div>
             <div className="mt-2 flex items-center gap-2">
               <GraduationCap className="h-5 w-5 text-emerald-600" />
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Student focus · Limited places</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Student move · India outbound</p>
             </div>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Student Move Pack</h2>
-            <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">early access</span></p>
+            <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
             <p className="mt-3 text-sm leading-6 text-zinc-600">A focused planning pack for students moving abroad — India to UK, Germany, Singapore, US, Australia or Canada. Includes scripts, packing guides and a parent/student handover checklist.</p>
             <ul className="mt-4 flex-1 space-y-2">
               {studentPackFeatures.map((f) => (
@@ -114,21 +105,27 @@ export default function PricingPage() {
               ))}
             </ul>
             <div className="mt-6 space-y-2">
-              <Link
-                href="/early-access"
+              <a
+                href={STRIPE_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
               >
-                Join early access <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-              <p className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
-                <Lock className="h-3 w-3" />
-                Payment links shared privately with selected testers only
-              </p>
+                Pay securely with Stripe <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
+                <ShieldCheck className="h-3 w-3" />
+                Secure payment via Stripe · No SettleMap account needed
+              </div>
             </div>
+            <p className="mt-3 border-t border-zinc-100 pt-3 text-[11px] leading-5 text-zinc-500">
+              After payment you will receive an email at the address used at checkout. Delivery is by email within 1 business day.{" "}
+              <Link href="/refund-policy" className="underline hover:text-zinc-700">Refund policy</Link>.
+            </p>
           </div>
 
           {/* Premium Pack — coming later */}
-          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-80">
+          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-70">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Coming later</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
             <p className="mt-1 text-2xl font-bold text-zinc-500">From S$49</p>
@@ -150,7 +147,7 @@ export default function PricingPage() {
           </div>
 
           {/* Voice Guide — waitlist only */}
-          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-80">
+          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-70">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Waitlist only · No pricing yet</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">SettleMap Voice Guide</h2>
             <p className="mt-1 text-sm font-semibold text-zinc-400">Pricing to be decided</p>
