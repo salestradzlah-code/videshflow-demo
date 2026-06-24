@@ -106,4 +106,4 @@ The AI assistant must never provide legal, immigration, tax, financial, medical,
 
 ## Internal migration note
 
-This project was originally scaffolded under the working name "VideshFlow" and briefly "SettlePath" before the public brand was finalized as SettleMap. Some internal-only filenames (e.g. legacy release scripts) and the GitHub repo / local folder path may still reference the old working name — these are not public-facing and are scheduled for cleanup in a later release. The public product name and all user-facing copy is SettleMap.
+The public product name is SettleMap. This project was originally scaffolded under the working names "VideshFlow" and "SettlePath". Old names may exist only in internal paths, the repository name, or legacy scripts; they must not appear on public pages.

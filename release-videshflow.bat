@@ -5,7 +5,7 @@ cd /d %~dp0
 set LOG=release-log.txt
 
 echo ================================ > %LOG%
-echo VideshFlow Release Started >> %LOG%
+echo SettleMap Release Started >> %LOG%
 echo Folder: %CD% >> %LOG%
 echo ================================ >> %LOG%
 
@@ -24,7 +24,7 @@ echo Adding files...
 git add . >> %LOG% 2>&1
 
 echo Committing changes...
-git commit -m "V5 SettleMap rebrand: brand rename, new route cards, interactive AI demo, feedback page, beta banner" >> %LOG% 2>&1
+git commit -m "V5 SettleMap rebrand: brand rename, new route cards, interactive AI experience, feedback page, beta banner" >> %LOG% 2>&1
 
 echo Pushing to GitHub...
 git push >> %LOG% 2>&1

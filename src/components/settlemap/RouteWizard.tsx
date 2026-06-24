@@ -2243,7 +2243,7 @@ function AiPlanningAssistant({
         <div className="max-h-80 space-y-3 overflow-auto pr-1" aria-live="polite">
           {messages.length === 0 && (
             <div className="rounded-xl bg-white/10 p-3 text-sm leading-6 text-white/90">
-              Choose a suggested question or ask for help organising your relocation checklist.
+              This AI assistant provides checklist-style planning support. Always verify official requirements with official sources.
             </div>
           )}
           {messages.map((message, index) => (

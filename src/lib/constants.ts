@@ -1,9 +1,6 @@
 export const SITE_NAME = "SettleMap";
 export const SITE_URL = "https://settlemap.app";
 
-// Previous Vercel preview URL. Kept working as a fallback only — never presented as the main public site.
-export const VERCEL_DEMO_URL = "https://settlemap-demo.vercel.app";
-
 // Live feedback channel for early access. All feedback and waitlist CTAs point here.
 export const TALLY_FORM_URL = "https://tally.so/r/Pd46qP";
 export const WAITLIST_FORM_URL = TALLY_FORM_URL;
