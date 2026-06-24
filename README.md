@@ -20,6 +20,18 @@ npm run build
 npm run start
 ```
 
+## Gemini chat pilot setup
+
+Create `.env.local` from `.env.example` and add a Gemini API key:
+
+```bash
+GEMINI_API_KEY=your_server_side_key
+```
+
+For Vercel, add `GEMINI_API_KEY` in the project environment variables and redeploy. Never prefix the variable with `NEXT_PUBLIC_`; the browser calls SettleMap's `/api/chat` route and the server calls Gemini 2.5 Flash-Lite.
+
+The pilot is limited to checklist-style planning support. It uses an HTTP-only session cookie for a simple in-memory request limit. It does not add login, a database, document upload, OCR, payments, or provider contact automation.
+
 ## Deploy
 
 Push to GitHub and import the repository into Vercel. Use the default Next.js settings.
@@ -36,11 +48,9 @@ This keeps the website from feeling like a generic relocation ocean. The selecto
 
 ## AI assistant roadmap
 
-Phase 1: Static AI Assistant page with prompt chips, language support note, service request flow, and safety boundaries.
+Current pilot: Gemini 2.5 Flash-Lite through a server-side Next.js route, with route context, prompt chips, request throttling, and strict safety boundaries.
 
-Phase 2: Embed a no-code AI chatbot such as Chatbase, Crisp, Botpress, Voiceflow, or similar. Train it only on approved SettleMap pages, FAQs, and official-source links.
-
-Phase 3: Build a custom Next.js chatbot using Vercel AI SDK or a similar stack. Use retrieval only from an approved SettleMap knowledge base and keep strict safety guardrails.
+Future phase: Use retrieval only from an approved SettleMap knowledge base and keep the current professional-advice guardrails.
 
 ### AI assistant guardrails
 
@@ -78,23 +88,17 @@ While they are placeholders, they point to safe internal fallback sections so us
 
 ## AI planner roadmap
 
-Phase 1, current launch version:
-- Static AI Assistant page
-- Prompt chips
-- Safety boundaries
-- AI planner roadmap cards
-- No login, no database, no payment, no automated tracking
+Current pilot:
+- Gemini-powered checklist chat through `/api/chat`
+- Route, move-reason, household-profile, and selected add-on context
+- Prompt chips and session request limits
+- Server-enforced professional-advice guardrails
+- No login, database, payment, document upload, OCR, or provider automation
 
-Phase 2, no-code AI assistant:
-- Embed a no-code AI chatbot such as Chatbase, Crisp, Botpress, Voiceflow, or similar
-- Train only on SettleMap website content, FAQs, approved checklists, and official source links
-- Keep responses checklist based and multilingual friendly
-
-Phase 3, custom AI assistant:
-- Build a custom Next.js chatbot using Vercel AI SDK or similar
-- Use retrieval from an approved SettleMap knowledge base
-- Add strict guardrails for legal, immigration, tax, medical, financial, insurance, school admission, housing, and vendor topics
-- Add future user-controlled reminders only after privacy and data storage are designed properly
+Future work:
+- Add retrieval only from approved SettleMap content and official-source links
+- Keep responses checklist-based and multilingual-friendly
+- Add user-controlled reminders only after privacy and data storage are designed properly
 
 ## AI safety guardrails
 

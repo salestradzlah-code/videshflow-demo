@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { AiAssistantClient } from "./AiAssistantClient";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "AI Relocation Assistant",
-  description: "Interactive preview of an AI assistant for practical relocation questions, checklists, reminders, and official source routing.",
+  title: "AI Planning Assistant",
+  description: "Build a route-aware relocation checklist and use SettleMap's limited AI planning assistant pilot.",
 };
 
 export default function AiAssistantPage() {
-  return <AiAssistantClient />;
+  redirect("/start");
 }

@@ -808,7 +808,13 @@ export function RouteWizard() {
           <section className="px-4 py-10 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.85fr_1.15fr]">
               <DocumentAuditor routeLabel={routeLabel} reasonKey={reason.key} profileKey={profile.key} />
-              <ChatbotPreview routeLabel={routeLabel} reason={reason.label} profile={profile.label} />
+              <AiPlanningAssistant
+                origin={originLabel}
+                destination={destinationLabel}
+                moveReason={reason.label}
+                whoIsMoving={profile.label}
+                selectedAddOns={selection.addOns.map((key) => addOnOptions.find((item) => item.key === key)?.label ?? key)}
+              />
             </div>
           </section>
 
@@ -1714,7 +1720,7 @@ function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan
           <Route className="mt-1 h-6 w-6 text-emerald-600" />
           <div>
             <p className="text-lg font-semibold">Complete the route choices above</p>
-            <p className="mt-1 text-sm leading-6 text-zinc-600">The full dashboard, timeline, document checklist and AI assistant preview stay hidden until your route is selected. Cities and pets are optional. This keeps the first action clear.</p>
+            <p className="mt-1 text-sm leading-6 text-zinc-600">The full dashboard, timeline, document checklist and AI planning assistant stay hidden until your route is selected. Cities and pets are optional. This keeps the first action clear.</p>
           </div>
         </div>
       )}
@@ -2154,51 +2160,121 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
   );
 }
 
-function ChatbotPreview({ routeLabel, reason, profile }: { routeLabel: string; reason: string; profile: string }) {
-  const [messages, setMessages] = useState([
-    { from: "bot", text: "This AI assistant preview shows the type of planning guidance SettleMap is designed to support." },
-  ]);
-  const [input, setInput] = useState("");
+type AiChatMessage = {
+  from: "user" | "bot";
+  text: string;
+};
 
-  function sendMessage(text?: string) {
+function AiPlanningAssistant({
+  origin,
+  destination,
+  moveReason,
+  whoIsMoving,
+  selectedAddOns,
+}: {
+  origin: string;
+  destination: string;
+  moveReason: string;
+  whoIsMoving: string;
+  selectedAddOns: string[];
+}) {
+  const [messages, setMessages] = useState<AiChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function sendMessage(text?: string) {
     const userText = (text ?? input).trim();
-    if (!userText) return;
-    setMessages((current) => [
-      ...current,
-      { from: "user", text: userText },
-      { from: "bot", text: `For ${routeLabel}, ${reason}, ${profile}, I would prioritise official links, documents, money buffer, temporary stay, local connectivity and the first 90-day task sequence. This is planning support only, not professional advice.` },
-    ]);
+    if (!userText || isLoading) return;
+
+    const history = messages.slice(-6).map((message) => ({
+      role: message.from === "bot" ? "assistant" : "user",
+      text: message.text,
+    }));
+
+    setMessages((current) => [...current, { from: "user", text: userText }]);
     setInput("");
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userText,
+          context: { origin, destination, moveReason, whoIsMoving, selectedAddOns },
+          history,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as { answer?: string; error?: string };
+      const answer = payload.answer;
+
+      if (!response.ok || !answer) {
+        throw new Error(payload.error || "The AI planning pilot could not answer right now.");
+      }
+
+      setMessages((current) => [...current, { from: "bot", text: answer }]);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "The AI planning pilot could not answer right now.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  const prompts = ["What should I do first?", "Which documents matter?", "What services should I research?"];
+  const prompts = [
+    "What should I do first?",
+    "Which documents matter?",
+    "What services should I research?",
+    "What should I do in the first 7 days?",
+  ];
 
   return (
     <div className="rounded-xl border border-zinc-200/80 bg-emerald-600 p-6 text-white shadow-sm sm:p-7">
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-white/10 p-3"><Bot className="h-6 w-6 text-white" /></div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">AI assistant preview</p>
-          <h2 className="text-2xl font-semibold">AI planning assistant preview</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Limited AI pilot</p>
+          <h2 className="text-2xl font-semibold">AI planning assistant</h2>
         </div>
       </div>
-      <p className="mt-4 text-sm leading-7 text-emerald-50">The future AI assistant will use route, move reason and family profile to generate more relevant checklist-style answers.</p>
+      <p className="mt-4 text-sm leading-7 text-emerald-50">Ask checklist-style relocation planning questions based on your selected route. This pilot does not provide professional advice.</p>
       <div className="mt-6 rounded-xl bg-white/10 p-4">
-        <div className="max-h-72 space-y-3 overflow-auto pr-1">
+        <div className="max-h-80 space-y-3 overflow-auto pr-1" aria-live="polite">
+          {messages.length === 0 && (
+            <div className="rounded-xl bg-white/10 p-3 text-sm leading-6 text-white/90">
+              Choose a suggested question or ask for help organising your relocation checklist.
+            </div>
+          )}
           {messages.map((message, index) => (
-            <div key={`${message.from}-${index}`} className={classNames("rounded-xl p-3 text-sm leading-6", message.from === "bot" ? "bg-white/10 text-white/90" : "ml-auto max-w-[85%] bg-white text-emerald-700")}>
+            <div key={`${message.from}-${index}`} className={classNames("whitespace-pre-wrap rounded-xl p-3 text-sm leading-6", message.from === "bot" ? "bg-white/10 text-white/90" : "ml-auto max-w-[85%] bg-white text-emerald-700")}>
               {message.text}
             </div>
           ))}
+          {isLoading && <div className="rounded-xl bg-white/10 p-3 text-sm leading-6 text-white/75">Building your checklist...</div>}
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           {prompts.map((prompt) => (
-            <button key={prompt} onClick={() => sendMessage(prompt)} className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/90 transition-all duration-200 ease-in-out hover:bg-white/10">{prompt}</button>
+            <button key={prompt} type="button" disabled={isLoading} onClick={() => void sendMessage(prompt)} className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/90 transition-all duration-200 ease-in-out hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50">{prompt}</button>
           ))}
         </div>
+        {error && <p className="mt-4 rounded-xl border border-white/20 bg-white/10 p-3 text-sm leading-6 text-white" role="alert">{error}</p>}
         <div className="mt-4 flex gap-2">
-          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a route planning question" className="min-w-0 flex-1 rounded-full border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/50 outline-none" />
-          <button onClick={() => sendMessage()} className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:bg-emerald-50">Send</button>
+          <input
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                void sendMessage();
+              }
+            }}
+            maxLength={800}
+            aria-label="Ask a route planning question"
+            placeholder="Ask a route planning question"
+            className="min-w-0 flex-1 rounded-full border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/50 outline-none"
+          />
+          <button type="button" disabled={isLoading || !input.trim()} onClick={() => void sendMessage()} className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-700 transition-all duration-200 ease-in-out hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60">{isLoading ? "Thinking..." : "Send"}</button>
         </div>
       </div>
     </div>
@@ -2256,11 +2332,11 @@ function ArchitectureSection() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Safety and architecture</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Global route planning now, scalable integrations later</h2>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This early access version uses an AI assistant preview, local progress state and static data panels to show the planning experience: plan, track, audit, ask, route and learn. Future phases may add OCR, AI API, CRM, calendar and provider integrations.</p>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This early access version uses a limited server-side AI planning pilot, local progress state and static data panels to support the planning experience. It does not upload documents, run OCR, contact providers, make bookings or take payments.</p>
             <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">{DISCLAIMER_SHORT}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {["No forced login", "Dashboard hidden until route is selected", "Document checklist preview", "AI assistant preview", "Route-first service research", "Safe non-advisory wording"].map((item) => (
+            {["No forced login", "Dashboard hidden until route is selected", "Document checklist preview", "Server-side AI chat pilot", "Route-first service research", "Safe non-advisory wording"].map((item) => (
               <div key={item} className="rounded-xl border border-white/10 bg-white/10 p-4 text-sm font-semibold text-white/90">
                 <CheckCircle2 className="mb-3 h-5 w-5 text-white" />
                 {item}

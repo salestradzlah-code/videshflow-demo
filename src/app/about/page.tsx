@@ -13,7 +13,7 @@ const covers = [
   "A 90-day adaptive task timeline with progress tracking",
   "Document checklists by move reason and profile",
   "Neutral service categories to research",
-  "AI assistant preview for checklist-style planning questions",
+  "Limited AI planning assistant for checklist-style planning questions",
 ];
 
 const doesNotCover = [
@@ -27,7 +27,7 @@ const doesNotCover = [
 const roadmap = [
   {
     label: "Now",
-    items: ["Route wizard and 90-day timeline", "Route library and starter kits", "AI assistant preview and service directory"],
+    items: ["Route wizard and 90-day timeline", "Route library and starter kits", "Limited AI planning assistant and service directory"],
   },
   {
     label: "Next",

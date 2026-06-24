@@ -5,6 +5,7 @@ out/
 dist/
 .env
 .env.*
+!.env.example
 *.log
 deploy-log.txt
 .DS_Store
