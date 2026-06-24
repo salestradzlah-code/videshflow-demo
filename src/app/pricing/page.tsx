@@ -114,9 +114,10 @@ export default function PricingPage() {
               </div>
             </div>
             <p className="mt-3 border-t border-zinc-100 pt-3 text-[11px] leading-5 text-zinc-500">
-              After payment, your route details are used to generate a paid Student Move Pack summary on the confirmation page and by email. If you do not receive the email within 15 minutes, check your spam folder or email{" "}
-              <a href="mailto:support@settlemap.app" className="underline hover:text-zinc-700">support@settlemap.app</a>{" "}
-              with your payment email.{" "}
+              After payment, your paid pack appears immediately on the confirmation page. A copy is also sent by email. If email delivery is delayed, use the on-screen pack and contact{" "}
+              <a href="mailto:support@settlemap.app" className="underline hover:text-zinc-700">support@settlemap.app</a>.{" "}
+              Refund requests are reviewed through{" "}
+              <Link href="/refund-request" className="underline hover:text-zinc-700">/refund-request</Link>.{" "}
               <Link href="/refund-policy" className="underline hover:text-zinc-700">Refund policy</Link>.
             </p>
           </div>
@@ -202,6 +203,9 @@ export default function PricingPage() {
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link href="/refund-policy" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-emerald-900 hover:bg-slate-50">
             Read refund policy
+          </Link>
+          <Link href="/refund-request" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-emerald-900 hover:bg-slate-50">
+            Request a refund review
           </Link>
           <Link href="/early-access" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-emerald-900 hover:bg-slate-50">
             Go to early access

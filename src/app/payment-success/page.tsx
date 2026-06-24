@@ -13,6 +13,9 @@ import {
   Loader2,
   ChevronDown,
   ChevronUp,
+  Printer,
+  Copy,
+  RefreshCw,
 } from "lucide-react";
 import { generateStudentMovePack, type PackSection } from "@/lib/studentMovePack";
 
@@ -62,6 +65,8 @@ function PackSectionCard({ section, defaultOpen = false }: { section: PackSectio
 
 // ── Full paid pack view ───────────────────────────────────────────────────────
 function PaidPackView({ data }: { data: SessionData }) {
+  const [copied, setCopied] = useState(false);
+
   const pack = generateStudentMovePack({
     moveRoute: data.moveRoute,
     otherRoute: data.otherRoute,
@@ -81,6 +86,40 @@ function PaidPackView({ data }: { data: SessionData }) {
     ),
     pack.officialSourceReminder,
   ];
+
+  function buildCopyText(): string {
+    const lines: string[] = [
+      "SettleMap Student Move Pack",
+      `Route: ${pack.effectiveRoute}`,
+      data.departureMonth ? `Expected departure: ${data.departureMonth}` : "",
+      data.concerns ? `Main concerns: ${data.concerns}` : "",
+      "",
+      `Route tip: ${pack.routeSummary}`,
+      "",
+    ];
+    for (const section of allSections) {
+      lines.push(section.title.toUpperCase());
+      for (const item of section.items) {
+        lines.push(`- ${item}`);
+      }
+      lines.push("");
+    }
+    lines.push(pack.safetyBoundaryNote);
+    lines.push("");
+    lines.push("SettleMap | support@settlemap.app | settlemap.app");
+    return lines.filter((l) => l !== undefined).join("\n");
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(buildCopyText()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }).catch(() => {/* silent */});
+  }
+
+  function handlePrint() {
+    window.print();
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -128,16 +167,44 @@ function PaidPackView({ data }: { data: SessionData }) {
         </div>
       </div>
 
-      {/* Email notice */}
+      {/* Email status — safe wording, no false "email sent" claim */}
       <div className="mt-4 flex items-start gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
         <Clock className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
         <span>
-          A copy of this pack has been emailed to your checkout email. If you do not receive it within 15 minutes, use the plan below and contact{" "}
+          Your paid pack is shown below. The email copy is also being sent to your checkout email. If it does not arrive within 15 minutes, use the plan shown here and contact{" "}
           <a href="mailto:support@settlemap.app" className="font-semibold text-emerald-700 underline">
             support@settlemap.app
           </a>
           .
         </span>
+      </div>
+
+      {/* Action buttons */}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          onClick={handlePrint}
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          <Printer className="h-4 w-4" />
+          Print / Save as PDF
+        </button>
+        <button
+          onClick={handleCopy}
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          {copied ? (
+            <><CheckCircle2 className="h-4 w-4 text-emerald-600" /> Copied!</>
+          ) : (
+            <><Copy className="h-4 w-4" /> Copy pack summary</>
+          )}
+        </button>
+        <a
+          href="mailto:support@settlemap.app"
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          <Mail className="h-4 w-4" />
+          Email support
+        </a>
       </div>
 
       {/* Pack sections */}
@@ -165,12 +232,13 @@ function PaidPackView({ data }: { data: SessionData }) {
         >
           Build my move plan <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
-        <a
-          href="mailto:support@settlemap.app"
+        <Link
+          href="/refund-request"
           className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 transition-all hover:border-zinc-400"
         >
-          Contact support <ExternalLink className="ml-2 h-4 w-4" />
-        </a>
+          <RefreshCw className="mr-2 h-4 w-4" />
+          Need a refund review?
+        </Link>
       </div>
 
       {/* Do not send */}
@@ -232,6 +300,13 @@ function FallbackView({ reason }: { reason: "no-session" | "lookup-failed" }) {
           <Mail className="mr-2 h-4 w-4" />
           support@settlemap.app
         </a>
+        <Link
+          href="/refund-request"
+          className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 hover:border-zinc-400"
+        >
+          <ExternalLink className="mr-2 h-4 w-4" />
+          Request refund review
+        </Link>
       </div>
     </div>
   );

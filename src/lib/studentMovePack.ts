@@ -1,4 +1,4 @@
-// ── SettleMap Student Move Pack Generator ────────────────────────────────────
+// ── SettleMap Student Move Pack Generator ────────────────────────────────────────────
 // Pure helper — no side effects, no async. Used by webhook email + success page.
 
 export interface PackMetadata {
@@ -28,7 +28,7 @@ export interface StudentMovePack {
   safetyBoundaryNote: string;
 }
 
-// ── Route helpers ─────────────────────────────────────────────────────────────
+// ── Route helpers ─────────────────────────────────────────────────────
 function resolveRoute(meta: PackMetadata): string {
   if (meta.moveRoute === "Other route" && meta.otherRoute?.trim())
     return meta.otherRoute.trim();
@@ -37,16 +37,19 @@ function resolveRoute(meta: PackMetadata): string {
 
 function routeContext(route: string): string {
   const r = route.toLowerCase();
-  if (r.includes("uk")) return "India to UK — check UKCISA, NHS surcharge, and UKVI visa timeline.";
-  if (r.includes("germany") || r.includes("eu")) return "India to Germany / EU — check blocked account (Sperrkonto), Anmeldung registration, and visa appointment lead times.";
-  if (r.includes("singapore")) return "India to Singapore — check ICA student pass, SAL acceptance, and accommodation near your institution.";
-  if (r.includes("us")) return "India to US — check I-20, SEVIS fee, F-1 visa interview, and earliest entry date rules.";
-  if (r.includes("australia")) return "India to Australia — check CoE, student visa (subclass 500), OSHC health insurance, and arrival reporting.";
-  if (r.includes("canada")) return "India to Canada — check study permit, SDS requirements, and PAL/LOA if needed.";
-  return "Check your destination country's official visa and student entry requirements before departure.";
+  // IMPORTANT: check "australia" BEFORE "us" — "australia" contains "us" as a substring.
+  // Use word-boundary regex for US so "australia" cannot accidentally match.
+  if (r.includes("australia")) return "India to Australia — check your CoE, student visa (subclass 500), OSHC health insurance, and university arrival reporting requirements. Refer to the Australian Department of Home Affairs and your institution's international student office for official guidance.";
+  if (r.includes("canada")) return "India to Canada — check your LOA, study permit, PAL/SDS requirements where relevant, and GIC if required by your institution. Check provincial health coverage requirements. Refer to IRCC (Immigration, Refugees and Citizenship Canada) and your institution for official guidance.";
+  if (r.includes("uk")) return "India to UK — check your CAS, student visa, BRP/eVisa collection, NHS surcharge, and UKVI visa timeline. Refer to UKCISA and the UK Visas and Immigration (UKVI) official site for official guidance.";
+  if (r.includes("germany") || r.includes("eu")) return "India to Germany / EU — check APS assessment where relevant, blocked account (Sperrkonto), health insurance, Anmeldung city registration, and residence permit appointment timelines. Refer to your German consulate and institution's international office for official guidance.";
+  if (r.includes("singapore")) return "India to Singapore — check IPA/student pass requirements, accommodation near your institution, local SIM setup, bank and payment account requirements, and campus reporting dates. Refer to ICA Singapore and your institution for official guidance.";
+  // Word-boundary check for US — ensures "australia" does not match
+  if (/\bus\b/.test(r) || r.includes("united states") || r.includes("usa")) return "India to US — check your I-20, SEVIS fee payment, F-1 visa interview requirements, and earliest entry date rules. Refer to your DSO, the US Embassy, and the official SEVIS site for official guidance.";
+  return "Check your destination country's official immigration and student entry requirements, university arrival guidance, housing rules, health coverage requirements, and local registration requirements.";
 }
 
-// ── Concern section generators ────────────────────────────────────────────────
+// ── Concern section generators ────────────────────────────────────────────
 type ConcernKey =
   | "accommodation"
   | "packing"

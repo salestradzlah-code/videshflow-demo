@@ -6,6 +6,7 @@ export async function GET() {
   const stripeConfigured = !!process.env.STRIPE_SECRET_KEY && !!process.env.STRIPE_WEBHOOK_SECRET;
   const resendConfigured = !!process.env.RESEND_API_KEY;
   const adminTokenConfigured = !!process.env.SETTLEMAP_ADMIN_TOKEN;
+  const fromEmailConfigured = !!process.env.SETTLEMAP_FROM_EMAIL;
   const checkoutEnabled = process.env.STUDENT_PACK_CHECKOUT_ENABLED !== "false";
   const autofulfillEnabled = process.env.STUDENT_PACK_AUTOFULFILL_ENABLED !== "false";
   const paymentsEnabled = process.env.NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED !== "false";
@@ -18,9 +19,16 @@ export async function GET() {
     stripeConfigured,
     resendConfigured,
     adminTokenConfigured,
-    fulfilmentVersion: "V12.10",
+    fromEmailConfigured,
+    fulfilmentVersion: "V12.10.1",
+    // V12.10 features
     studentPackGeneratorReady: true,
     sessionLookupReady: true,
     resendEndpointReady: adminTokenConfigured,
+    // V12.10.1 features
+    paidPackGeneratorReady: true,
+    routeTipsReady: true,
+    refundRequestReady: true,
+    fulfilmentEmailConfigured: resendConfigured && fromEmailConfigured,
   });
 }
