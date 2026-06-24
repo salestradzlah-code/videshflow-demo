@@ -18,13 +18,14 @@ export const metadata: Metadata = {
 };
 
 const studentPackFeatures = [
+  "Immediate paid pack summary on confirmation page",
+  "Full pack sent by email automatically after payment",
   "90-day route-aware project plan",
   "First 7 days setup guide",
-  "India SIM/OTP continuity checklist",
+  "Concern-based checklist — SIM, banking, accommodation, insurance and more",
   "Packing and bring-vs-buy checklist",
   "Parent/student question checklist",
   "Provider research scripts",
-  "Downloadable checklist (PDF where available)",
   "Support by email: support@settlemap.app",
 ];
 
@@ -113,7 +114,7 @@ export default function PricingPage() {
               </div>
             </div>
             <p className="mt-3 border-t border-zinc-100 pt-3 text-[11px] leading-5 text-zinc-500">
-              After payment, Stripe sends your receipt and SettleMap sends your Student Move Pack email automatically. If you do not receive the SettleMap email within 15 minutes, check your spam folder or email{" "}
+              After payment, your route details are used to generate a paid Student Move Pack summary on the confirmation page and by email. If you do not receive the email within 15 minutes, check your spam folder or email{" "}
               <a href="mailto:support@settlemap.app" className="underline hover:text-zinc-700">support@settlemap.app</a>{" "}
               with your payment email.{" "}
               <Link href="/refund-policy" className="underline hover:text-zinc-700">Refund policy</Link>.

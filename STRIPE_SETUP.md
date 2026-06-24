@@ -1,118 +1,103 @@
-# SettleMap V12.8 — Stripe Webhook Setup
+# SettleMap Stripe + Resend Setup — V12.9
 
-Internal reference for Ash. Do not commit with real secret values.
+## Required Vercel Environment Variables
 
----
+| Variable | Notes |
+|---|---|
+| `STRIPE_SECRET_KEY` | Stripe secret key — server-side only, never NEXT_PUBLIC |
+| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret (`whsec_…`) from Stripe event destination |
+| `RESEND_API_KEY` | Resend API key — server-side only |
+| `SETTLEMAP_FROM_EMAIL` | e.g. `SettleMap <support@settlemap.app>` |
+| `SETTLEMAP_SUPPORT_EMAIL` | e.g. `support@settlemap.app` |
+| `NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED` | `true` to show payment CTA; `false` to hide and show paused message |
+| `STUDENT_PACK_CHECKOUT_ENABLED` | `true` to allow checkout session creation; `false` returns 503 |
+| `STUDENT_PACK_AUTOFULFILL_ENABLED` | `true` to send customer email automatically; `false` sends internal alert only (manual required) |
+| `NEXT_PUBLIC_STRIPE_STUDENT_MOVE_PACK_PAYMENT_LINK` | Legacy Stripe Payment Link — kept for fallback reference only |
 
-## Environment variables
+## Stripe Webhook Endpoint
 
-Set these in Vercel project settings (Settings → Environment Variables). Never put in `.env` or git.
+- URL: `https://settlemap.app/api/stripe/webhook`
+- Events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`
+- Location in Stripe: Workbench → Event destinations → `settlemap-student-move-pack`
+- Copy the `whsec_…` signing secret and add to Vercel as `STRIPE_WEBHOOK_SECRET`
 
-| Variable | Where to find | Safe to commit? |
+## Fulfilment Logic Summary (V12.9)
+
+1. User opens `/student-move-pack` and fills in intake form (email, name, role, route, departure, concerns, consent)
+2. Form POSTs to `/api/stripe/create-checkout-session` — creates Stripe Checkout Session with all metadata in `payment_intent_data.metadata`
+3. User pays S$19 on Stripe-hosted checkout
+4. Stripe fires `checkout.session.completed` webhook to `/api/stripe/webhook`
+5. Webhook verifies signature, validates payment (paid, 1900 SGD, student_move_pack product)
+6. Retrieves PaymentIntent — checks `settlemap_fulfilled_at` for idempotency (prevents duplicate emails on retry)
+7. If `STUDENT_PACK_AUTOFULFILL_ENABLED=true`: sends customer fulfilment email via Resend
+8. Updates PaymentIntent metadata: `settlemap_fulfilled_at`, `settlemap_fulfilment_version=V12.9`
+9. Sends internal notification to `SETTLEMAP_SUPPORT_EMAIL`
+10. If `STUDENT_PACK_AUTOFULFILL_ENABLED=false`: sends internal alert for manual fulfilment only
+
+## Feature Flags
+
+| Flag | Value | Effect |
 |---|---|---|
-| `STRIPE_SECRET_KEY` | Stripe Dashboard → API keys → Secret key | No |
-| `STRIPE_WEBHOOK_SECRET` | Stripe Dashboard → Webhooks → signing secret | No |
-| `RESEND_API_KEY` | Resend Dashboard → API Keys | No |
-| `SETTLEMAP_FROM_EMAIL` | Set to `SettleMap <support@settlemap.app>` | Yes (no secret) |
-| `SETTLEMAP_SUPPORT_EMAIL` | Set to `support@settlemap.app` | Yes (no secret) |
-| `NEXT_PUBLIC_STRIPE_STUDENT_MOVE_PACK_PAYMENT_LINK` | The Stripe Payment Link URL | Yes |
+| `NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED` | `true` | Shows payment CTA on /pricing and /student-move-pack |
+| `NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED` | `false` | Hides CTA, shows "payments paused" message |
+| `STUDENT_PACK_CHECKOUT_ENABLED` | `true` | Allows checkout session creation |
+| `STUDENT_PACK_CHECKOUT_ENABLED` | `false` | Returns 503 with friendly error |
+| `STUDENT_PACK_AUTOFULFILL_ENABLED` | `true` | Sends customer email automatically |
+| `STUDENT_PACK_AUTOFULFILL_ENABLED` | `false` | Skips customer email, sends internal manual-action alert |
 
----
-
-## Stripe webhook setup
-
-1. Go to Stripe Dashboard → Developers → Webhooks
-2. Click **Add endpoint**
-3. Endpoint URL: `https://settlemap.app/api/stripe/webhook`
-4. Select events to listen to:
-   - `checkout.session.completed`
-   - `checkout.session.async_payment_succeeded`
-5. Click **Add endpoint**
-6. Copy the **Signing secret** (`whsec_...`) → save as `STRIPE_WEBHOOK_SECRET` in Vercel
-
-### Health check
-
-After deploy, verify the endpoint is live:
-
-```
-curl https://settlemap.app/api/stripe/webhook
-# Expected: SettleMap Stripe webhook endpoint is available.
-```
-
----
-
-## Stripe Payment Link — custom fields
-
-The Payment Link `https://buy.stripe.com/bJe7sKcJs90l7csgrK1gs00` should have these custom fields configured in Stripe Dashboard:
-
-| Key | Label | Type | Required |
-|---|---|---|---|
-| `student_name` | Student or parent name | Text | Yes |
-| `move_route` | Move route (e.g. India to UK) | Text | Yes |
-| `departure_month` | Expected departure month | Text | Yes |
-
-The webhook parses these by matching keywords in the field key:
-- `name`/`student`/`parent` → customer name
-- `route`/`move`/`destination` → move route
-- `departure`/`month`/`when` → departure month
-
-If custom fields are missing, the customer email still sends but asks the customer to reply with their route details.
-
----
-
-## Resend domain setup
-
-1. In Resend Dashboard → Domains, verify `settlemap.app`
-2. Add DNS records as instructed by Resend (SPF, DKIM, DMARC)
-3. Set `SETTLEMAP_FROM_EMAIL` to `SettleMap <support@settlemap.app>` once verified
-4. Create an API key (not the root key) with Send permission only → save as `RESEND_API_KEY`
-
----
-
-## Fulfilment logic summary
-
-1. Stripe calls `POST /api/stripe/webhook` on `checkout.session.completed`
-2. Webhook verifies signature with `STRIPE_WEBHOOK_SECRET`
-3. Validates: `payment_status === "paid"`, `amount_total === 1900`, `currency === "sgd"`
-4. Retrieves PaymentIntent — checks `settlemap_fulfilled_at` metadata for idempotency
-5. Sends customer fulfilment email via Resend
-6. Updates PaymentIntent metadata with `settlemap_fulfilled_at` timestamp
-7. Sends internal notification to `SETTLEMAP_SUPPORT_EMAIL`
-8. Returns `{ received: true }` with status 200
-
-If the customer email send fails (Resend error), returns HTTP 500 so Stripe retries.
-
----
-
-## Safe logging rules (already implemented in webhook)
+## Safe Logging Rules
 
 | Safe to log | Never log |
 |---|---|
 | event.id, event.type | Stripe secret key |
-| session.id, payment_intent.id | Webhook secret |
-| Email domain only (e.g. `gmail.com`) | Resend API key |
-| Fulfilment status (true/false) | Full email address in logs |
-| Error type/name only | Full card details |
-| Amount and currency | Authorization headers |
-| | Passport/ID numbers |
+| session.id | Webhook secret |
+| paymentIntentId | Resend API key |
+| email domain only (after `@`) | Full customer email |
+| fulfilment status, error type | Full card details |
+| move route, departure month | Personal ID numbers |
 
----
+## Health Check
 
-## Testing
+```
+GET https://settlemap.app/api/stripe/health
+```
 
-Use Stripe CLI for local testing:
+Returns JSON — no secrets exposed:
+```json
+{
+  "stripeWebhookEndpoint": "available",
+  "paymentsEnabled": true,
+  "checkoutEnabled": true,
+  "autofulfillEnabled": true,
+  "stripeConfigured": true,
+  "resendConfigured": true,
+  "fulfilmentVersion": "V12.9"
+}
+```
+
+## Resend Domain Verification
+
+- Go to resend.com → Domains → Add `settlemap.app`
+- Add the DNS records (SPF, DKIM, DMARC) shown to your DNS provider
+- Until verified, emails send but may have deliverability issues
+
+## Test Workflow
+
+1. Open `https://settlemap.app/student-move-pack`
+2. Enter buyer email, name, role, move route, departure month, concerns
+3. Tick both consent checkboxes
+4. Click "Continue to secure payment" — redirects to Stripe Checkout
+5. Pay S$19 (use Stripe test card `4242 4242 4242 4242` in test mode)
+6. Confirm Stripe receipt arrives at buyer email
+7. Confirm SettleMap Student Move Pack email arrives (within 15 min)
+8. Confirm internal support notification arrives at support@settlemap.app
+9. Check Stripe PaymentIntent metadata shows `settlemap_fulfilled_at` timestamp
+10. In Stripe: resend the webhook event — confirm no duplicate customer email sent (idempotency)
+11. Test refund from Stripe dashboard — no automated action required (manual support)
+
+## Stripe CLI Testing (local)
 
 ```bash
 stripe listen --forward-to localhost:3000/api/stripe/webhook
-```
-
-The CLI prints a webhook signing secret (`whsec_...`) — use it as `STRIPE_WEBHOOK_SECRET` in `.env.local` for local testing only.
-
-Trigger a test event:
-```bash
 stripe trigger checkout.session.completed
 ```
-
----
-
-*Last updated: V12.8 — June 2026*
