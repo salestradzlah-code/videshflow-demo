@@ -772,12 +772,17 @@ export function RouteWizard() {
 
       {!showDashboard && <PreSelectionGuide />}
 
-      <SampleRoutesSection />
-      <ChooseMoveSituationSection />
       <HowItWorksSection />
-      <WhyDifferentSection />
+      <MicroStressSection />
+      <CommandCentreProofSection />
+      <SampleRoutesSection />
       <AIPreviewSection />
+      <DocumentPrivacySection />
+      <ChooseMoveSituationSection />
+      <EarlyAccessPricingSection />
+      <FounderNoteSection />
       <PositioningSection />
+      <WhyDifferentSection />
       <ComingNextSection />
       <PartnerInterestSection />
       <FeedbackCtaSection />
@@ -833,34 +838,48 @@ function Hero() {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  const trustBullets = [
+    "Privacy-first — no passport or document uploads required",
+    "Official-source reminders built into every route",
+    "Designed for students, professionals and families",
+  ];
+
   return (
-    <section className="relative overflow-hidden px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
-      <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_12%_12%,rgba(16,185,129,0.12),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(5,150,105,0.10),transparent_30%)]" />
+    <section className="relative overflow-hidden px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <div className="absolute inset-x-0 top-0 -z-10 h-[40rem] bg-[radial-gradient(circle_at_12%_12%,rgba(16,185,129,0.12),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(5,150,105,0.10),transparent_30%)]" />
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
               <Sparkles className="h-4 w-4 text-emerald-600" />
-              SettleMap · AI-first relocation planning
+              Free during early access
             </div>
-            <h1 className="mt-7 text-5xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Plan your move with AI, not scattered checklists.</h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">
-              SettleMap helps students, professionals and families turn a relocation route into a practical project plan — tasks, documents, housing prep, official links, scripts and next steps in one place.
+            <h1 className="mt-6 text-5xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Your relocation command centre.</h1>
+            <p className="mt-5 text-lg leading-8 text-zinc-600">
+              Build a route-aware 90-day move plan with tasks, official-source reminders, first-week setup and service research — without scattered checklists.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <button
                 onClick={() => scrollTo("route-selector")}
-                className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
+                className="rounded-full bg-emerald-600 px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"
               >
-                Build my move plan
+                Build my move plan, free
               </button>
-              <button
-                onClick={() => scrollTo("sample-routes")}
-                className="rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300"
+              <Link
+                href="/countries"
+                className="rounded-full border border-zinc-200/80 bg-white px-6 py-3.5 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300"
               >
-                Explore sample routes
-              </button>
+                Explore route library
+              </Link>
             </div>
+            <ul className="mt-8 space-y-2.5">
+              {trustBullets.map((bullet) => (
+                <li key={bullet} className="flex items-center gap-2.5 text-sm text-zinc-600">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                  {bullet}
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm lg:block">
             <Image
@@ -872,15 +891,6 @@ function Hero() {
               className="object-cover"
             />
           </div>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {platformStats.map((stat) => (
-            <div key={stat.label} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-              <stat.icon className="mb-3 h-5 w-5 text-emerald-600" />
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">{stat.label}</p>
-              <p className="mt-2 text-sm font-semibold text-zinc-900">{stat.value}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
@@ -924,20 +934,37 @@ function ChooseMoveSituationSection() {
 
 function HowItWorksSection() {
   const steps = [
-    { title: "1. Pick your route", desc: "Origin, destination, and reason for moving.", icon: Globe2 },
-    { title: "2. Add your profile", desc: "Who is moving, pets, and any add-ons that apply.", icon: ShieldCheck },
-    { title: "3. Get a project-style move plan", desc: "A structured 90-day plan, not a generic checklist.", icon: Route },
-    { title: "4. Track tasks, scripts and official links", desc: "Work through tasks with status, notes, and copy-ready scripts.", icon: FileSearch },
+    {
+      number: "1",
+      title: "Pick your route",
+      desc: "Choose origin, destination, move reason and who is moving.",
+      icon: Globe2,
+    },
+    {
+      number: "2",
+      title: "Get your move plan",
+      desc: "SettleMap creates a 90-day project plan with documents, services and first-week setup.",
+      icon: Route,
+    },
+    {
+      number: "3",
+      title: "Track your setup",
+      desc: "Use checklists, scripts and official-source reminders to stay organised.",
+      icon: CheckCircle2,
+    },
   ];
 
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="How it works" title="From route to action plan in 4 steps" description="Four steps from route to a working plan." />
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <SectionHeader eyebrow="How SettleMap works" title="Three steps from route to action plan" description="" />
+        <div className="mt-8 grid gap-5 sm:grid-cols-3">
           {steps.map((step) => (
-            <div key={step.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
-              <step.icon className="h-6 w-6 text-emerald-600" />
+            <div key={step.title} className="relative rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm transition-all duration-200 ease-in-out hover:border-emerald-200">
+              <div className="flex items-center gap-3">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-sm font-bold text-white">{step.number}</span>
+                <step.icon className="h-5 w-5 text-emerald-600" />
+              </div>
               <h3 className="mt-4 text-base font-semibold text-zinc-900">{step.title}</h3>
               <p className="mt-2 text-sm leading-6 text-zinc-600">{step.desc}</p>
             </div>
@@ -977,8 +1004,13 @@ function WhyDifferentSection() {
 }
 
 function AIPreviewSection() {
-  const current = ["AI-style planning prompts and route logic", "Route and task explanations", "Scripts and checklists", "Official-source reminders"];
-  const comingSoon = ["AI-generated route plans", "AI relocation chatbot", "SettleMap Voice Guide", "Session summaries and printable plans"];
+  const current = [
+    "Ask checklist-style questions based on your selected route",
+    "Get route-aware answers on documents, services and first-week setup",
+    "Built-in checklist guidance if the live AI is temporarily rate-limited",
+    "Official-source reminders in every response",
+  ];
+  const comingSoon = ["AI-generated route plans", "SettleMap Voice Guide", "Session summaries and printable plans"];
 
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
@@ -994,9 +1026,12 @@ function AIPreviewSection() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">AI in SettleMap today</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">An AI-first relocation platform, not just a checklist</h2>
-            <ul className="mt-5 space-y-2">
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Limited AI planning pilot</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">AI assistance that stays honest about what it can do</h2>
+            <p className="mt-3 text-sm leading-7 text-zinc-600">
+              Ask checklist-style questions based on your selected route. If the live AI is temporarily rate-limited, SettleMap shows built-in checklist guidance so the plan still works.
+            </p>
+            <ul className="mt-4 space-y-2">
               {current.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-700">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
@@ -1006,13 +1041,10 @@ function AIPreviewSection() {
             </ul>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/ai-assistant" className="inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700">
-                Explore the AI Assistant <ArrowRight className="ml-2 h-4 w-4" />
+                Try the AI assistant <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link href="/services" className="inline-flex items-center rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
                 Browse services directory
-              </Link>
-              <Link href="/share-story" className="inline-flex items-center rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
-                Share feedback
               </Link>
             </div>
           </div>
@@ -1026,6 +1058,16 @@ function AIPreviewSection() {
                 </li>
               ))}
             </ul>
+            <div className="mt-5 rounded-xl bg-zinc-50 p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">What this pilot does not do</p>
+              <ul className="mt-3 space-y-1.5 text-sm leading-6 text-zinc-600">
+                {["Give visa, immigration or legal advice", "Provide tax, financial or property guidance", "Guarantee outcomes or assess eligibility", "Upload or store documents"].map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <span className="text-zinc-400">✕</span> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <p className="mt-4 rounded-xl bg-emerald-50 p-4 text-xs leading-6 text-emerald-800">{AI_APPROVAL_RULE_VISIBLE}</p>
           </div>
         </div>
@@ -1221,6 +1263,181 @@ function GetMoreHelpSection() {
           Not included yet: legal, immigration, property, financial/tax/insurance/medical/school advice, human review, or any booking/payment/submission/provider contact by SettleMap.{" "}
           <Link href="/pricing" className="font-semibold text-emerald-700 hover:text-emerald-800">See full pricing details</Link>.
         </p>
+      </div>
+    </section>
+  );
+}
+
+// V12.5 — Micro-stress solver section
+function MicroStressSection() {
+  const cards = [
+    {
+      icon: Smartphone,
+      title: "Indian SIM and OTP continuity",
+      desc: "Before you land, make sure you have a plan for keeping your Indian number active or forwarding OTPs. Many banking and government services still require it.",
+    },
+    {
+      icon: CalendarDays,
+      title: "First 7 days after landing",
+      desc: "SIM activation, grocery run, transport card, emergency contacts, housing viewings — your first week has more moving parts than it looks.",
+    },
+    {
+      icon: FileSearch,
+      title: "Documents and official-source checks",
+      desc: "Knowing which documents to prepare — and where to verify requirements — saves you from last-minute surprises. SettleMap reminds you to check official sources directly.",
+    },
+    {
+      icon: Globe2,
+      title: "Services to research before you commit",
+      desc: "Movers, banking, remittance, eSIM, housing, insurance — the right order matters. Research categories are built into your route plan.",
+    },
+  ];
+
+  return (
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Practical planning" title="The small things that make moves stressful" description="SettleMap surfaces these early so they do not become last-minute surprises." />
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {cards.map((card) => (
+            <div key={card.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-emerald-200">
+              <card.icon className="h-6 w-6 text-emerald-600" />
+              <h3 className="mt-4 text-base font-semibold text-zinc-900">{card.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-zinc-600">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// V12.5 — Command centre proof section
+function CommandCentreProofSection() {
+  const features = ["Route", "Tasks", "Documents", "Services", "First 7 days", "AI planning assistant"];
+
+  return (
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm sm:p-9">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl shadow-sm">
+            <Image
+              src="/images/settlemap/ai-route-planner-tracker.png"
+              alt="SettleMap relocation command centre with project plan, documents, services and AI assistant."
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Command centre</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Not just another moving checklist.</h2>
+            <p className="mt-4 text-sm leading-7 text-zinc-600">
+              SettleMap turns your move into a project plan with stages, priorities, next steps and reminders to verify official sources.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {features.map((feature) => (
+                <span key={feature} className="rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-700">{feature}</span>
+              ))}
+            </div>
+            <p className="mt-5 text-xs leading-6 text-zinc-500">
+              SettleMap provides planning support only. It is not legal, immigration, financial, property, insurance, medical, school or government advice.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// V12.5 — Document privacy section
+function DocumentPrivacySection() {
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm sm:p-9">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Privacy-first</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Document readiness without uploads</h2>
+            <p className="mt-4 text-sm leading-7 text-zinc-600">
+              SettleMap helps you understand which document categories to prepare for your route. Document upload is not active today — no passport, visa, bank statement or ID files are uploaded or stored.
+            </p>
+            <ul className="mt-5 space-y-2">
+              {["Passport readiness check", "Entry and stay approval categories", "Employment or school document list", "Family documents where relevant", "Banking and insurance document guidance"].map((item) => (
+                <li key={item} className="flex items-center gap-2 text-sm text-zinc-700">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="space-y-4">
+            <div className="rounded-xl bg-emerald-50 p-5">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-emerald-600" />
+                <p className="text-sm font-semibold text-emerald-800">No uploads required</p>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-emerald-700">SettleMap never asks you to upload or share passport scans, visa documents, bank statements, or any identity documents.</p>
+            </div>
+            <div className="rounded-xl bg-zinc-50 p-5">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-zinc-500" />
+                <p className="text-sm font-semibold text-zinc-700">Browser-only progress</p>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-zinc-600">Your plan and checklist progress are saved in your browser only. No account, no server storage, no data sold.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// V12.5 — Founder note section
+function FounderNoteSection() {
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-3xl rounded-xl border border-zinc-200/80 bg-white p-8 shadow-sm sm:p-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">A note from Ash</p>
+          <blockquote className="mt-5 text-base leading-8 text-zinc-700">
+            I built SettleMap because relocation planning often becomes a mess of browser tabs, WhatsApp messages and half-finished spreadsheets. The goal is simple: help people turn a move into a clear plan while keeping official-source checks and privacy boundaries front and centre.
+          </blockquote>
+          <div className="mt-5 flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-sm font-bold text-white">A</div>
+            <div>
+              <p className="text-sm font-semibold text-zinc-900">Ash</p>
+              <p className="text-xs text-zinc-500">Founder, SettleMap · TRADZLAH LLP, Singapore</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// V12.5 — Free early access pricing section
+function EarlyAccessPricingSection() {
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-xl border border-emerald-200 bg-emerald-50 p-7 sm:p-9">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Pricing</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Free during early access</h2>
+            <p className="mt-4 text-sm leading-7 text-zinc-700">
+              SettleMap is free to use during early access while we collect feedback. Pilot pricing may be introduced later — only after the planning experience is stable and payment testing is complete.
+            </p>
+            <p className="mt-3 text-xs leading-6 text-zinc-500">No card required. No payment processing active today.</p>
+          </div>
+          <div className="space-y-3">
+            {["Full 90-day route-aware move plan", "Document readiness checklist", "Services research categories", "First-week setup guide", "AI planning assistant (limited pilot)", "Copy-ready scripts and rental safety checklist"].map((item) => (
+              <div key={item} className="flex items-center gap-2.5 text-sm text-zinc-700">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
