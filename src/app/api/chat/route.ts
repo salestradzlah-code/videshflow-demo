@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const GEMINI_MODEL = "gemini-1.5-flash";
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+// V12.3 — model fallback list. Tried in order until one succeeds.
+const GEMINI_MODELS = [
+  "gemini-1.5-flash",
+  "gemini-1.5-flash-8b",
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
+];
+
 const REQUIRED_REMINDER = "Verify official requirements with official sources.";
 const REGULATED_REFUSAL =
   "I can help organise your checklist, but I cannot give professional advice. Please verify with official sources or a qualified professional.";
@@ -9,8 +15,11 @@ const SESSION_COOKIE = "settlemap_chat_session";
 const RATE_LIMIT = 8;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 
+// V12.3 — only refuse when user is explicitly asking for professional advice, a guarantee,
+// eligibility determination, or a specific visa/regulated-product recommendation.
+// Relocation planning naturally mentions visa, insurance, tax as document/task categories — those are fine.
 const REGULATED_ADVICE_PATTERN =
-  /\b(visa|immigration|legal|lawyer|tax|taxation|financial|finance|investment|mortgage|property|real estate|insurance|medical|healthcare|diagnos(?:e|is)|medication|prescription|school admission|school application|vendor|provider recommendation)\b/i;
+  /\b(guarantee[sd]?|will (i|we) (definitely |surely )?(get|be|receive) (approved|accepted|granted)|which visa (should|do|can|would) (i|we)\b|(legal|immigration|tax|financial|insurance|medical|property|school admission) (advice|guidance|opinion|interpretation|recommendation|strategy|eligibility)|am i( actually)? eligible|are (we|i) eligible|should (i|we) (apply for|choose|pick) (which |what )?(visa|permit)|interpret(ing)? (the |an? )?(law|rule|regulation)|will (my|our) (application|visa|case) (be )?approved|diagnos(e|is|ed)\b)/i;
 
 const SYSTEM_PROMPT = `You are the SettleMap AI planning assistant, a limited relocation planning pilot.
 
@@ -218,7 +227,18 @@ export async function POST(request: NextRequest) {
     return jsonResponse({ error: "Please provide a question and complete route context." }, 400, sessionId, rateLimit);
   }
 
+  // V12.3 — diagnostic log: confirm body fields without exposing content
+  console.log("[settlemap/chat] request fields present:", {
+    hasMessage: Boolean(body.message),
+    hasOrigin: Boolean(body.context.origin),
+    hasDestination: Boolean(body.context.destination),
+    hasMoveReason: Boolean(body.context.moveReason),
+    hasWhoIsMoving: Boolean(body.context.whoIsMoving),
+    historyLength: body.history.length,
+  });
+
   if (REGULATED_ADVICE_PATTERN.test(body.message)) {
+    console.log("[settlemap/chat] guardrail triggered on user message");
     return jsonResponse(
       { answer: `${REGULATED_REFUSAL}\n\n${REQUIRED_REMINDER}` },
       200,
@@ -228,6 +248,10 @@ export async function POST(request: NextRequest) {
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
+
+  // V12.3 — log key presence only (never the value)
+  console.log("[settlemap/chat] GEMINI_API_KEY present:", Boolean(apiKey));
+
   if (!apiKey) {
     return jsonResponse(
       { error: "The AI planning pilot is not configured yet. Please try again later." },
@@ -251,51 +275,103 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  try {
-    const geminiResponse = await fetch(GEMINI_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: `${SYSTEM_PROMPT}\n\n${buildContextPrompt(body.context)}` }],
-        },
-        contents,
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 450,
-        },
-      }),
-      signal: AbortSignal.timeout(20_000),
-    });
+  const requestBody = JSON.stringify({
+    systemInstruction: {
+      parts: [{ text: `${SYSTEM_PROMPT}\n\n${buildContextPrompt(body.context)}` }],
+    },
+    contents,
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 450,
+    },
+  });
 
-    if (!geminiResponse.ok) {
+  // V12.3 — model fallback loop: try each model until one succeeds
+  let lastGeminiStatus = 0;
+  let lastGeminiError = "";
+
+  for (const model of GEMINI_MODELS) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    console.log("[settlemap/chat] trying model:", model);
+
+    let geminiResponse: Response;
+    try {
+      geminiResponse = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: requestBody,
+        signal: AbortSignal.timeout(20_000),
+      });
+    } catch (fetchError) {
+      const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
+      console.error("[settlemap/chat] fetch error for model", model, ":", msg.slice(0, 200));
+      lastGeminiError = msg;
+      continue;
+    }
+
+    lastGeminiStatus = geminiResponse.status;
+    console.log("[settlemap/chat] model", model, "HTTP status:", geminiResponse.status);
+
+    if (geminiResponse.status === 429) {
+      // Quota exhausted — no point trying other models on same key
+      console.warn("[settlemap/chat] quota exhausted (429)");
       return jsonResponse(
-        { error: "The AI planning pilot is temporarily unavailable. Please try again." },
-        502,
+        { error: "The AI planning pilot has reached its usage limit. Please try again in a few minutes." },
+        429,
         sessionId,
         rateLimit,
       );
     }
 
-    const data = (await geminiResponse.json()) as GeminiResponse;
+    if (geminiResponse.status === 401 || geminiResponse.status === 403) {
+      // Auth or permission error — key misconfigured, no point retrying
+      console.error("[settlemap/chat] auth error from Gemini:", geminiResponse.status);
+      return jsonResponse(
+        { error: "The AI planning pilot is not configured correctly. Please try again later." },
+        503,
+        sessionId,
+        rateLimit,
+      );
+    }
+
+    if (geminiResponse.status === 404) {
+      // Model not found — try next in list
+      const errText = await geminiResponse.text().catch(() => "");
+      lastGeminiError = errText.slice(0, 500);
+      console.warn("[settlemap/chat] model not found (404):", model, "|", lastGeminiError.slice(0, 200));
+      continue;
+    }
+
+    if (!geminiResponse.ok) {
+      const errText = await geminiResponse.text().catch(() => "");
+      lastGeminiError = errText.slice(0, 500);
+      console.error("[settlemap/chat] unexpected Gemini error", geminiResponse.status, "for model", model, ":", lastGeminiError.slice(0, 200));
+      continue;
+    }
+
+    // Success — parse response
+    let data: GeminiResponse;
+    try {
+      data = (await geminiResponse.json()) as GeminiResponse;
+    } catch {
+      console.error("[settlemap/chat] failed to parse Gemini JSON for model", model);
+      continue;
+    }
+
     const answer = data.candidates?.[0]?.content?.parts
       ?.map((part) => part.text ?? "")
       .join("")
       .trim();
 
     if (!answer) {
-      return jsonResponse(
-        { error: "The AI planning pilot could not answer that question. Please try a checklist prompt." },
-        502,
-        sessionId,
-        rateLimit,
-      );
+      console.warn("[settlemap/chat] empty answer from model", model);
+      continue;
     }
 
+    console.log("[settlemap/chat] success with model:", model);
+
     if (REGULATED_ADVICE_PATTERN.test(answer)) {
+      console.log("[settlemap/chat] guardrail triggered on model answer");
       return jsonResponse(
         { answer: `${REGULATED_REFUSAL}\n\n${REQUIRED_REMINDER}` },
         200,
@@ -305,12 +381,14 @@ export async function POST(request: NextRequest) {
     }
 
     return jsonResponse({ answer: formatAnswer(answer) }, 200, sessionId, rateLimit);
-  } catch {
-    return jsonResponse(
-      { error: "The AI planning pilot is temporarily unavailable. Please try again." },
-      502,
-      sessionId,
-      rateLimit,
-    );
   }
+
+  // All models failed
+  console.error("[settlemap/chat] all models failed. last status:", lastGeminiStatus, "last error:", lastGeminiError.slice(0, 200));
+  return jsonResponse(
+    { error: "The AI planning pilot is temporarily unavailable. Please use the checklist for now and try again later." },
+    502,
+    sessionId,
+    rateLimit,
+  );
 }
