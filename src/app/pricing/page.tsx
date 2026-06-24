@@ -59,7 +59,6 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Plan cards */}
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
 
           {/* Free plan */}
@@ -76,15 +75,12 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/#route-selector"
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
-            >
+            <Link href="/#route-selector" className="mt-6 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
               Start free plan <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
 
-          {/* Student Move Pack — ACTIVE */}
+          {/* Student Move Pack */}
           <div className="relative flex flex-col rounded-xl border-2 border-emerald-400 bg-white p-6 shadow-md">
             <div className="absolute -top-3 left-6">
               <span className="rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">Early access · Open now</span>
@@ -105,12 +101,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <div className="mt-6 space-y-2">
-              <a
-                href={STRIPE_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
-              >
+              <a href={STRIPE_LINK} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
                 Pay securely with Stripe <ExternalLink className="ml-2 h-4 w-4" />
               </a>
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
@@ -119,12 +110,14 @@ export default function PricingPage() {
               </div>
             </div>
             <p className="mt-3 border-t border-zinc-100 pt-3 text-[11px] leading-5 text-zinc-500">
-              After payment you will receive an email at the address used at checkout. Delivery is by email within 1 business day.{" "}
+              After payment, check your Stripe receipt email. For access questions, email{" "}
+              <a href="mailto:support@settlemap.app" className="underline hover:text-zinc-700">support@settlemap.app</a>{" "}
+              with your payment email and move route. We aim to respond within 1 business day during early access.{" "}
               <Link href="/refund-policy" className="underline hover:text-zinc-700">Refund policy</Link>.
             </p>
           </div>
 
-          {/* Premium Pack — coming later */}
+          {/* Premium Pack */}
           <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-70">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Coming later</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
@@ -138,15 +131,12 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/early-access"
-              className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400"
-            >
+            <Link href="/early-access" className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400">
               Register interest <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
 
-          {/* Voice Guide — waitlist only */}
+          {/* Voice Guide */}
           <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-70">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Waitlist only · No pricing yet</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">SettleMap Voice Guide</h2>
@@ -160,16 +150,12 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/early-access"
-              className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400"
-            >
+            <Link href="/early-access" className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400">
               Join Voice Guide waitlist <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
         </div>
 
-        {/* What is included / not included */}
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">What SettleMap helps with</p>
