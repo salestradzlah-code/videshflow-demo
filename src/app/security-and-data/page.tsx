@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { SECURITY_DATA_POINTS, SUPPORT_EMAIL, SUPPORT_EMAIL_SAFETY_NOTE } from "@/lib/constants";
 
@@ -45,6 +46,15 @@ export default function SecurityAndDataPage() {
           is not a substitute for a full privacy policy or terms of service, which will be published before paid
           launch.
         </p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/privacy" className="rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+            Read privacy policy
+          </Link>
+          <Link href="/disclaimer" className="rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+            Read the disclaimer
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { RouteLibraryGrid } from "@/components/settlemap/RouteLibraryGrid";
 
@@ -18,6 +20,11 @@ export default function CountriesPage() {
         />
         <div className="mt-10">
           <RouteLibraryGrid />
+        </div>
+        <div className="mt-10">
+          <Link href="/services" className="inline-flex items-center rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+            Research services for your route <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

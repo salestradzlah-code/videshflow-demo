@@ -7,6 +7,7 @@ const exploreLinks = [
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/get-help", label: "Get Help" },
   { href: "/services", label: "Services Directory" },
+  { href: "/faq", label: "FAQ" },
   { href: "/reference-links", label: "Reference Links" },
   { href: "/early-access", label: "Early Access" },
 ];

@@ -200,6 +200,9 @@ export default function PricingPage() {
           <Link href="/early-access" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
             Go to early access
           </Link>
+          <Link href="/get-help" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
+            Get help with pricing questions
+          </Link>
         </div>
 
         <div className="mt-8"><DisclaimerBox /></div>

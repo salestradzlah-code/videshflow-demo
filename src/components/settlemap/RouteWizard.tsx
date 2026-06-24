@@ -857,7 +857,7 @@ function Hero() {
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm lg:block">
             <Image
               src="/images/settlemap/hero-relocation-command-centre.png"
-              alt="Homepage hero: AI relocation command centre with route map, suitcase, checklist and assistant."
+              alt="AI relocation command centre showing a route map, suitcase, task checklist and assistant panel."
               fill
               priority
               sizes="(min-width: 1024px) 40vw, 100vw"
@@ -996,9 +996,17 @@ function AIPreviewSection() {
                 </li>
               ))}
             </ul>
-            <Link href="/ai-assistant" className="mt-6 inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700">
-              Explore the AI Assistant <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/ai-assistant" className="inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700">
+                Explore the AI Assistant <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+              <Link href="/services" className="inline-flex items-center rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+                Browse services directory
+              </Link>
+              <Link href="/share-story" className="inline-flex items-center rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+                Share feedback
+              </Link>
+            </div>
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Coming soon</p>
