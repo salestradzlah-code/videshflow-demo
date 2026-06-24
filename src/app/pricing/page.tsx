@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, AlertTriangle } from "lucide-react";
+import { ArrowRight, AlertTriangle, CheckCircle2, Lock, GraduationCap } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import {
   PAYMENT_READINESS_NOTE,
@@ -16,76 +16,28 @@ import { SuitcaseIllustration } from "@/components/illustrations/RelocationIllus
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "SettleMap plans and pilot pricing signals. AI-first and self-serve. No human review, no payments active yet.",
+  description: "SettleMap plans and pilot pricing. Free route plan plus early-access paid pilot for students and professionals. No public checkout active yet.",
 };
 
-const plans = [
-  {
-    key: "free",
-    label: "Available now",
-    title: "Free relocation project plan",
-    price: "Free",
-    copy: "Plan your move with a route-aware project tracker, saved browser progress, Tenant Bio where applicable, action links and copy-ready scripts.",
-    features: [
-      "Route-aware project tracker",
-      "Saved browser progress",
-      "Tenant Bio where applicable",
-      "Action links and copy-ready scripts",
-    ],
-    cta: "Start free plan",
-    href: "/#route-selector",
-  },
-  {
-    key: "ai-route-plan",
-    label: "Coming soon / pilot interest",
-    title: "AI-generated route plan",
-    price: "From S$19",
-    copy: "Future self-serve AI-generated route-specific plan for your selected move.",
-    features: [
-      "AI-generated route-specific plan",
-      "90-day task timeline",
-      "Official-source reminders",
-      "Housing, documents and first-30-days checklist",
-      "Copy-ready scripts",
-      "Printable/downloadable format planned",
-    ],
-    cta: "Register interest in AI route plan",
-    href: "/early-access",
-  },
-  {
-    key: "premium-ai-pack",
-    label: "Coming soon / pilot interest",
-    title: "Premium AI relocation pack",
-    price: "From S$49",
-    copy: "Future premium AI pack with templates, scripts and planning tools.",
-    features: [
-      "Everything in AI-generated route plan",
-      "Budget worksheet",
-      "Document tracker",
-      "Housing comparison template",
-      "First-week setup plan",
-      "Additional scripts",
-      "Family/student/pet/senior add-ons where relevant",
-    ],
-    cta: "Register interest in Premium AI relocation pack",
-    href: "/early-access",
-  },
-  {
-    key: "voice-guide",
-    label: "Coming soon / waitlist only",
-    title: "SettleMap Voice Guide",
-    price: "Coming soon, or pilot pricing to be decided",
-    copy: "A future AI-guided voice walkthrough that helps you understand your relocation plan, ask planning questions, prioritise next steps and prepare checklist notes.",
-    features: [
-      "Voice-guided plan walkthrough",
-      "Guided planning questions",
-      "Next-step summary",
-      "Script ideas",
-      "Official-source reminders",
-    ],
-    cta: "Join Voice Guide waitlist",
-    href: "/early-access",
-  },
+const studentPackFeatures = [
+  "90-day route-aware project plan",
+  "First 7 days setup guide",
+  "India SIM/OTP continuity checklist",
+  "Packing and bring-vs-buy checklist",
+  "Parent/student question checklist",
+  "Provider research scripts",
+  "Downloadable checklist (PDF where available)",
+  "Support by email: support@settlemap.app",
+];
+
+const freeFeatures = [
+  "Route-aware move plan",
+  "First 7 days checklist",
+  "Document readiness categories",
+  "Services research starting points",
+  "AI planning pilot with built-in fallback",
+  "Copy-ready scripts",
+  "Browser-saved progress (no login)",
 ];
 
 export default function PricingPage() {
@@ -97,9 +49,8 @@ export default function PricingPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Plans and pilots</p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">Pricing</h1>
             <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
-              SettleMap's project planner is free today. Paid plans below are AI-first, self-serve, and fully automated by
-              design — there is no human review and no manual fulfilment. Pricing signals are research-stage interest lists
-              only. No card is charged today.
+              SettleMap's route planner is free. The early-access pilot is a private, limited programme for selected testers.
+              No card is charged publicly today.
             </p>
           </div>
           <div className="hidden lg:block">
@@ -107,60 +58,128 @@ export default function PricingPage() {
           </div>
         </div>
 
-        <div className="mt-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-950">
+        {/* Payment readiness warning */}
+        <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-950">
           <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
-          <div className="space-y-1.5">
-            <p className="text-sm leading-6 font-medium">{PAYMENT_READINESS_NOTE}</p>
-            <p className="text-sm leading-6 font-medium">{PILOT_PRICE_TESTING_NOTE}</p>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold leading-6">{PAYMENT_READINESS_NOTE}</p>
+            <p className="text-sm leading-6">{PILOT_PRICE_TESTING_NOTE}</p>
+            <p className="text-sm leading-6">Payments will only be enabled after test payment, refund wording and delivery details are confirmed. For now, selected early-access users may be invited privately.</p>
           </div>
         </div>
 
+        {/* Plan cards */}
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {plans.map((plan) => {
-            const isExternal = plan.href.startsWith("http");
-            return (
-              <div key={plan.key} className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">{plan.label}</p>
-                <h2 className="mt-3 text-lg font-semibold text-zinc-900">{plan.title}</h2>
-                <p className="mt-1 text-2xl font-semibold text-zinc-900">{plan.price}</p>
-                <p className="mt-3 text-sm leading-6 text-zinc-600">{plan.copy}</p>
-                <ul className="mt-4 flex-1 space-y-2 text-sm leading-6 text-zinc-600">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2">
-                      <span className="mt-2 h-1 w-1 flex-none rounded-full bg-emerald-600" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                {isExternal ? (
-                  <a
-                    href={plan.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-5 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
-                  >
-                    {plan.cta} <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                ) : (
-                  <Link
-                    href={plan.href}
-                    className="mt-5 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
-                  >
-                    {plan.cta} <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                )}
-              </div>
-            );
-          })}
+
+          {/* Free plan */}
+          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Available now · Free</p>
+            <h2 className="mt-3 text-lg font-semibold text-zinc-900">Free route plan</h2>
+            <p className="mt-1 text-2xl font-bold text-zinc-900">Free</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">Plan your move with a route-aware project tracker, scripts and checklists — no login or card required.</p>
+            <ul className="mt-4 flex-1 space-y-2">
+              {freeFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-sm text-zinc-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/#route-selector"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
+            >
+              Start free plan <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Student Move Pack — early access pilot */}
+          <div className="relative flex flex-col rounded-xl border-2 border-emerald-400 bg-white p-6 shadow-md">
+            <div className="absolute -top-3 left-6">
+              <span className="rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">Private early-access pilot</span>
+            </div>
+            <div className="mt-2 flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-emerald-600" />
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Student focus · Limited places</p>
+            </div>
+            <h2 className="mt-3 text-lg font-semibold text-zinc-900">Student Move Pack</h2>
+            <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">early access</span></p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">A focused planning pack for students moving abroad — India to UK, Germany, Singapore, US, Australia or Canada. Includes scripts, packing guides and a parent/student handover checklist.</p>
+            <ul className="mt-4 flex-1 space-y-2">
+              {studentPackFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-sm text-zinc-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 space-y-2">
+              <Link
+                href="/early-access"
+                className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
+              >
+                Join early access <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+              <p className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
+                <Lock className="h-3 w-3" />
+                Payment links shared privately with selected testers only
+              </p>
+            </div>
+          </div>
+
+          {/* Premium Pack — coming later */}
+          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-80">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Coming later</p>
+            <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
+            <p className="mt-1 text-2xl font-bold text-zinc-500">From S$49</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">Everything in the Student Move Pack plus a detailed move checklist, budget template, document tracker, first-week setup plan, and family/student/pet add-ons.</p>
+            <ul className="mt-4 flex-1 space-y-2 text-sm text-zinc-500">
+              {["Everything in Student Move Pack", "Budget worksheet starter", "Document tracker", "Housing comparison template", "Family/student/pet/senior add-ons"].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-300" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/early-access"
+              className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400"
+            >
+              Register interest <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Voice Guide — waitlist only */}
+          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-80">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Waitlist only · No pricing yet</p>
+            <h2 className="mt-3 text-lg font-semibold text-zinc-900">SettleMap Voice Guide</h2>
+            <p className="mt-1 text-sm font-semibold text-zinc-400">Pricing to be decided</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">A future AI-guided voice walkthrough that helps you understand your relocation plan, ask planning questions and prepare checklist notes. Not available today.</p>
+            <ul className="mt-4 flex-1 space-y-2 text-sm text-zinc-500">
+              {["Voice-guided plan walkthrough", "Guided planning questions", "Next-step summary", "Official-source reminders"].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-300" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/early-access"
+              className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400"
+            >
+              Join Voice Guide waitlist <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
+        {/* What is included / not included */}
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">What SettleMap helps with</p>
             <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-600">
               {SETTLEMAP_HELPS_WITH.map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-emerald-600" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
                   {item}
                 </li>
               ))}
@@ -171,7 +190,7 @@ export default function PricingPage() {
             <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-600">
               {SETTLEMAP_DOES_NOT_DO.map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-300" />
                   {item}
                 </li>
               ))}

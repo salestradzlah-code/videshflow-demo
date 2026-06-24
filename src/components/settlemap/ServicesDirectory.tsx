@@ -318,6 +318,114 @@ const categories: ServiceCategory[] = [
   },
 ];
 
+const GROUP_BORDER: Record<ServiceGroup, string> = {
+  "Housing": "border-t-emerald-400",
+  "Moving and goods": "border-t-amber-400",
+  "Connectivity and utilities": "border-t-sky-400",
+  "Money and insurance": "border-t-violet-400",
+  "Healthcare": "border-t-rose-400",
+  "Family and school": "border-t-teal-400",
+  "Transport and admin": "border-t-zinc-400",
+};
+
+function ServiceCard({ category }: { category: ServiceCategory }) {
+  const [open, setOpen] = useState(false);
+  const borderColor = GROUP_BORDER[category.group] ?? "border-t-zinc-300";
+
+  return (
+    <div className={`flex flex-col rounded-xl border border-zinc-200/80 border-t-4 ${borderColor} bg-white shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300`}>
+      <div className="p-5 pb-4">
+        <div className="flex items-start justify-between gap-2">
+          <category.icon className="h-6 w-6 text-emerald-600" />
+          <span
+            className={
+              category.sourceType === "Official source"
+                ? "rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-white"
+                : "rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-800"
+            }
+          >
+            {category.sourceType}
+          </span>
+        </div>
+        <h3 className="mt-4 text-lg font-semibold text-zinc-900">{category.title}</h3>
+        <p className="mt-2 text-sm leading-6 text-zinc-600">{category.description}</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {category.examples.map((example) => (
+            <span key={example} className="rounded-full bg-zinc-50 px-2.5 py-1 text-[11px] font-semibold text-zinc-500">{example}</span>
+          ))}
+        </div>
+
+        {/* whenToResearch — highlighted */}
+        <div className="mt-4 rounded-lg bg-emerald-50 px-3.5 py-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700">Best time to research</p>
+          <p className="mt-0.5 text-xs font-semibold text-emerald-900">{category.whenToResearch}</p>
+        </div>
+
+        <div className="mt-4 border-t border-zinc-100 pt-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Next steps</p>
+          <ul className="mt-2 space-y-1.5">
+            {category.nextSteps.map((step) => (
+              <li key={step} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-emerald-600" />
+                {step}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Collapsible details */}
+      <div className="border-t border-zinc-100">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="flex w-full items-center justify-between px-5 py-3 text-xs font-semibold text-zinc-500 transition hover:text-zinc-700"
+          aria-expanded={open}
+        >
+          <span>{open ? "Hide details" : "Show details"}</span>
+          <span className="text-[10px]">{open ? "▲" : "▼"}</span>
+        </button>
+        {open && (
+          <div className="px-5 pb-5 space-y-3">
+            <div className="border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">What to compare</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.whatToCompare.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Documents or info needed</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.documentsNeeded.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="border-t border-zinc-100 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Questions to ask the provider</p>
+              <ul className="mt-2 space-y-1.5">
+                {category.questionsToAsk.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
+                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function ServicesDirectory() {
   const [activeGroup, setActiveGroup] = useState<"All" | ServiceGroup>("All");
 
@@ -359,74 +467,7 @@ export function ServicesDirectory() {
 
       <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((category) => (
-          <div key={category.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
-            <div className="flex items-start justify-between gap-2">
-              <category.icon className="h-6 w-6 text-emerald-600" />
-              <span
-                className={
-                  category.sourceType === "Official source"
-                    ? "rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-white"
-                    : "rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-800"
-                }
-              >
-                {category.sourceType}
-              </span>
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-zinc-900">{category.title}</h3>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">{category.description}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {category.examples.map((example) => (
-                <span key={example} className="rounded-full bg-zinc-50 px-2.5 py-1 text-[11px] font-semibold text-zinc-500">{example}</span>
-              ))}
-            </div>
-            <p className="mt-4 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
-              Best time to research: <span className="font-medium text-zinc-600">{category.whenToResearch}</span>
-            </p>
-            <div className="mt-3 border-t border-zinc-100 pt-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Next steps</p>
-              <ul className="mt-2 space-y-1.5">
-                {category.nextSteps.map((step) => (
-                  <li key={step} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
-                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-emerald-600" />
-                    {step}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mt-3 border-t border-zinc-100 pt-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">What to compare</p>
-              <ul className="mt-2 space-y-1.5">
-                {category.whatToCompare.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
-                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mt-3 border-t border-zinc-100 pt-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Documents or info needed</p>
-              <ul className="mt-2 space-y-1.5">
-                {category.documentsNeeded.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
-                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mt-3 border-t border-zinc-100 pt-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">Questions to ask the provider</p>
-              <ul className="mt-2 space-y-1.5">
-                {category.questionsToAsk.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-xs leading-5 text-zinc-600">
-                    <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-zinc-400" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <ServiceCard key={category.title} category={category} />
         ))}
       </div>
 

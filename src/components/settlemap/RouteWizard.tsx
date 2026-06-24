@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, ListOrdered, Luggage, MapPin, Globe2, Plane, Route, ShieldCheck, Smartphone, Sparkles, UploadCloud } from "lucide-react";
+import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, GraduationCap, HelpCircle, ListOrdered, Luggage, MapPin, Globe2, MessageSquare, Plane, Route, Scale, ShieldCheck, Smartphone, Sparkles, UploadCloud, Users } from "lucide-react";
 import { addOnOptions, APP_CATEGORIES_DISCLAIMER, appEcosystemGuide, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
 import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
@@ -775,6 +775,7 @@ export function RouteWizard() {
       <HowItWorksSection />
       <MicroStressSection />
       <CommandCentreProofSection />
+      <AgenticActionPrepSection />
       <SampleRoutesSection />
       <AIPreviewSection />
       <DocumentPrivacySection />
@@ -1344,6 +1345,94 @@ function CommandCentreProofSection() {
             </p>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+
+// V12.6 — Agentic action-prep section
+function AgenticActionPrepSection() {
+  const cards = [
+    {
+      icon: MessageSquare,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      title: "Provider message drafts",
+      description: "Copy-ready message templates for SIM, bank, housing agent, GP, and campus admin contacts before you arrive.",
+      cta: "Prepare script",
+      ctaHint: "Included in route plan",
+    },
+    {
+      icon: HelpCircle,
+      color: "text-sky-600",
+      bg: "bg-sky-50",
+      border: "border-sky-200",
+      title: "Questions to ask",
+      description: "Pre-built question lists for housing viewings, bank account openings, SIM purchases, and GP registration calls.",
+      cta: "View questions",
+      ctaHint: "Included in route plan",
+    },
+    {
+      icon: Scale,
+      color: "text-amber-600",
+      bg: "bg-amber-50",
+      border: "border-amber-200",
+      title: "Compare options",
+      description: "What to look for when comparing SIM plans, bank accounts, insurance packages or housing options. No ads, no commissions.",
+      cta: "Open comparison checklist",
+      ctaHint: "Included in route plan",
+    },
+    {
+      icon: Users,
+      color: "text-violet-600",
+      bg: "bg-violet-50",
+      border: "border-violet-200",
+      title: "Parent / student handover",
+      description: "A family-ready checklist covering what parents need to know: SIM, banking, health contacts, first-week schedule and emergency numbers.",
+      cta: "Copy family checklist",
+      ctaHint: "Student Move Pack · Early access",
+    },
+  ];
+
+  return (
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Action prep</p>
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Action prep, not just checklists.</h2>
+          <p className="text-sm text-zinc-500 sm:text-right">Scripts, scripts, scripts. No guesswork.</p>
+        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-600">
+          SettleMap goes beyond task lists. Build the scripts, questions and comparison guides you actually need before you land — so you can walk into any office or call knowing exactly what to say and ask.
+        </p>
+        <div className="mt-7 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div key={card.title} className={`flex flex-col rounded-xl border ${card.border} bg-white p-5 shadow-sm`}>
+                <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${card.bg}`}>
+                  <Icon className={`h-5 w-5 ${card.color}`} />
+                </div>
+                <h3 className="mt-4 text-sm font-semibold text-zinc-900">{card.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-zinc-600">{card.description}</p>
+                <div className="mt-4 space-y-1.5">
+                  <button
+                    onClick={() => document.getElementById("route-selector")?.scrollIntoView({ behavior: "smooth" })}
+                    className={`inline-flex w-full items-center justify-center rounded-full border ${card.border} ${card.bg} px-3 py-2 text-xs font-semibold ${card.color} transition hover:opacity-80`}
+                  >
+                    {card.cta} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </button>
+                  <p className="text-center text-[10px] text-zinc-400">{card.ctaHint}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-5 text-xs leading-6 text-zinc-500">
+          Scripts and questions are starting points for research — not legal, immigration or professional advice. Always verify requirements with official sources and qualified professionals.
+        </p>
       </div>
     </section>
   );
