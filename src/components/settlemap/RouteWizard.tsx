@@ -808,7 +808,7 @@ export function RouteWizard() {
           <section className="px-4 py-10 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.85fr_1.15fr]">
               <DocumentAuditor routeLabel={routeLabel} reasonKey={reason.key} profileKey={profile.key} />
-              <ChatbotMock routeLabel={routeLabel} reason={reason.label} profile={profile.label} />
+              <ChatbotPreview routeLabel={routeLabel} reason={reason.label} profile={profile.label} />
             </div>
           </section>
 
@@ -2127,14 +2127,14 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
         <div className="rounded-xl bg-zinc-50 p-3"><FileSearch className="h-6 w-6 text-emerald-600" /></div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Document checklist preview</p>
-          <h2 className="text-2xl font-semibold text-zinc-900">AI document checklist</h2>
+          <h2 className="text-2xl font-semibold text-zinc-900">Document readiness checklist</h2>
         </div>
       </div>
       <p className="mt-4 text-sm leading-7 text-zinc-600">Document checklist preview for {routeLabel}. Document upload is not active today. No files are uploaded, sent or stored in this version.</p>
       <label className="mt-6 flex cursor-not-allowed flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center">
         <UploadCloud className="h-8 w-8 text-emerald-600" />
         <span className="mt-3 text-sm font-semibold text-zinc-900">Drop passport, visa, offer, school or rental files</span>
-        <span className="mt-1 text-xs text-zinc-500">Preview only, no files are uploaded or stored</span>
+        <span className="mt-1 text-xs text-zinc-500">Preview only. No files are uploaded, sent or stored.</span>
         <input type="file" className="hidden" disabled />
       </label>
       <div className="mt-6 space-y-3">
@@ -2154,7 +2154,7 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
   );
 }
 
-function ChatbotMock({ routeLabel, reason, profile }: { routeLabel: string; reason: string; profile: string }) {
+function ChatbotPreview({ routeLabel, reason, profile }: { routeLabel: string; reason: string; profile: string }) {
   const [messages, setMessages] = useState([
     { from: "bot", text: "This AI assistant preview shows the type of planning guidance SettleMap is designed to support." },
   ]);
@@ -2178,8 +2178,8 @@ function ChatbotMock({ routeLabel, reason, profile }: { routeLabel: string; reas
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-white/10 p-3"><Bot className="h-6 w-6 text-white" /></div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Future AI integration ready</p>
-          <h2 className="text-2xl font-semibold">AI assistant preview</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">AI assistant preview</p>
+          <h2 className="text-2xl font-semibold">AI planning assistant preview</h2>
         </div>
       </div>
       <p className="mt-4 text-sm leading-7 text-emerald-50">The future AI assistant will use route, move reason and family profile to generate more relevant checklist-style answers.</p>
@@ -2260,7 +2260,7 @@ function ArchitectureSection() {
             <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">{DISCLAIMER_SHORT}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {["No forced login", "Dashboard hidden until route is selected", "Document checklist preview", "Future AI integration ready", "Route-first service research", "Safe non-advisory wording"].map((item) => (
+            {["No forced login", "Dashboard hidden until route is selected", "Document checklist preview", "AI assistant preview", "Route-first service research", "Safe non-advisory wording"].map((item) => (
               <div key={item} className="rounded-xl border border-white/10 bg-white/10 p-4 text-sm font-semibold text-white/90">
                 <CheckCircle2 className="mb-3 h-5 w-5 text-white" />
                 {item}
