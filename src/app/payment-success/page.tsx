@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ExternalLink, Mail } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, ExternalLink, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Payment confirmed — SettleMap",
   description: "Your Student Move Pack payment has been received through Stripe.",
 };
-
-const STRIPE_LINK =
-  process.env.NEXT_PUBLIC_STRIPE_STUDENT_MOVE_PACK_PAYMENT_LINK ??
-  "https://buy.stripe.com/bJe7sKcJs90l7csgrK1gs00";
 
 export default function PaymentSuccessPage() {
   return (
@@ -21,19 +17,25 @@ export default function PaymentSuccessPage() {
           </div>
           <h1 className="mt-6 text-3xl font-semibold tracking-tight text-zinc-900">Payment confirmed</h1>
           <p className="mt-4 text-base leading-7 text-zinc-600">
-            Thank you. Your Student Move Pack payment has been received through Stripe.
+            Thank you. Your Student Move Pack payment has been received and confirmed by Stripe.
           </p>
         </div>
 
+        {/* Automated delivery notice */}
+        <div className="mt-6 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          <Clock className="h-4 w-4 shrink-0 text-emerald-600" />
+          Your Student Move Pack email is being sent automatically — check within 15 minutes.
+        </div>
+
         {/* Next steps */}
-        <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">What to do next</p>
+        <div className="mt-5 rounded-xl border border-zinc-200/80 bg-white p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">What to do next</p>
           <ol className="mt-4 space-y-3">
             {[
               "Check your Stripe receipt email — it confirms the payment and amount.",
-              "Build your route plan on SettleMap using the free planner while you wait.",
-              "Email support@settlemap.app with your payment email and route if you need access help.",
-              "Your early-access planning pack will be shared by email after review. We aim to respond within 1 business day during early access.",
+              "Check the Student Move Pack email from SettleMap — this is sent automatically within minutes.",
+              "Open SettleMap and start building your route plan while you wait.",
+              "Did not receive the SettleMap email within 15 minutes? Check your spam folder, then email support@settlemap.app with your payment email.",
             ].map((step, i) => (
               <li key={i} className="flex items-start gap-3 text-sm leading-6 text-zinc-700">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white">
@@ -44,18 +46,18 @@ export default function PaymentSuccessPage() {
             ))}
           </ol>
           <p className="mt-4 text-[11px] leading-5 text-zinc-500">
-            SettleMap currently uses Stripe-hosted checkout. If you paid using Stripe Link, the receipt may be sent to the email saved in your Stripe Link account rather than the email you typed.
+            SettleMap uses Stripe-hosted checkout. If you paid via Stripe Link, the Stripe receipt may go to the email saved in your Stripe Link account rather than the one you typed during checkout.
           </p>
         </div>
 
-        {/* Contact support checklist */}
+        {/* If you contact support */}
         <div className="mt-5 rounded-xl border border-zinc-200/80 bg-white p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">If you contact support, include</p>
           <ul className="mt-3 space-y-2">
             {[
               "The email address used at Stripe checkout",
-              "Your student move route (for example: India to UK)",
               "Student or parent name",
+              "Move route (for example: India to UK)",
               "Expected departure month",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm leading-6 text-zinc-600">
@@ -64,15 +66,17 @@ export default function PaymentSuccessPage() {
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-[11px] text-zinc-400">
-            Do not send: passport number, visa number, bank details, medical details or ID documents.
-          </p>
+          <div className="mt-3 rounded border border-amber-200 bg-amber-50 px-3 py-2">
+            <p className="text-[11px] leading-5 text-amber-800">
+              Do not send: passport number, visa number, bank details, medical details or ID documents.
+            </p>
+          </div>
         </div>
 
         {/* Support email */}
         <div className="mt-5 flex items-center gap-2 text-sm text-zinc-500">
           <Mail className="h-4 w-4 shrink-0" />
-          Questions? Email{" "}
+          Questions?{" "}
           <a href="mailto:support@settlemap.app" className="font-semibold text-emerald-700 underline hover:text-emerald-800">
             support@settlemap.app
           </a>

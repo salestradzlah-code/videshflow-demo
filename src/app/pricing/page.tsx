@@ -87,7 +87,7 @@ export default function PricingPage() {
             </div>
             <div className="mt-2 flex items-center gap-2">
               <GraduationCap className="h-5 w-5 text-emerald-600" />
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Student move · India outbound</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Student move · Early access</p>
             </div>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Student Move Pack</h2>
             <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
@@ -110,9 +110,9 @@ export default function PricingPage() {
               </div>
             </div>
             <p className="mt-3 border-t border-zinc-100 pt-3 text-[11px] leading-5 text-zinc-500">
-              After payment, check your Stripe receipt email. For access questions, email{" "}
+              After payment, Stripe sends your receipt and SettleMap sends your Student Move Pack email automatically. If you do not receive the SettleMap email within 15 minutes, check your spam folder or email{" "}
               <a href="mailto:support@settlemap.app" className="underline hover:text-zinc-700">support@settlemap.app</a>{" "}
-              with your payment email and move route. We aim to respond within 1 business day during early access.{" "}
+              with your payment email.{" "}
               <Link href="/refund-policy" className="underline hover:text-zinc-700">Refund policy</Link>.
             </p>
           </div>
