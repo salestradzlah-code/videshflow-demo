@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ExternalLink, GraduationCap, ShieldCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2, GraduationCap, ShieldCheck } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import {
   SUPPORT_CONTACT_NOTE,
@@ -16,10 +16,6 @@ export const metadata: Metadata = {
   title: "Pricing",
   description: "SettleMap Student Move Pack — S$19 early access. Route-aware 90-day plan, SIM/OTP checklist, packing guide, parent handover checklist and provider scripts.",
 };
-
-const STRIPE_LINK =
-  process.env.NEXT_PUBLIC_STRIPE_STUDENT_MOVE_PACK_PAYMENT_LINK ??
-  "https://buy.stripe.com/bJe7sKcJs90l7csgrK1gs00";
 
 const studentPackFeatures = [
   "90-day route-aware project plan",
@@ -101,9 +97,16 @@ export default function PricingPage() {
               ))}
             </ul>
             <div className="mt-6 space-y-2">
-              <a href={STRIPE_LINK} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
-                Pay securely with Stripe <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
+              {process.env.NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED !== "false" ? (
+                <Link href="/student-move-pack" className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
+                  Start Student Move Pack <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              ) : (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                  Payments temporarily paused. Contact{" "}
+                  <a href="mailto:support@settlemap.app" className="underline hover:text-amber-900">support@settlemap.app</a>.
+                </div>
+              )}
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
                 <ShieldCheck className="h-3 w-3" />
                 Secure payment via Stripe · No SettleMap account needed
@@ -196,13 +199,13 @@ export default function PricingPage() {
         <p className="mt-6 text-sm text-zinc-500">{SUPPORT_CONTACT_NOTE}</p>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link href="/refund-policy" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
+          <Link href="/refund-policy" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-emerald-900 hover:bg-slate-50">
             Read refund policy
           </Link>
-          <Link href="/early-access" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
+          <Link href="/early-access" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-emerald-900 hover:bg-slate-50">
             Go to early access
           </Link>
-          <Link href="/get-help" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-[#123638] hover:bg-slate-50">
+          <Link href="/get-help" className="rounded-full border border-black/10 bg-white px-6 py-3 text-center text-sm font-semibold text-emerald-900 hover:bg-slate-50">
             Get help with pricing questions
           </Link>
         </div>

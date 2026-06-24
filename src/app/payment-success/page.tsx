@@ -33,9 +33,9 @@ export default function PaymentSuccessPage() {
           <ol className="mt-4 space-y-3">
             {[
               "Check your Stripe receipt email — it confirms the payment and amount.",
-              "Check the Student Move Pack email from SettleMap — this is sent automatically within minutes.",
+              "Check the Student Move Pack email from SettleMap — this is sent automatically within minutes of payment.",
               "Open SettleMap and start building your route plan while you wait.",
-              "Did not receive the SettleMap email within 15 minutes? Check your spam folder, then email support@settlemap.app with your payment email.",
+              "Did not receive the SettleMap email within 15 minutes? Check your spam folder, then email support@settlemap.app with your payment email and route.",
             ].map((step, i) => (
               <li key={i} className="flex items-start gap-3 text-sm leading-6 text-zinc-700">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white">
@@ -46,7 +46,7 @@ export default function PaymentSuccessPage() {
             ))}
           </ol>
           <p className="mt-4 text-[11px] leading-5 text-zinc-500">
-            SettleMap uses Stripe-hosted checkout. If you paid via Stripe Link, the Stripe receipt may go to the email saved in your Stripe Link account rather than the one you typed during checkout.
+            SettleMap uses Stripe-hosted checkout. If you paid via Stripe Link, the Stripe receipt may go to the email saved in your Stripe Link account rather than the one you entered during checkout.
           </p>
         </div>
 
