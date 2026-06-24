@@ -1,6 +1,6 @@
 # SettleMap — Map your move. Settle with confidence.
 
-A professional Next.js + Tailwind CSS demo for SettleMap, a practical relocation starter kit website for people and families moving across countries.
+A professional Next.js + Tailwind CSS early access site for SettleMap, a practical relocation starter kit for people and families moving across countries.
 
 SettleMap is operated by TRADZLAH LLP, Singapore UEN T20LL0224L. It is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website.
 

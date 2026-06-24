@@ -24,7 +24,7 @@ export default function GetHelpPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Support</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">Get Help</h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
-          SettleMap is an early feedback prototype, not a manual consulting service. The fastest way to reach us today
+          SettleMap is an early access planning tool, not a manual consulting service. The fastest way to reach us today
           is the feedback form below.
         </p>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-500">{SUPPORT_CURRENT_STATUS_NOTE}</p>

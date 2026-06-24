@@ -444,7 +444,7 @@ export function ServicesDirectory() {
               <p className="mt-3 border-t border-zinc-100 pt-3 text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
                 Where to start: <span className="font-medium text-zinc-600">{category.whereToStart}</span>
               </p>
-              <p className="mt-2 text-xs text-zinc-400">Verify from official website. Not an endorsement.</p>
+              <p className="mt-2 text-xs text-zinc-400">Check official source. Not an endorsement.</p>
             </div>
           ))}
         </div>
@@ -477,7 +477,7 @@ export function ServicesDirectory() {
                     Visit official website
                   </a>
                 ) : (
-                  <p className="mt-2 text-xs text-zinc-400">Verify from official website. Not an endorsement.</p>
+                  <p className="mt-2 text-xs text-zinc-400">Check official source. Not an endorsement.</p>
                 )}
               </div>
             ))}

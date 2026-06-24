@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What is SettleMap?",
-    a: "SettleMap is an early feedback prototype that helps people and families plan a relocation. It turns your route and move details into a project-style task tracker with checklists, official-source reminders, and copy-ready scripts.",
+    a: "SettleMap is an early access planning tool that helps people and families plan a relocation. It turns your route and move details into a project-style task tracker with checklists, official-source reminders, and copy-ready scripts.",
   },
   {
     q: "Is SettleMap free?",

@@ -59,7 +59,7 @@ export function getTaskOwner(task: TimelineTask): TaskOwner {
 // --- Rule-sensitive / official-link / script classification ----------
 // Tasks with a confirmed official government URL already available (Singapore housing official
 // links only — see demoPlatform.ts singaporeOfficialLinkCategories). Anything not listed here that
-// is still rule-sensitive falls back to "Plan action" + "Verify from official website" — never a
+// is still rule-sensitive falls back to "Plan action" + "Check official source" — never a
 // guessed link.
 const OFFICIAL_LINK_TASK_IDS: Record<string, string[]> = {
   "sg-rental-registration": ["hdb", "ura"],

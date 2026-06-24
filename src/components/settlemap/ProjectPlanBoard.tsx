@@ -38,7 +38,7 @@ function downloadPlanChecklist(tasks: EnrichedTask[], format: "csv" | "md") {
     stage: task.stage,
     priority: task.priority,
     owner: task.owner,
-    nextStep: task.nextStep ?? "Plan this step.",
+    nextStep: task.nextStep ?? "Open starter guidance",
   }));
 
   let content: string;
@@ -588,7 +588,7 @@ function TaskAction({
               Verify directly · {category.title}
             </a>
           ) : (
-            <p key={category.key} className="text-xs font-semibold text-zinc-500">Verify from official website · {category.title}</p>
+            <p key={category.key} className="text-xs font-semibold text-zinc-500">Check official source · {category.title}</p>
           )
         )}
       </div>
@@ -675,10 +675,10 @@ function TaskAction({
       {task.ruleSensitive && (
         <>
           <span className="inline-block rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-white">Official source</span>
-          <p className="text-xs font-semibold text-zinc-500">Verify from official website</p>
+          <p className="text-xs font-semibold text-zinc-500">Check official source</p>
         </>
       )}
-      {!task.ruleSensitive && <p className="text-xs text-zinc-500">{task.nextStep ?? "Plan this step."}</p>}
+      {!task.ruleSensitive && <p className="text-xs text-zinc-500">{task.nextStep ?? "Open starter guidance"}</p>}
       <ShieldCheck className="hidden h-0 w-0" />
     </div>
   );

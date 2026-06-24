@@ -99,7 +99,7 @@ export default function PricingPage() {
             <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
               SettleMap's project planner is free today. Paid plans below are AI-first, self-serve, and fully automated by
               design — there is no human review and no manual fulfilment. Pricing signals are research-stage interest lists
-              only — nothing here charges a card.
+              only. No card is charged today.
             </p>
           </div>
           <div className="hidden lg:block">

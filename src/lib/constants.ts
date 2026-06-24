@@ -22,7 +22,7 @@ export const EARLY_ACCESS_FORM_URL = TALLY_FORM_URL;
 export const CONTACT_NOTE = "Use the feedback form to contact us during early access.";
 
 export const DISCLAIMER_SHORT =
-  "SettleMap is an early feedback prototype, not a finished product. It is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Always verify current requirements with official sources and qualified professionals.";
+  "SettleMap is an early access planning tool, not a professional advice service. It is not a travel agency, immigration adviser, property agent, financial adviser, insurance adviser, medical adviser, school or admission adviser, or government website. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice. Always verify current requirements with official sources and qualified professionals.";
 
 export const OPERATOR_LINE = "SettleMap is operated by TRADZLAH LLP, Singapore UEN T20LL0224L.";
 
@@ -35,7 +35,7 @@ export const INSURANCE_DISCLAIMER =
   "SettleMap does not sell or advise on insurance. Users must compare policies and verify with licensed professionals/providers.";
 
 export const AI_ASSISTANT_DISCLAIMER =
-  "SettleMap is a prototype planning assistant. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice.";
+  "SettleMap provides planning support only. It does not provide legal, immigration, tax, financial, medical, insurance, housing, school admission, travel, pet import, or vendor advice.";
 
 // V10.4: monetisation readiness and lead capture disclosures.
 export const AFFILIATE_DISCLOSURE_NOTE =
@@ -52,7 +52,7 @@ export const PAID_SERVICES_DISCLAIMER =
   "This is planning support only. SettleMap does not provide legal, immigration, tax, property, financial, insurance, medical, school/admission or travel advice.";
 
 export const PAYMENT_READINESS_NOTE =
-  "SettleMap is in early feedback mode. Payments are not active yet. Early-access users will be contacted before any payment is requested.";
+  "SettleMap is in early access. Payments are not active yet. Early-access users will be contacted before any payment is requested.";
 
 // V11.6 Part 1 — live support email, now published.
 export const SUPPORT_EMAIL = "support@settlemap.app";
@@ -69,7 +69,7 @@ export const PRICING_BOUNDARY_SHORT =
 export const AGENT_ROADMAP_CAPABILITIES = [
   "Prepare route plans",
   "Draft messages",
-  "Compare options",
+  "Open comparison checklist",
   "Prepare document checklists",
   "Ask for approval before contacting providers",
   "Ask for approval before bookings or payments",
@@ -158,7 +158,7 @@ export const SUPPORT_CANNOT_HELP = [
   "School/admission advice",
 ];
 
-export const SUPPORT_CURRENT_STATUS_NOTE = "Current status: early feedback prototype.";
+export const SUPPORT_CURRENT_STATUS_NOTE = "Current status: early access version.";
 
 // V11: AI-first homepage story, referral/partner disclosure language, and language readiness.
 
@@ -215,7 +215,7 @@ export const FEEDBACK_PLAN_INTEREST_OPTIONS = ["S$19 AI Route Plan", "S$49 Premi
 
 // V11.5 Part 7 — pilot pricing is indicative; no live checkout exists yet.
 export const PILOT_PRICE_TESTING_NOTE =
-  "SettleMap is in early feedback mode. Payments are not active yet. Pilot prices are indicative. Payment links will be tested privately before public launch.";
+  "SettleMap is in early access. Payments are not active yet. Pilot prices are indicative. Payment links will be tested privately before public launch.";
 
 // V11.5 Part 8 — Security and Data Handling page content, plus the footer link label.
 export const SECURITY_DATA_PAGE_TITLE = "Security and data";

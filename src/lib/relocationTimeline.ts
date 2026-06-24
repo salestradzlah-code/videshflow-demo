@@ -79,7 +79,7 @@ const baseTasks: TimelineTask[] = [
     phase: "Days 1 to 7",
     title: "Set up local banking",
     description: "Research local banking, payment apps, remittance, cards and salary account steps. Verify requirements with the bank directly.",
-    nextStep: "Prepare provider questions.",
+    nextStep: "View provider questions",
     timing: "Day 2 to 7",
     priority: "High",
     category: "Banking",
@@ -120,7 +120,7 @@ const baseTasks: TimelineTask[] = [
     phase: "Days 8 to 30",
     title: "Set up home and health basics",
     description: "Plan furniture, appliances, WiFi, utilities and delivery windows, and register with a nearby clinic or pharmacy. Verify medical requirements directly.",
-    nextStep: "Prepare provider questions.",
+    nextStep: "View provider questions",
     timing: "Week 2 to 4",
     priority: "Medium",
     category: "Home setup",
@@ -329,7 +329,7 @@ const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
     { id: "catch-up-plan", phase: "Days 8 to 30", title: "Catch up missed pre-move tasks", description: "Backfill documents, insurance, banking, housing, school, utilities and local registrations that were not completed before arrival.", timing: "Week 2", priority: "High", category: "Catch-up" },
   ],
   retirement: [
-    { id: "retirement-healthcare", phase: "Before you move", title: "Check healthcare and pension logistics", description: "Research healthcare system access, long-term insurance, prescription continuity, and how pension or retirement income transfers. Confirm tax or residency points with qualified professionals.", nextStep: "Prepare provider questions.", timing: "T-60", priority: "High", category: "Healthcare", tier: "Core" },
+    { id: "retirement-healthcare", phase: "Before you move", title: "Check healthcare and pension logistics", description: "Research healthcare system access, long-term insurance, prescription continuity, and how pension or retirement income transfers. Confirm tax or residency points with qualified professionals.", nextStep: "View provider questions", timing: "T-60", priority: "High", category: "Healthcare", tier: "Core" },
     { id: "retirement-housing-comfort", phase: "Days 8 to 30", title: "Prioritise housing comfort", description: "Check accessibility, transport ease, single-level living options and proximity to healthcare, then find local clubs, faith communities and hobby groups for a steady weekly routine.", nextStep: "Compare three options.", timing: "Week 2 to 4", priority: "Medium", category: "Housing", tier: "Recommended" },
   ],
   domestic: [

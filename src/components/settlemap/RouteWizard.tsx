@@ -1279,10 +1279,10 @@ function FeedbackCtaSection() {
       <div className="mx-auto max-w-7xl rounded-xl bg-emerald-600 p-7 text-white shadow-sm sm:p-9">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Early feedback prototype</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Early access planning tool</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Help shape SettleMap</h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-emerald-50">
-              This is an early prototype. Your answers directly shape what gets built next.
+              This is an early access version designed to collect feedback and improve the planning experience. Your answers directly shape what gets built next.
             </p>
             <a
               href={TALLY_FORM_URL}
@@ -1591,7 +1591,7 @@ function OfficialLinksSection() {
                 Visit official website
               </a>
             ) : (
-              <p className="mt-1 text-xs font-semibold text-zinc-500">Verify from official website</p>
+              <p className="mt-1 text-xs font-semibold text-zinc-500">Check official source</p>
             )}
           </div>
         ))}
@@ -1714,7 +1714,7 @@ function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan
           <Route className="mt-1 h-6 w-6 text-emerald-600" />
           <div>
             <p className="text-lg font-semibold">Complete the route choices above</p>
-            <p className="mt-1 text-sm leading-6 text-zinc-600">The full dashboard, timeline, document checklist and AI mock assistant stay hidden until your route is selected. Cities and pets are optional. This keeps the first action clear.</p>
+            <p className="mt-1 text-sm leading-6 text-zinc-600">The full dashboard, timeline, document checklist and AI assistant preview stay hidden until your route is selected. Cities and pets are optional. This keeps the first action clear.</p>
           </div>
         </div>
       )}
@@ -1732,7 +1732,7 @@ function PreSelectionGuide() {
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="Before you start" title="A clearer first step, not a content ocean" description="The prototype now waits for your route before showing the full relocation command centre." />
+        <SectionHeader eyebrow="Before you start" title="A clearer first step, not a content ocean" description="The early access experience waits for your route before showing the full relocation command centre." />
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {cards.map((card) => (
             <div key={card.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
@@ -2126,16 +2126,16 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-zinc-50 p-3"><FileSearch className="h-6 w-6 text-emerald-600" /></div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Mock OCR</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Document checklist preview</p>
           <h2 className="text-2xl font-semibold text-zinc-900">AI document checklist</h2>
         </div>
       </div>
-      <p className="mt-4 text-sm leading-7 text-zinc-600">Mock mode for {routeLabel}. Upload UI is mocked. This prototype never sends files anywhere.</p>
-      <label className="mt-6 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center transition-all duration-200 ease-in-out hover:border-emerald-400">
+      <p className="mt-4 text-sm leading-7 text-zinc-600">Document checklist preview for {routeLabel}. Document upload is not active today. No files are uploaded, sent or stored in this version.</p>
+      <label className="mt-6 flex cursor-not-allowed flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center">
         <UploadCloud className="h-8 w-8 text-emerald-600" />
         <span className="mt-3 text-sm font-semibold text-zinc-900">Drop passport, visa, offer, school or rental files</span>
-        <span className="mt-1 text-xs text-zinc-500">Mock scan only. API-ready later.</span>
-        <input type="file" className="hidden" />
+        <span className="mt-1 text-xs text-zinc-500">Preview only, no files are uploaded or stored</span>
+        <input type="file" className="hidden" disabled />
       </label>
       <div className="mt-6 space-y-3">
         {visibleDocs.map((category) => (
@@ -2156,7 +2156,7 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
 
 function ChatbotMock({ routeLabel, reason, profile }: { routeLabel: string; reason: string; profile: string }) {
   const [messages, setMessages] = useState([
-    { from: "bot", text: "I can help you convert this relocation route into checklist-style planning guidance. I am a mock assistant in this prototype." },
+    { from: "bot", text: "This AI assistant preview shows the type of planning guidance SettleMap is designed to support." },
   ]);
   const [input, setInput] = useState("");
 
@@ -2166,7 +2166,7 @@ function ChatbotMock({ routeLabel, reason, profile }: { routeLabel: string; reas
     setMessages((current) => [
       ...current,
       { from: "user", text: userText },
-      { from: "bot", text: `For ${routeLabel}, ${reason}, ${profile}, I would prioritise official links, documents, money buffer, temporary stay, local connectivity and the first 90-day task sequence. This is prototype guidance only.` },
+      { from: "bot", text: `For ${routeLabel}, ${reason}, ${profile}, I would prioritise official links, documents, money buffer, temporary stay, local connectivity and the first 90-day task sequence. This is planning support only, not professional advice.` },
     ]);
     setInput("");
   }
@@ -2178,8 +2178,8 @@ function ChatbotMock({ routeLabel, reason, profile }: { routeLabel: string; reas
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-white/10 p-3"><Bot className="h-6 w-6 text-white" /></div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">API-ready mock</p>
-          <h2 className="text-2xl font-semibold">AI chatbot interface</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Future AI integration ready</p>
+          <h2 className="text-2xl font-semibold">AI assistant preview</h2>
         </div>
       </div>
       <p className="mt-4 text-sm leading-7 text-emerald-50">The future AI assistant will use route, move reason and family profile to generate more relevant checklist-style answers.</p>
@@ -2256,11 +2256,11 @@ function ArchitectureSection() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Safety and architecture</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Global route planning now, scalable integrations later</h2>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This prototype uses mock AI, local progress state and static data panels so leadership can see the operating model: plan, track, audit, ask, route and learn. Later phases can add auth, database, OCR, AI API, CRM, calendar and provider integrations.</p>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This early access version uses an AI assistant preview, local progress state and static data panels to show the planning experience: plan, track, audit, ask, route and learn. Future phases may add OCR, AI API, CRM, calendar and provider integrations.</p>
             <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">{DISCLAIMER_SHORT}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {["No forced login", "Dashboard hidden until route is selected", "Mock OCR for preview speed", "API-ready chatbot UI", "Route-first service research", "Safe non-advisory wording"].map((item) => (
+            {["No forced login", "Dashboard hidden until route is selected", "Document checklist preview", "Future AI integration ready", "Route-first service research", "Safe non-advisory wording"].map((item) => (
               <div key={item} className="rounded-xl border border-white/10 bg-white/10 p-4 text-sm font-semibold text-white/90">
                 <CheckCircle2 className="mb-3 h-5 w-5 text-white" />
                 {item}

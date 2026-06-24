@@ -13,7 +13,7 @@ const covers = [
   "A 90-day adaptive task timeline with progress tracking",
   "Document checklists by move reason and profile",
   "Neutral service categories to research",
-  "Mock AI assistant for checklist-style planning questions",
+  "AI assistant preview for checklist-style planning questions",
 ];
 
 const doesNotCover = [
@@ -27,7 +27,7 @@ const doesNotCover = [
 const roadmap = [
   {
     label: "Now",
-    items: ["Route wizard and 90-day timeline", "Route library and starter kits", "Mock AI assistant and service directory"],
+    items: ["Route wizard and 90-day timeline", "Route library and starter kits", "AI assistant preview and service directory"],
   },
   {
     label: "Next",
@@ -61,13 +61,13 @@ export default function AboutPage() {
           <div className="rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Why now</p>
             <p className="mt-3 text-sm leading-7 text-zinc-600">
-              Cross-border moves keep increasing for work, study, family and retirement, while the planning experience has not caught up. This prototype tests whether a route-first, checklist-first approach actually reduces relocation stress.
+              Cross-border moves keep increasing for work, study, family and retirement, while the planning experience has not caught up. This early access version explores how a route-first, checklist-first approach can reduce relocation stress.
             </p>
           </div>
           <div className="rounded-xl border border-zinc-200/80 bg-white p-7 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Early feedback stage</p>
             <p className="mt-3 text-sm leading-7 text-zinc-600">
-              This is an early feedback prototype, not a finished product. We are starting with a focused route library, an adaptive planning wizard, and safe public-source guidance — more routes and features will follow based on tester feedback.
+              This is an early access version designed to collect feedback and improve the planning experience. We are starting with a focused route library, an adaptive planning wizard, and safe public-source guidance — more routes and features will follow based on tester feedback.
             </p>
           </div>
         </div>

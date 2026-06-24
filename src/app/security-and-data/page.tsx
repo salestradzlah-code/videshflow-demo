@@ -15,7 +15,7 @@ export default function SecurityAndDataPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Trust and safety</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">Security and data</h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
-          SettleMap is an early feedback prototype. Here is a practical, plain summary of how planning data,
+          SettleMap is an early access planning tool. Here is a practical, plain summary of how planning data,
           feedback, and any future payments are handled.
         </p>
 

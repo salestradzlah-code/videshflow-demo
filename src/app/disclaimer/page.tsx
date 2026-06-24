@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 const sections = [
   {
-    id: "prototype-status",
-    title: "1. Prototype status",
-    body: "SettleMap is an early feedback prototype, not a finished product. Features, data, and wording may change without notice as we learn from tester feedback.",
+    id: "early-access-status",
+    title: "1. Early access status",
+    body: "SettleMap is an early access planning tool. Some features are still being improved and may change as we learn from user feedback.",
   },
   {
     id: "no-professional-advice",
@@ -55,7 +55,7 @@ const sections = [
   {
     id: "user-responsibility",
     title: "10. User responsibility",
-    body: "You are responsible for verifying information before acting on it and for any decisions made using this platform. SettleMap and its operators are not liable for outcomes resulting from reliance on prototype content.",
+    body: "You are responsible for verifying information before acting on it and for any decisions made using this platform. SettleMap and its operators are not liable for outcomes resulting from reliance on early access content.",
   },
   {
     id: "paid-services",
@@ -71,7 +71,7 @@ export default function DisclaimerPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Trust and safety</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">Disclaimer</h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600">
-          SettleMap is an experience-backed relocation planning prototype. It is designed to help users ask better questions, prepare practical checklists, and find official sources faster — not to replace professional advice.
+          SettleMap is an experience-backed, early access relocation planning tool. It is designed to help users ask better questions, prepare practical checklists, and find official sources faster — not to replace professional advice.
         </p>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[220px_1fr]">

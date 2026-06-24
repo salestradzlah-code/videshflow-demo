@@ -514,7 +514,7 @@ export type ActionLinkCategory = {
   whatToDo: string;
   whereToStart: string;
   // V9.2.1 — only set when the exact official government/statutory-board URL has been confirmed.
-  // If absent, the UI must show "Verify from official website" instead of a link.
+  // If absent, the UI must show "Check official source" instead of a link.
   url?: string;
 };
 
