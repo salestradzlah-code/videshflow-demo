@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ShieldCheck } from "lucide-react";
-import { SECURITY_DATA_POINTS } from "@/lib/constants";
+import { SECURITY_DATA_POINTS, SUPPORT_EMAIL, SUPPORT_EMAIL_SAFETY_NOTE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Security and Data Handling",
@@ -27,6 +27,17 @@ export default function SecurityAndDataPage() {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+          <p className="text-sm leading-6 text-zinc-600">
+            Questions about security or data? Email{" "}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-emerald-700 hover:text-emerald-800">
+              {SUPPORT_EMAIL}
+            </a>
+            .
+          </p>
+          <p className="mt-2 text-sm leading-6 text-zinc-600">{SUPPORT_EMAIL_SAFETY_NOTE}</p>
         </div>
 
         <p className="mt-6 text-xs leading-5 text-zinc-500">

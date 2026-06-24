@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, LifeBuoy, ShieldAlert } from "lucide-react";
 import {
   TALLY_FORM_URL,
+  SUPPORT_EMAIL,
   SUPPORT_CONTACT_NOTE,
   SUPPORT_CAN_HELP_LATER,
   SUPPORT_CANNOT_HELP,
@@ -87,7 +88,13 @@ export default function GetHelpPage() {
         </div>
 
         <div className="mt-8 rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-          <p className="text-sm leading-6 text-zinc-600">{SUPPORT_CONTACT_NOTE}</p>
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+          >
+            <LifeBuoy className="h-4 w-4" /> {SUPPORT_EMAIL}
+          </a>
+          <p className="mt-3 text-sm leading-6 text-zinc-600">{SUPPORT_CONTACT_NOTE}</p>
           <p className="mt-3 text-xs leading-5 text-zinc-500">{LANGUAGE_HELP_PAGE_NOTE}</p>
         </div>
 

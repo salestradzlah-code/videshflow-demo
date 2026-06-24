@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AFFILIATE_DISCLOSURE_NOTE, DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL, LANGUAGE_TRANSLATE_NOTE } from "@/lib/constants";
+import { AFFILIATE_DISCLOSURE_NOTE, DISCLAIMER_SHORT, OPERATOR_LINE, TALLY_FORM_URL, LANGUAGE_TRANSLATE_NOTE, SUPPORT_EMAIL } from "@/lib/constants";
 
 const exploreLinks = [
   { href: "/", label: "Build My Move Plan" },
@@ -39,6 +39,9 @@ export function Footer() {
           <p className="mt-4 max-w-2xl text-xs leading-5 text-zinc-500">{DISCLAIMER_SHORT}</p>
           <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">{LANGUAGE_TRANSLATE_NOTE}</p>
           <p className="mt-4 max-w-2xl text-xs leading-5 text-zinc-500">{OPERATOR_LINE}</p>
+          <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">
+            Support: <a href={`mailto:${SUPPORT_EMAIL}`} className="text-zinc-300 hover:text-white">{SUPPORT_EMAIL}</a>
+          </p>
           <p className="mt-3 max-w-2xl text-xs leading-5 text-zinc-500">{AFFILIATE_DISCLOSURE_NOTE}</p>
         </div>
         <div>

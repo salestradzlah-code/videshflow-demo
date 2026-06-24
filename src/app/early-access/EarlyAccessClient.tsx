@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
-import { EARLY_ACCESS_FORM_URL, COMMERCIAL_LINKS_NOTE } from "@/lib/constants";
+import { EARLY_ACCESS_FORM_URL, COMMERCIAL_LINKS_NOTE, SUPPORT_EMAIL, SUPPORT_EMAIL_SAFETY_NOTE } from "@/lib/constants";
 import { trackEvent } from "@/lib/analytics";
 
 const captureFields = [
@@ -152,7 +152,14 @@ export function EarlyAccessClient() {
           Partner or referral interest? Use the <a href="/partner-with-us" className="font-semibold text-[#123638] underline hover:no-underline">Partner With Us</a> page instead of this form.
         </p>
 
-        <p className="mt-8 max-w-3xl text-xs leading-6 text-slate-500">{COMMERCIAL_LINKS_NOTE}</p>
+        <p className="mt-8 max-w-3xl text-xs leading-6 text-slate-500">
+          Questions? Email{" "}
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-[#123638] underline hover:no-underline">
+            {SUPPORT_EMAIL}
+          </a>
+          . {SUPPORT_EMAIL_SAFETY_NOTE}
+        </p>
+        <p className="mt-3 max-w-3xl text-xs leading-6 text-slate-500">{COMMERCIAL_LINKS_NOTE}</p>
         <div className="mt-6"><DisclaimerBox /></div>
       </div>
     </section>

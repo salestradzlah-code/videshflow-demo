@@ -52,9 +52,15 @@ export const PAID_SERVICES_DISCLAIMER =
   "This is planning support only. SettleMap does not provide legal, immigration, tax, property, financial, insurance, medical, school/admission or travel advice.";
 
 export const PAYMENT_READINESS_NOTE =
-  "Payments are not active yet. Early-access users will be contacted before any payment is requested.";
+  "SettleMap is in early feedback mode. Payments are not active yet. Early-access users will be contacted before any payment is requested.";
 
-export const SUPPORT_CONTACT_NOTE = "Official support email will be added before paid launch.";
+// V11.6 Part 1 — live support email, now published.
+export const SUPPORT_EMAIL = "support@settlemap.app";
+
+export const SUPPORT_EMAIL_SAFETY_NOTE =
+  "Please do not send passport numbers, ID documents, medical records, bank details or other sensitive personal information by email.";
+
+export const SUPPORT_CONTACT_NOTE = `Email support: ${SUPPORT_EMAIL}. ${SUPPORT_EMAIL_SAFETY_NOTE}`;
 
 // V10.8: paid product clarity, resource action steps, and agentic roadmap readiness.
 export const PRICING_BOUNDARY_SHORT =
@@ -209,7 +215,7 @@ export const FEEDBACK_PLAN_INTEREST_OPTIONS = ["S$19 AI Route Plan", "S$49 Premi
 
 // V11.5 Part 7 — pilot pricing is indicative; no live checkout exists yet.
 export const PILOT_PRICE_TESTING_NOTE =
-  "Pilot prices are indicative. Payment links will be tested privately before public launch. No live payments yet.";
+  "SettleMap is in early feedback mode. Payments are not active yet. Pilot prices are indicative. Payment links will be tested privately before public launch.";
 
 // V11.5 Part 8 — Security and Data Handling page content, plus the footer link label.
 export const SECURITY_DATA_PAGE_TITLE = "Security and data";

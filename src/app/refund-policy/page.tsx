@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TALLY_FORM_URL, SUPPORT_CONTACT_NOTE, PAYMENT_READINESS_NOTE } from "@/lib/constants";
+import { TALLY_FORM_URL, SUPPORT_EMAIL, SUPPORT_CONTACT_NOTE, PAYMENT_READINESS_NOTE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Refund Policy",
@@ -58,14 +58,22 @@ export default function RefundPolicyPage() {
               <h2 className="text-lg font-semibold text-zinc-900">{section.title}</h2>
               <p className="mt-3 text-sm leading-7 text-zinc-600">{section.body}</p>
               {section.id === "contact" && (
-                <a
-                  href={TALLY_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-[#123638] hover:bg-slate-50"
-                >
-                  Reach us via the feedback form
-                </a>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href={`mailto:${SUPPORT_EMAIL}`}
+                    className="inline-flex items-center rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                  >
+                    Email {SUPPORT_EMAIL}
+                  </a>
+                  <a
+                    href={TALLY_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-[#123638] hover:bg-slate-50"
+                  >
+                    Reach us via the feedback form
+                  </a>
+                </div>
               )}
             </div>
           ))}

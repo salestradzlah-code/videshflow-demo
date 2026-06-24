@@ -11,7 +11,10 @@ const sections = [
   { title: "What not to share", text: "Do not share passport numbers, identification numbers, bank details, exact address, employer confidential information, child sensitive details, or private medical information." },
   { title: "Provider connection consent", text: "SettleMap should only connect users with providers where the user has agreed to be contacted or has asked for service options." },
   { title: "Anonymized stories", text: "Contributor stories may be edited, shortened, anonymized, and converted into practical relocation guidance with appropriate permission." },
-  { title: "Contact", text: "For privacy questions, use the feedback form to contact us during early access." },
+  {
+    title: "Contact",
+    text: "For privacy questions, email support@settlemap.app or use the feedback form. Please do not send passport numbers, ID documents, medical records, bank details or other sensitive personal information by email.",
+  },
 ];
 
 export default function PrivacyPage() {

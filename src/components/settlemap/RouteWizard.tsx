@@ -1743,6 +1743,19 @@ function Dashboard({ origin, destination, reason, profile, progress, completed, 
   return (
     <section id="dashboard-top" className="scroll-mt-24 px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-4">
+          <p className="text-base font-semibold text-emerald-900">Your relocation project plan is ready</p>
+          <a
+            href="#timeline-dashboard"
+            onClick={(event) => {
+              event.preventDefault();
+              document.getElementById("timeline-dashboard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+          >
+            Jump to your plan <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
         <SectionHeader eyebrow="Interactive dashboard" title={isDomestic ? "Domestic relocation plan" : "International relocation plan"} description="Your dashboard, built the moment your route is selected." />
         <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_1.2fr]">
           <div className="rounded-xl bg-emerald-600 p-7 text-white shadow-sm">

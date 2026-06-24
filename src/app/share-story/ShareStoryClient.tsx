@@ -33,9 +33,9 @@ export function ShareStoryClient() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a6a20]">Feedback request</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#172326] sm:text-5xl">Help shape SettleMap</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              This is an early feedback prototype. The form below takes about two minutes — mostly ratings and
-              checkboxes, one short text field at the end. Your input helps the next family avoid confusion around
-              documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
+              This is an early feedback prototype. Share quick feedback in under 2 minutes. Most questions are
+              ratings or checkboxes. One optional comment box is available. Your input helps the next family avoid
+              confusion around documents, SIM cards, OTPs, rent, school, healthcare, banking, and first-month setup.
             </p>
 
             <div className="mt-7 grid gap-2.5 sm:grid-cols-2">
