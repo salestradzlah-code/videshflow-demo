@@ -131,6 +131,20 @@ function buildFallbackAnswer(message: string, context: ChatContext): string {
   const header = FALLBACK_PREFIX + "\n\nRoute: " + orig + " to " + dest + " | " + reason + " | " + who + ".\n\n";
   const lower = message.toLowerCase();
 
+  if (/\b(7 days?|seven day|first week|first 7|arrival|day one|day 1|after i land)\b/.test(lower)) {
+    return header
+      + "First 7 days in " + dest + " - action checklist\n\n"
+      + "- Day 1: Activate SIM or eSIM, confirm temporary stay check-in, rest from travel.\n"
+      + "- Day 1 to 2: Buy essential groceries. Locate the nearest pharmacy and clinic.\n"
+      + "- Day 2 to 3: Get a transport card or research the local transit app. Do an orientation walk.\n"
+      + "- Day 2 to 4: Save emergency contacts: local emergency services, employer or school contact, nearest embassy or consulate from " + orig + ".\n"
+      + "- Day 3 to 5: Begin housing viewings if you need long-term accommodation. Do not rush into signing.\n"
+      + "- Day 3 to 6: Research bank account options and book an appointment if required.\n"
+      + "- Day 5 to 7: Follow up on any pending document submissions or registrations in " + dest + ".\n"
+      + "- Throughout: Keep notes on what surprised you to help plan the next 30 days.\n\n"
+      + REQUIRED_REMINDER;
+  }
+
   if (/\b(first|start|begin|priority|where do i|what do i do)\b/.test(lower)) {
     return header
       + "Start here - first priorities\n\n"
@@ -169,20 +183,6 @@ function buildFallbackAnswer(message: string, context: ChatContext): string {
       + "- Long-term housing: research areas, typical costs, and agent fees in " + dest + ". Do not sign anything remotely without verifying.\n"
       + "- Utilities and broadband: check provider options once you have a confirmed address.\n"
       + "- All service choices are your own. Compare directly and verify with providers.\n\n"
-      + REQUIRED_REMINDER;
-  }
-
-  if (/\b(7 day|seven day|first week|arrival|day one|day 1|after i land)\b/.test(lower)) {
-    return header
-      + "First 7 days in " + dest + " - action checklist\n\n"
-      + "- Day 1: Activate SIM or eSIM, confirm temporary stay check-in, rest from travel.\n"
-      + "- Day 1 to 2: Buy essential groceries. Locate the nearest pharmacy and clinic.\n"
-      + "- Day 2 to 3: Get a transport card or research the local transit app. Do an orientation walk.\n"
-      + "- Day 2 to 4: Save emergency contacts: local emergency services, employer or school contact, nearest embassy or consulate from " + orig + ".\n"
-      + "- Day 3 to 5: Begin housing viewings if you need long-term accommodation. Do not rush into signing.\n"
-      + "- Day 3 to 6: Research bank account options and book an appointment if required.\n"
-      + "- Day 5 to 7: Follow up on any pending document submissions or registrations in " + dest + ".\n"
-      + "- Throughout: Keep notes on what surprised you to help plan the next 30 days.\n\n"
       + REQUIRED_REMINDER;
   }
 
