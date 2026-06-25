@@ -44,16 +44,15 @@ REM -------------------------------------------------------
 echo.
 echo Checking https://settlemap.app/api/stripe/health ...
 echo.
-curl -s "https://settlemap.app/api/stripe/health" > "%TEMP%\sm_ec_health.json" 2>&1
-where python >nul 2>&1 && (
-    python -c ^
-"import json; d=json.loads(open(r'%TEMP%\sm_ec_health.json').read()); ^
-print('fulfilmentVersion:', d.get('fulfilmentVersion','?')); ^
-print('maintenanceModeActive:     ', d.get('maintenanceModeActive','?')); ^
-print('paymentsGlobalPauseActive: ', d.get('paymentsGlobalPauseActive','?')); ^
-print('aiGlobalPauseActive:       ', d.get('aiGlobalPauseActive','?')); ^
-" 2>&1
-) || type "%TEMP%\sm_ec_health.json"
+powershell -NoProfile -Command ^
+  "try { $r = Invoke-RestMethod -Uri 'https://settlemap.app/api/stripe/health'; " ^
+  "Write-Host ('fulfilmentVersion:         ' + $r.fulfilmentVersion); " ^
+  "Write-Host ('maintenanceModeActive:     ' + $r.maintenanceModeActive); " ^
+  "Write-Host ('paymentsGlobalPauseActive: ' + $r.paymentsGlobalPauseActive); " ^
+  "Write-Host ('aiGlobalPauseActive:       ' + $r.aiGlobalPauseActive); " ^
+  "Write-Host ('stripeConfigured:          ' + $r.stripeConfigured); " ^
+  "Write-Host ('resendConfigured:          ' + $r.resendConfigured); " ^
+  "} catch { Write-Host ('ERROR: ' + $_.Exception.Message) }"
 echo.
 goto MAIN_MENU
 
@@ -239,8 +238,3 @@ if errorlevel 1 (
     goto MAIN_MENU
 )
 goto :EOF
-
-REM -------------------------------------------------------
-:EXIT_SCRIPT
-echo Exiting.
-exit /b 0
