@@ -774,19 +774,14 @@ export function RouteWizard() {
 
       <HowItWorksSection />
       <MicroStressSection />
-      <CommandCentreProofSection />
-      <AgenticActionPrepSection />
       <SampleRoutesSection />
-      <AIPreviewSection />
-      <DocumentPrivacySection />
-      <ChooseMoveSituationSection />
       <EarlyAccessPricingSection />
-      <FounderNoteSection />
-      <PositioningSection />
-      <WhyDifferentSection />
-      <ComingNextSection />
-      <PartnerInterestSection />
       <FeedbackCtaSection />
+      <section className="px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-center text-xs leading-6 text-zinc-400">Planning support only — verify important details with official sources before acting.{" "}<a href="/disclaimer" className="underline hover:text-zinc-600">Read full disclaimer</a>.</p>
+        </div>
+      </section>
 
       {showDashboard && origin && destination && reason && profile && (
         <>
@@ -1585,38 +1580,38 @@ function PartnerInterestSection() {
 }
 
 function FeedbackCtaSection() {
-  const questions = [
-    "Which route are you planning?",
-    "Are you a student, working professional, family with children, or domestic mover?",
-    "What task is most painful in this process?",
-    "Would you pay for an AI-generated plan?",
-    "Would you use an AI Voice Guide walkthrough?",
-  ];
-
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl rounded-xl bg-emerald-600 p-7 text-white shadow-sm sm:p-9">
-        <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Early access planning tool</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Help shape SettleMap</h2>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Help build the relocation GPS for real movers</h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-emerald-50">
-              This is an early access version designed to collect feedback and improve the planning experience. Your answers directly shape what gets built next.
+              SettleMap is being shaped with feedback from people who have actually moved across countries and cities. Try a sample route, tell us what was missing, and help us make relocation planning less confusing for students, families and professionals.
             </p>
-            <a
-              href={TALLY_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-50"
-            >
-              Share feedback <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="/#route-selector" className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-50">
+                Try a sample route <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+              <a href={TALLY_FORM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/20">
+                Give quick feedback
+              </a>
+              <a href={TALLY_FORM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/20">
+                Suggest a route
+              </a>
+              <a href={TALLY_FORM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/20">
+                Join early tester list
+              </a>
+            </div>
           </div>
-          <ul className="space-y-2">
-            {questions.map((question) => (
-              <li key={question} className="rounded-xl bg-white/10 p-3.5 text-sm leading-6 text-emerald-50">{question}</li>
-            ))}
-          </ul>
+          <div className="hidden lg:block">
+            <p className="text-sm font-semibold text-emerald-100">What you can help with</p>
+            <ul className="mt-3 space-y-2">
+              {["Which route did you move on?", "What task was hardest — visa, housing, banking or arrival?", "What was missing from online guides?", "Would a paid planning pack have saved you time?"].map((q) => (
+                <li key={q} className="rounded-xl bg-white/10 p-3.5 text-sm leading-6 text-emerald-50">{q}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -2056,15 +2051,15 @@ function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan
 
 function PreSelectionGuide() {
   const cards = [
-    { title: "1. Pick your route", desc: "From country or region, to country or region.", icon: Globe2 },
+    { title: "1. Pick any route", desc: "From any country or region to any country or region — not just India to other destinations.", icon: Globe2 },
     { title: "2. Add your reason", desc: "Job, study, corporate transfer, family, PR, business, return home or already landed.", icon: Plane },
-    { title: "3. Unlock your plan", desc: "Then view a 90-day project-style dashboard built around that context.", icon: CalendarDays },
+    { title: "3. Unlock your plan", desc: "View a 90-day project-style checklist dashboard built around your specific route and context.", icon: CalendarDays },
   ];
 
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="Before you start" title="A clearer first step, not a content ocean" description="The early access experience waits for your route before showing the full relocation command centre." />
+        <SectionHeader eyebrow="Plan any route" title="From any country to any country" description="Start with any origin and destination, or choose a sample route to see how SettleMap works. Your personalised plan unlocks once your route is set." />
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {cards.map((card) => (
             <div key={card.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
@@ -2607,19 +2602,40 @@ function AiPlanningAssistant({
   );
 }
 
+const SERVICE_CATEGORY_COLORS: Record<string, { iconColor: string; borderTop: string }> = {
+  "International movers":     { iconColor: "text-amber-600",   borderTop: "border-t-amber-400" },
+  "Temporary stay":           { iconColor: "text-emerald-600", borderTop: "border-t-emerald-400" },
+  "Furniture":                { iconColor: "text-amber-600",   borderTop: "border-t-amber-400" },
+  "Electrical appliances":    { iconColor: "text-amber-600",   borderTop: "border-t-amber-400" },
+  "SIM and internet":         { iconColor: "text-sky-600",     borderTop: "border-t-sky-400" },
+  "Banking and remittance":   { iconColor: "text-violet-600",  borderTop: "border-t-violet-400" },
+  "Schooling and childcare":  { iconColor: "text-teal-600",    borderTop: "border-t-teal-400" },
+  "Healthcare and insurance": { iconColor: "text-rose-600",    borderTop: "border-t-rose-400" },
+  "Notary and attestation":   { iconColor: "text-slate-500",   borderTop: "border-t-slate-400" },
+  "Transport and driving":    { iconColor: "text-slate-500",   borderTop: "border-t-slate-400" },
+  "Groceries and community":  { iconColor: "text-orange-600",  borderTop: "border-t-orange-400" },
+  "Official links":           { iconColor: "text-emerald-800", borderTop: "border-t-emerald-700" },
+  "Pet relocation":           { iconColor: "text-pink-600",    borderTop: "border-t-pink-400" },
+  "Insurance planning":       { iconColor: "text-violet-600",  borderTop: "border-t-violet-400" },
+};
+
 function ServicesSection() {
   return (
     <section id="services-to-research" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="Action layer" title="Services to research" description="Service listings are research categories only. Users must compare, verify directly and check official sources before engaging anyone." />
+        <SectionHeader eyebrow="Services to research" title="Research before you move" description="Service categories are for research orientation only. Verify directly before engaging any provider. Not an endorsement." />
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {serviceCategories.map((service) => (
-            <div key={service.title} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
-              <service.icon className="h-6 w-6 text-emerald-600" />
-              <h3 className="mt-4 text-lg font-semibold text-zinc-900">{service.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-600">{service.note}</p>
-            </div>
-          ))}
+          {serviceCategories.map((service) => {
+            const color = SERVICE_CATEGORY_COLORS[service.title] ?? { iconColor: "text-zinc-500", borderTop: "border-t-zinc-300" };
+            return (
+              <div key={service.title} className={`flex flex-col rounded-xl border border-zinc-200/80 border-t-4 ${color.borderTop} bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md`}>
+                <service.icon className={`h-6 w-6 ${color.iconColor}`} />
+                <h3 className="mt-4 text-lg font-semibold text-zinc-900">{service.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-zinc-600">{service.note}</p>
+                <p className="mt-3 text-[11px] text-zinc-400">Verify with official sources. Not an endorsement.</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

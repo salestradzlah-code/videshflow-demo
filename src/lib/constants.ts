@@ -23,7 +23,7 @@ export const DISCLAIMER_SHORT =
 
 export const OPERATOR_LINE = "SettleMap is operated by TRADZLAH LLP, Singapore UEN T20LL0224L.";
 
-export const BETA_NOTE = "SettleMap early access — planning support only, not professional advice.";
+export const BETA_NOTE = "Planning support only — verify important details with official sources.";
 
 export const DIRECTORY_DISCLAIMER =
   "Service listings and categories are for research convenience only. They are not endorsements, guarantees, official recommendations, or promises of service quality, pricing, licensing, availability, or outcomes. Verify directly before engaging any provider.";
