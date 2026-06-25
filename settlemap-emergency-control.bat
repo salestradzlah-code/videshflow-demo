@@ -42,10 +42,10 @@ goto MAIN_MENU
 REM -------------------------------------------------------
 :DO_HEALTH
 echo.
-echo Checking https://settlemap.app/api/stripe/health ...
+echo Checking https://videshflow-demo.vercel.app/api/stripe/health ...
 echo.
 powershell -NoProfile -Command ^
-  "try { $r = Invoke-RestMethod -Uri 'https://settlemap.app/api/stripe/health'; " ^
+  "try { $r = Invoke-RestMethod -Uri 'https://videshflow-demo.vercel.app/api/stripe/health'; " ^
   "Write-Host ('fulfilmentVersion:         ' + $r.fulfilmentVersion); " ^
   "Write-Host ('maintenanceModeActive:     ' + $r.maintenanceModeActive); " ^
   "Write-Host ('paymentsGlobalPauseActive: ' + $r.paymentsGlobalPauseActive); " ^
@@ -66,7 +66,7 @@ set /p CONFIRM="Type YES to confirm: "
 if /i not "!CONFIRM!"=="YES" (echo Cancelled. & goto MAIN_MENU)
 call :CHECK_VERCEL_CLI
 vercel env rm PAYMENTS_GLOBAL_PAUSED production --yes 2>nul
-vercel env add PAYMENTS_GLOBAL_PAUSED production <<< "true" 2>nul
+echo true| vercel env add PAYMENTS_GLOBAL_PAUSED production 2>nul
 echo.
 echo env var set. Redeploying now...
 call :DO_REDEPLOY_INLINE
@@ -96,7 +96,7 @@ set /p CONFIRM="Type YES to confirm: "
 if /i not "!CONFIRM!"=="YES" (echo Cancelled. & goto MAIN_MENU)
 call :CHECK_VERCEL_CLI
 vercel env rm AI_GLOBAL_PAUSED production --yes 2>nul
-vercel env add AI_GLOBAL_PAUSED production <<< "true" 2>nul
+echo true| vercel env add AI_GLOBAL_PAUSED production 2>nul
 echo.
 echo env var set. Redeploying now...
 call :DO_REDEPLOY_INLINE
@@ -126,7 +126,7 @@ set /p CONFIRM="Type YES to confirm: "
 if /i not "!CONFIRM!"=="YES" (echo Cancelled. & goto MAIN_MENU)
 call :CHECK_VERCEL_CLI
 vercel env rm SITE_MAINTENANCE_MODE production --yes 2>nul
-vercel env add SITE_MAINTENANCE_MODE production <<< "true" 2>nul
+echo true| vercel env add SITE_MAINTENANCE_MODE production 2>nul
 echo.
 echo env var set. Redeploying now...
 call :DO_REDEPLOY_INLINE
@@ -162,13 +162,13 @@ if /i not "!CONFIRM!"=="EMERGENCY" (echo Cancelled. & goto MAIN_MENU)
 call :CHECK_VERCEL_CLI
 echo Setting PAYMENTS_GLOBAL_PAUSED=true...
 vercel env rm PAYMENTS_GLOBAL_PAUSED production --yes 2>nul
-vercel env add PAYMENTS_GLOBAL_PAUSED production <<< "true" 2>nul
+echo true| vercel env add PAYMENTS_GLOBAL_PAUSED production 2>nul
 echo Setting AI_GLOBAL_PAUSED=true...
 vercel env rm AI_GLOBAL_PAUSED production --yes 2>nul
-vercel env add AI_GLOBAL_PAUSED production <<< "true" 2>nul
+echo true| vercel env add AI_GLOBAL_PAUSED production 2>nul
 echo Setting SITE_MAINTENANCE_MODE=true...
 vercel env rm SITE_MAINTENANCE_MODE production --yes 2>nul
-vercel env add SITE_MAINTENANCE_MODE production <<< "true" 2>nul
+echo true| vercel env add SITE_MAINTENANCE_MODE production 2>nul
 echo.
 echo All flags set. Redeploying now...
 call :DO_REDEPLOY_INLINE
@@ -238,3 +238,8 @@ if errorlevel 1 (
     goto MAIN_MENU
 )
 goto :EOF
+
+REM -------------------------------------------------------
+:EXIT_SCRIPT
+echo Exiting.
+exit /b 0

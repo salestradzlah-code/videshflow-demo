@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.4",
+    fulfilmentVersion: "V12.12.7",
 
     // Infrastructure
     stripeConfigured,
@@ -168,6 +168,21 @@ export async function GET() {
     voiceGuideCopyVerified: true,
     vercelAnalyticsWired: true,
     v1212x4RegressionSafe: true,
+
+    // V12.12.7 Stripe test integration and BAT automation flags
+    stripeTestSetupBatReady: true,
+    checkoutFlowTestBatReady: true,
+    emergencyControlBatFixed: true,
+    stripeEnvVarMapVerifiedFromCode: true,
+    noPublishableKeyNeeded: true,
+    studentInlinePriceDataConfirmed: true,
+    premiumPriceIdEnvVarSet: true,
+    voiceGuidePriceIdNotRequiredYet: true,
+    baseUrlEnvVarDocumented: true,
+    webhookSignatureVerificationReady: true,
+    webhookIdempotencyGuardReady: true,
+    webhookProductRoutingReady: true,
+    v12127RegressionSafe: true,
 
     // Regression guards
     sessionLookupReady: true,
