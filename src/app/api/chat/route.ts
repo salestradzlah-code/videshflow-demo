@@ -203,6 +203,12 @@ function buildFallbackAnswer(message: string, context: ChatContext): string {
 }
 
 export async function POST(request: NextRequest) {
+  // Emergency AI global pause
+  if (process.env.AI_GLOBAL_PAUSED === "true") {
+    console.warn("[chat] AI_GLOBAL_PAUSED is active — AI assistant blocked");
+    return NextResponse.json({ error: "The AI assistant is temporarily paused. Please try again later." }, { status: 503 });
+  }
+
   const sessionId = getSessionId(request);
   const rateLimit = checkRateLimit(sessionId);
 
@@ -304,7 +310,6 @@ export async function POST(request: NextRequest) {
     }
     return jsonResponse({ answer: formatAnswer(answer) }, 200, sessionId, rateLimit);
   }
-
-  console.error("[settlemap/chat] all models failed. status:", lastStatus, "error:", lastError.slice(0, 200), "- serving fallback");
+  console.error("[settlemap/chat] All models failed.", { lastStatus, lastError: lastError.slice(0, 200) });
   return jsonResponse({ answer: buildFallbackAnswer(body.message, body.context) }, 200, sessionId, rateLimit);
 }

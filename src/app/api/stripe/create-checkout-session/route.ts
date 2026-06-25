@@ -88,6 +88,12 @@ async function createPricedCheckoutSession(params: {
 }
 
 export async function POST(request: NextRequest) {
+  // Emergency global payments pause
+  if (process.env.PAYMENTS_GLOBAL_PAUSED === "true") {
+    console.warn("[checkout] PAYMENTS_GLOBAL_PAUSED is active — all checkout blocked");
+    return NextResponse.json({ error: "Payments are temporarily paused. Please try again later or contact support@settlemap.app." }, { status: 503 });
+  }
+
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;
