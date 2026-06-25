@@ -6,7 +6,7 @@ import { generateVoiceGuide, buildVoiceGuideEmail } from "@/lib/voiceGuide";
 
 export const dynamic = "force-dynamic";
 
-const QA_TEST_EMAIL = "hellosettlemap@gmail.com";
+const QA_TEST_EMAIL = process.env.SETTLEMAP_QA_EMAIL ?? "hellosettlemap@gmail.com";
 const VALID_PRODUCTS = ["student_move_pack", "premium_relocation_pack", "voice_guide", "all"] as const;
 type QAProduct = (typeof VALID_PRODUCTS)[number];
 
@@ -169,6 +169,4 @@ export async function POST(request: NextRequest) {
       allSuccess,
       anySuccess,
     },
-    { status: allSuccess ? 200 : anySuccess ? 207 : 500 },
-  );
-}
+    { status: allSuccess ? 200 :
