@@ -97,7 +97,6 @@ async function sendVoiceGuideTest(resend: Resend, fromEmail: string): Promise<Se
 }
 
 export async function POST(request: NextRequest) {
-  // 1. Admin token check
   const adminToken = process.env.SETTLEMAP_ADMIN_TOKEN;
   if (!adminToken) {
     console.error("[qa-test-fulfilment] SETTLEMAP_ADMIN_TOKEN not configured");
@@ -111,7 +110,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  // 2. Parse body
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;
@@ -127,7 +125,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 3. Init Resend
   let resend: Resend;
   try {
     resend = getResend();
@@ -144,7 +141,6 @@ export async function POST(request: NextRequest) {
 
   console.log("[qa-test-fulfilment] Starting QA test. product:", product, "sentAt:", sentAt);
 
-  // 4. Generate and send
   if (product === "all" || product === "student_move_pack") {
     results.push(await sendStudentTest(resend, fromEmail));
   }
@@ -169,4 +165,6 @@ export async function POST(request: NextRequest) {
       allSuccess,
       anySuccess,
     },
-    { status: allSuccess ? 200 :
+    { status: allSuccess ? 200 : anySuccess ? 207 : 500 },
+  );
+}
