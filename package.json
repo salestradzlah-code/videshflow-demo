@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:smoke": "node scripts/settlemap-qa.mjs smoke",
+    "test:paid-flows": "node scripts/settlemap-qa.mjs paid-flows",
+    "test:safety": "node scripts/settlemap-qa.mjs safety"
   },
   "dependencies": {
     "@tailwindcss/postcss": "4.3.0",

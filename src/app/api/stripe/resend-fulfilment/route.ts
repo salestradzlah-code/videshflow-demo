@@ -20,6 +20,10 @@ function getResend(): Resend {
   return new Resend(key);
 }
 
+function safeIdSuffix(value: string | null | undefined): string {
+  return value ? value.slice(-6) : "unknown";
+}
+
 export async function POST(request: NextRequest) {
   // 1. Admin token check
   const adminToken = process.env.SETTLEMAP_ADMIN_TOKEN;
@@ -209,7 +213,7 @@ export async function POST(request: NextRequest) {
   }
 
   const emailDomain = customerEmail.split("@")[1] ?? "unknown";
-  console.log("[resend-fulfilment] Email resent. domain:", emailDomain, "pi:", pi.id, "product:", settlemapProduct);
+  console.log("[resend-fulfilment] Email resent. domain:", emailDomain, "pi:", safeIdSuffix(pi.id), "product:", settlemapProduct);
 
   // 8. Update metadata
   const now = new Date().toISOString();
@@ -220,7 +224,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         settlemap_last_resend_at: now,
         settlemap_resend_count: String(resendCount),
-        settlemap_fulfilment_version: "V12.12.2",
+        settlemap_fulfilment_version: "V12.12.3",
       },
     });
   } catch (err) {
@@ -238,11 +242,11 @@ export async function POST(request: NextRequest) {
     from: fromEmail,
     to: supportEmail,
     subject: `[Resend #${resendCount}] ${productLabel} resent — ${emailDomain}`,
-    text: `Resent fulfilment email.\n\nProduct: ${settlemapProduct}\nPaymentIntent: ${pi.id}\nResend count: ${resendCount}\nTimestamp: ${now}`,
+    text: `Resent fulfilment email.\n\nProduct: ${settlemapProduct}\nPaymentIntent reference: ...${safeIdSuffix(pi.id)}\nResend count: ${resendCount}\nTimestamp: ${now}`,
     html: `<p><strong>Resent fulfilment email.</strong></p>
 <table>
 <tr><td>Product</td><td>${settlemapProduct}</td></tr>
-<tr><td>PaymentIntent</td><td>${pi.id}</td></tr>
+<tr><td>PaymentIntent reference</td><td>...${safeIdSuffix(pi.id)}</td></tr>
 <tr><td>Resend count</td><td>${resendCount}</td></tr>
 <tr><td>Timestamp</td><td>${now}</td></tr>
 </table>`,

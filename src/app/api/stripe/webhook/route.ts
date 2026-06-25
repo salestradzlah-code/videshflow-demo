@@ -21,6 +21,10 @@ function getResend(): Resend {
   return new Resend(key);
 }
 
+function safeIdSuffix(value: string | null | undefined): string {
+  return value ? value.slice(-6) : "unknown";
+}
+
 function buildInternalEmail(params: {
   customerEmail: string | null;
   buyerName: string | null;
@@ -28,27 +32,31 @@ function buildInternalEmail(params: {
   amountTotal: number;
   currency: string;
   sessionId: string;
-  paymentIntentId: string;
-  route: string | null;
-  timing: string | null;
+  paymentStatus: string;
   customerEmailSent: boolean;
   packGenerated: boolean;
   autofulfillEnabled: boolean;
   fulfilledAt: string;
+  error?: string | null;
 }): { subject: string; html: string; text: string } {
   const amount = `${(params.amountTotal / 100).toFixed(2)} ${params.currency.toUpperCase()}`;
+  const fulfilmentStatus = params.customerEmailSent
+    ? "customer email sent"
+    : params.autofulfillEnabled
+      ? "customer email not sent - action required"
+      : "manual fulfilment required";
 
   const rows: [string, string][] = [
-    ["Product", params.product],
+    ["Product type", params.product],
     ["Customer email", params.customerEmail ?? "(not available)"],
     ["Buyer name", params.buyerName ?? "(not provided)"],
+    ["Payment status", params.paymentStatus],
     ["Amount", amount],
-    ["Route / timing", `${params.route ?? "(not provided)"} · ${params.timing ?? ""}`],
-    ["Checkout session ID", params.sessionId],
-    ["Payment intent ID", params.paymentIntentId],
-    ["Fulfilment email sent", params.customerEmailSent ? "yes" : "no"],
+    ["Stripe session reference", `...${safeIdSuffix(params.sessionId)}`],
+    ["Fulfilment status", fulfilmentStatus],
     ["Pack generated", params.packGenerated ? "yes" : "no"],
     ["Autofulfill enabled", params.autofulfillEnabled ? "yes" : "no"],
+    ["Error", params.error ?? "none"],
     ["Fulfilled at (UTC)", params.fulfilledAt],
   ];
 
@@ -76,7 +84,7 @@ function buildInternalEmail(params: {
 
   const html = `<div style="font-family:system-ui,sans-serif;padding:24px;max-width:600px;">
 <h2 style="color:${accentColor};margin:0 0 8px 0;">New ${productLabel} Payment</h2>
-<p style="color:#71717a;font-size:13px;margin:0 0 20px 0;">SettleMap · V12.12.2 Automated Fulfilment</p>
+<p style="color:#71717a;font-size:13px;margin:0 0 20px 0;">SettleMap · V12.12.3 Automated Fulfilment</p>
 <table style="width:100%;border-collapse:collapse;">${tableRows}</table>
 ${actionNote}
 </div>`;
@@ -84,7 +92,7 @@ ${actionNote}
   return {
     subject: `New paid ${productLabel} — ${params.customerEmail ?? "email unknown"}`,
     html,
-    text: rows.map(([k, v]) => `${k}: ${v}`).join("\n") + "\n\n" + (params.customerEmailSent ? "Email sent with full pack." : "ACTION REQUIRED: Email not sent."),
+    text: rows.map(([k, v]) => `${k}: ${v}`).join("\n") + "\n\n" + (params.customerEmailSent ? "Customer email sent." : "ACTION REQUIRED: Customer email not sent."),
   };
 }
 
@@ -168,7 +176,7 @@ export async function POST(request: NextRequest) {
 
   // Idempotency
   if (piMeta.settlemap_fulfilled_at) {
-    console.log("[webhook] Already fulfilled. session.id:", session.id);
+    console.log("[webhook] Already fulfilled. session:", safeIdSuffix(session.id));
     return NextResponse.json({ received: true });
   }
 
@@ -240,7 +248,7 @@ export async function POST(request: NextRequest) {
       customerEmailSent = true;
       console.log("[webhook-voice] Voice Guide email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
     } else if (!autofulfillEnabled) {
-      console.log("[webhook-voice] Autofulfill disabled. session.id:", session.id);
+      console.log("[webhook-voice] Autofulfill disabled. session:", safeIdSuffix(session.id));
     }
 
     try {
@@ -249,7 +257,7 @@ export async function POST(request: NextRequest) {
           settlemap_product: "voice_guide",
           settlemap_fulfilled_at: fulfilledAt,
           settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
-          settlemap_fulfilment_version: "V12.12.2",
+          settlemap_fulfilment_version: "V12.12.3",
           buyer_name: buyerName ?? "",
           origin: origin ?? "",
           destination: destination ?? "",
@@ -270,9 +278,7 @@ export async function POST(request: NextRequest) {
       amountTotal: session.amount_total ?? 0,
       currency: session.currency ?? "sgd",
       sessionId: session.id,
-      paymentIntentId,
-      route: routeLabel,
-      timing: timingLabel,
+      paymentStatus: session.payment_status,
       customerEmailSent,
       packGenerated,
       autofulfillEnabled,
@@ -288,7 +294,7 @@ export async function POST(request: NextRequest) {
     });
     if (internalError) console.error("[webhook-voice] Internal notification failed");
 
-    console.log("[webhook-voice] Done. session.id:", session.id, "emailSent:", customerEmailSent);
+    console.log("[webhook-voice] Done. session:", safeIdSuffix(session.id), "emailSent:", customerEmailSent);
     return NextResponse.json({ received: true });
   }
 
@@ -331,7 +337,7 @@ export async function POST(request: NextRequest) {
       customerEmailSent = true;
       console.log("[webhook-premium] Premium pack email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
     } else if (!autofulfillEnabled) {
-      console.log("[webhook-premium] Autofulfill disabled. session.id:", session.id);
+      console.log("[webhook-premium] Autofulfill disabled. session:", safeIdSuffix(session.id));
     }
 
     try {
@@ -340,7 +346,7 @@ export async function POST(request: NextRequest) {
           settlemap_product: "premium_relocation_pack",
           settlemap_fulfilled_at: fulfilledAt,
           settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
-          settlemap_fulfilment_version: "V12.12.2",
+          settlemap_fulfilment_version: "V12.12.3",
           buyer_name: buyerName ?? "",
           origin: origin ?? "",
           destination: destination ?? "",
@@ -358,7 +364,7 @@ export async function POST(request: NextRequest) {
     const internal = buildInternalEmail({
       customerEmail, buyerName, product: "premium_relocation_pack",
       amountTotal: session.amount_total ?? 0, currency: session.currency ?? "sgd",
-      sessionId: session.id, paymentIntentId, route: routeLabel, timing: timingLabel,
+      sessionId: session.id, paymentStatus: session.payment_status,
       customerEmailSent, packGenerated, autofulfillEnabled, fulfilledAt,
     });
 
@@ -368,7 +374,7 @@ export async function POST(request: NextRequest) {
     });
     if (internalError) console.error("[webhook-premium] Internal notification failed");
 
-    console.log("[webhook-premium] Done. session.id:", session.id, "emailSent:", customerEmailSent);
+    console.log("[webhook-premium] Done. session:", safeIdSuffix(session.id), "emailSent:", customerEmailSent);
     return NextResponse.json({ received: true });
   }
 
@@ -400,7 +406,7 @@ export async function POST(request: NextRequest) {
     customerEmailSent = true;
     console.log("[webhook] Pack email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
   } else if (!autofulfillEnabled) {
-    console.log("[webhook] Autofulfill disabled. session.id:", session.id);
+    console.log("[webhook] Autofulfill disabled. session:", safeIdSuffix(session.id));
   }
 
   try {
@@ -409,13 +415,13 @@ export async function POST(request: NextRequest) {
         settlemap_product: "student_move_pack",
         settlemap_fulfilled_at: fulfilledAt,
         settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
-        settlemap_fulfilment_version: "V12.12.2",
+        settlemap_fulfilment_version: "V12.12.3",
         buyer_name: buyerName ?? "",
         buyer_role: buyerRole ?? "",
         move_route: moveRoute ?? "",
         departure_month: departureMonth ?? "",
         concerns: concerns ?? "",
-        fulfilment_version: "V12.12.2",
+        fulfilment_version: "V12.12.3",
       },
     });
   } catch (err) {
@@ -425,7 +431,7 @@ export async function POST(request: NextRequest) {
   const internal = buildInternalEmail({
     customerEmail, buyerName, product: "student_move_pack",
     amountTotal: session.amount_total ?? 0, currency: session.currency ?? "sgd",
-    sessionId: session.id, paymentIntentId, route: routeLabel, timing: timingLabel,
+    sessionId: session.id, paymentStatus: session.payment_status,
     customerEmailSent, packGenerated, autofulfillEnabled, fulfilledAt,
   });
 
@@ -435,6 +441,6 @@ export async function POST(request: NextRequest) {
   });
   if (internalError) console.error("[webhook] Internal notification failed:", (internalError as { name?: string }).name ?? "unknown");
 
-  console.log("[webhook] Done. session.id:", session.id, "emailSent:", customerEmailSent);
+  console.log("[webhook] Done. session:", safeIdSuffix(session.id), "emailSent:", customerEmailSent);
   return NextResponse.json({ received: true });
 }

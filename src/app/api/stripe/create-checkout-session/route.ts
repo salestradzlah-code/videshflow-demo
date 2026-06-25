@@ -15,6 +15,10 @@ function getStripe(): Stripe {
   return new Stripe(key, { apiVersion: "2024-11-20.acacia" as any });
 }
 
+function safeIdSuffix(value: string | null | undefined): string {
+  return value ? value.slice(-6) : "unknown";
+}
+
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -172,16 +176,16 @@ export async function POST(request: NextRequest) {
           timing_month: timingMonth,
           modules,
           concerns,
-          fulfilment_version: "V12.12.2",
+          fulfilment_version: "V12.12.3",
         }),
       });
 
       if (!session.url) {
-        console.error("[checkout-premium] No URL returned. session.id:", session.id);
+        console.error("[checkout-premium] No URL returned. session:", safeIdSuffix(session.id));
         return NextResponse.json({ error: "Payment setup error. Please try again." }, { status: 500 });
       }
 
-      console.log("[checkout-premium] Session created. session.id:", session.id, "route:", `${origin} to ${destination}`);
+      console.log("[checkout-premium] Session created. session:", safeIdSuffix(session.id));
       return NextResponse.json({ url: session.url });
     } catch (err) {
       console.error("[checkout-premium] Stripe session create failed:", err instanceof Error ? err.message : "unknown");
@@ -246,16 +250,16 @@ export async function POST(request: NextRequest) {
           who_is_moving: whoIsMoving,
           timing_month: timingMonth,
           concerns,
-          fulfilment_version: "V12.12.2",
+          fulfilment_version: "V12.12.3",
         }),
       });
 
       if (!session.url) {
-        console.error("[checkout-voice] No URL returned. session.id:", session.id);
+        console.error("[checkout-voice] No URL returned. session:", safeIdSuffix(session.id));
         return NextResponse.json({ error: "Payment setup error. Please try again." }, { status: 500 });
       }
 
-      console.log("[checkout-voice] Session created. session.id:", session.id, "route:", `${origin} to ${destination}`);
+      console.log("[checkout-voice] Session created. session:", safeIdSuffix(session.id));
       return NextResponse.json({ url: session.url });
     } catch (err) {
       console.error("[checkout-voice] Stripe session create failed:", err instanceof Error ? err.message : "unknown");
@@ -324,7 +328,7 @@ export async function POST(request: NextRequest) {
           other_route: moveRoute === "Other route" ? otherRoute : "",
           departure_month: departureMonth,
           concerns,
-          fulfilment_version: "V12.12.2",
+          fulfilment_version: "V12.12.3",
         }),
       },
       success_url: `${baseUrl()}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
@@ -332,11 +336,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (!session.url) {
-      console.error("[checkout] Stripe session created but no URL returned. session.id:", session.id);
+      console.error("[checkout] Stripe session created but no URL returned. session:", safeIdSuffix(session.id));
       return NextResponse.json({ error: "Payment setup error. Please try again." }, { status: 500 });
     }
 
-    console.log("[checkout] Session created. session.id:", session.id, "route:", effectiveRoute);
+    console.log("[checkout] Session created. session:", safeIdSuffix(session.id));
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[checkout] Stripe session create failed:", err instanceof Error ? err.message : "unknown");

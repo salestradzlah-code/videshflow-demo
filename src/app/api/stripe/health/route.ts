@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.2",
+    fulfilmentVersion: "V12.12.3",
 
     // Infrastructure
     stripeConfigured,
@@ -139,6 +139,19 @@ export async function GET() {
     aiAssistantFallbackReady: true,
     documentUploadStillDisabled: true,
     addonsStillSafelyOff,
+
+    // V12.12.3 QA automation and release-safety fields
+    studentEndToEndTested: false,
+    premiumEndToEndTested: false,
+    voiceGuideEndToEndTested: false,
+    emailFulfilmentTested: false,
+    adminNotificationReady: true,
+    stripeTestModeDocumented: true,
+    paymentFailurePathTested: true,
+    serviceResearchLinksInPaidPacks: true,
+    documentChecklistNoUploadConfirmed: true,
+    aiSafetyScenariosTested: true,
+    v12123TestingSafe: true,
 
     // Regression guards
     sessionLookupReady: true,
