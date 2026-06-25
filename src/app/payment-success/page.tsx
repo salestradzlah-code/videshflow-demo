@@ -90,8 +90,10 @@ function PaidPackView({ data }: { data: SessionData }) {
     ...pack.concernSections.filter(
       (s) =>
         s.title !== pack.firstSevenDays.title &&
-        s.title !== pack.ninetyDayPlan.title,
+        s.title !== pack.ninetyDayPlan.title &&
+        s.title !== pack.researchLinksSection.title,
     ),
+    pack.researchLinksSection,
     pack.officialSourceReminder,
   ];
 

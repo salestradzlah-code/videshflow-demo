@@ -25,6 +25,7 @@ export interface StudentMovePack {
   parentHandover: PackSection;
   packingChecklist: PackSection;
   officialSourceReminder: PackSection;
+  researchLinksSection: PackSection;
   safetyBoundaryNote: string;
 }
 
@@ -60,7 +61,8 @@ type ConcernKey =
   | "campus"
   | "parent"
   | "budget"
-  | "provider";
+  | "provider"
+  | "research";
 
 function concernKey(label: string): ConcernKey | null {
   const l = label.toLowerCase();
@@ -92,11 +94,15 @@ const CONCERN_SECTIONS: Record<ConcernKey, PackSection> = {
   packing: {
     title: "Packing and bring-vs-buy checklist",
     items: [
-      "BRING: Original official documents (passport, visa, admission letter, academic certificates), prescription medicines with a doctor letter, laptop and chargers, India SIM card (keep active), formal clothes for admin days.",
-      "BUY AT DESTINATION: Bulky items (towels, bedding, kitchen basics), toiletries, heavy winter clothing — these are usually cheaper locally.",
-      "ESSENTIAL FIRST WEEK BAG: 3–5 days of casual clothes, travel adaptor, power bank, small first-aid kit, 2–3 weeks of any prescription medication.",
-      "CHECK CUSTOMS RULES: Do not pack restricted or prohibited items — check your destination country's customs guidelines.",
-      "DOCUMENTS TO CARRY IN HAND LUGGAGE: Passport, visa, admission letter, accommodation booking confirmation, emergency contacts.",
+      "HAND LUGGAGE — DOCUMENTS: Passport, visa/entry document, original admission letter, accommodation booking confirmation, printed emergency contacts (campus security, nearest Indian consulate, local contact). Keep these with you, not in checked baggage.",
+      "HAND LUGGAGE — MEDICINES: Carry all prescription medicines in original packaging with a doctor letter in English. Bring at least 2–3 weeks' supply in carry-on in case checked luggage is delayed. Check your destination's medicine import rules — some medications require prior approval.",
+      "BRING FROM INDIA: Laptop and all chargers and adaptors, unlocked India SIM (keep active for OTPs), formal/smart clothes for admin and campus days, lightweight layers for arrival week, academic certificates and transcripts (originals + copies), prescribed eyewear or contacts with a spare pair.",
+      "WEATHER-SPECIFIC: Check the climate for your destination at arrival time. UK/Germany — pack a rain jacket and warm layer even in summer. Singapore — light breathable clothing only, no heavy jackets needed. Australia/Canada — check seasonal temperature range, a packable down jacket is useful in colder months. US — depends on state; check specifically for your city.",
+      "BUY AT DESTINATION — CHEAPER THERE: Bulky bedding (duvet, pillows, sheets), large towels, kitchen basics (kettle, pots, crockery), heavy winter coats, toiletries and personal care items, local plug adaptors if your power strip has universal ports.",
+      "BEDDING DECISION: Many student accommodations provide basic bedding or rent it. Check with your accommodation before buying — if provided, save the luggage space.",
+      "KITCHEN BASICS DECISION: University halls often have shared kitchen basics. Private rentals may be unfurnished — confirm with your landlord what is included before buying.",
+      "DO NOT PACK: Food items that may be restricted (meat, dairy, fruits, seeds vary by country — check customs rules for your destination country). Prohibited items vary — always check the official customs website before packing.",
+      "CUSTOMS REMINDER: Always verify restricted and prohibited items with your destination country's official customs authority before packing. Declaring dutiable items is your responsibility. Official source: search your destination country's customs or border control official website.",
     ],
   },
   sim: {
@@ -124,13 +130,14 @@ const CONCERN_SECTIONS: Record<ConcernKey, PackSection> = {
   firstweek: {
     title: "First 7 days setup guide",
     items: [
-      "Day 1: Get a local SIM or activate your eSIM — data is essential from day one.",
-      "Day 1–2: Check into your accommodation and confirm your rental or temporary stay.",
-      "Day 2–3: Buy essential groceries, a travel adaptor, and household basics.",
-      "Day 3–4: Set up local transport — research bus/rail card, app, or pass for your city.",
-      "Day 3–5: Register at your university or institution, collect your student ID.",
-      "Day 5–7: Open a local bank account, or confirm your international card is working.",
-      "Throughout: Save emergency contacts — campus security, local emergency services (not 999/911 by default in all countries), nearest Indian consulate.",
+      "Day 1: Get a local SIM or activate your eSIM — data is essential from day one. Prepaid SIMs are usually available at the airport or major supermarkets.",
+      "Day 1–2: Check into your accommodation and confirm your rental or temporary stay. Get your landlord or hall contact number saved immediately.",
+      "Day 2–3: Buy essential groceries, a travel adaptor, and household basics. Note: Bedding and kitchen items can often wait 1–2 days once you confirm what is provided.",
+      "Day 3–4: Set up local transport — research bus/rail card, app, or pass for your city. Student discount cards are often available from day one with a valid student ID.",
+      "Day 3–5: Register at your university or institution, collect your student ID. Bring your passport, visa/entry document, and admission letter. Check your institution's international student office for exact requirements — this is an official source, not SettleMap.",
+      "Day 5–7: Open a local bank account, or confirm your international card is working. Requirements vary by bank — check each bank's website for documentation needed.",
+      "Day 5–7: Register with a local GP or health centre if you have ongoing prescriptions or health needs. Do not wait until you are unwell.",
+      "Throughout: Save emergency contacts — campus security, local emergency services number (varies by country — do not assume 999 or 911), nearest Indian consulate or high commission, and a trusted local contact.",
     ],
   },
   insurance: {
@@ -184,6 +191,25 @@ const CONCERN_SECTIONS: Record<ConcernKey, PackSection> = {
       'SIM / INTERNET: "What is the monthly data allowance?", "Does the plan include calls to India?", "What is the minimum contract length?", "Can I get a SIM without a local bank account?"',
       'BANKING: "What documents do I need to open a student account?", "Is there a fee-free student account?", "How long does opening take?", "Can I open online before arrival?"',
       'MOVERS / SHIPPING: "What is the estimated transit time?", "What is restricted or prohibited?", "What insurance is included in the quote?", "What is the volumetric weight calculation?"',
+      'INSURANCE: "Is health insurance mandatory for my student visa?", "What does the university health plan cover and what is excluded?", "Does it cover pre-existing conditions or ongoing prescriptions?", "What is the process to make a claim?" — Always verify coverage requirements with your institution and the relevant immigration authority.',
+      'SCHOOL / UNIVERSITY ADMIN: "Where do I collect my student ID and when?", "What is the international student office address and contact?", "Where do I go for arrival orientation?", "What documentation do I need to bring on day one?"',
+      'HEALTHCARE / CLINIC: "Is there a GP or student health centre on campus?", "Do I need to register in advance?", "What is the nearest 24-hour clinic or walk-in centre?", "Can I get a repeat prescription for my existing medication here?"',
+    ],
+  },
+  research: {
+    title: "Research links — where to start",
+    items: [
+      "IMMIGRATION AND ENTRY: Search your destination country's official immigration or home affairs website for student visa requirements, entry rules, and processing times. Do not rely on third-party summaries — always verify on the official government portal.",
+      "UNIVERSITY AND STUDENT SETUP: Check your institution's International Student Office page for arrival, orientation, student ID, accommodation, health coverage, and academic registration guidance.",
+      "BANKING: Search for student bank accounts at major banks in your destination city. Look for accounts with no monthly fee for students and low international transfer fees. Compare at least 2–3 options before choosing.",
+      "SIM AND INTERNET: Check local telecom providers for prepaid student SIM or monthly plans. Look for: data allowance, international call minutes, and contract length. Prepaid is safest for the first few months.",
+      "HOUSING RESEARCH: For off-campus housing, search local property listing sites for your city. Prioritise accommodation close to campus or on a direct transit route. Check student union housing boards and university-approved accommodation lists first.",
+      "HEALTHCARE: Search for student health services on your university website. For out-of-pocket care, search for GP clinics near your accommodation and save the address before you need it.",
+      "INSURANCE: If not covered by your university, search for international student health insurance plans for your destination country. Compare coverage, exclusions, and claim process before purchasing.",
+      "TRANSPORT: Search for monthly transit passes or student discount cards for your city. Check if the university has a bus or shuttle service. Download the local transport app before arriving.",
+      "TAX AND PAYROLL (if working): If you plan to work part-time, search for tax filing requirements for student visa holders in your destination country. Check your visa conditions on working hours first.",
+      "OFFICIAL GOVERNMENT PORTALS: Bookmark your destination country's main government portal for immigration, tax, healthcare, and local registration — these are the authoritative source for requirements and deadlines.",
+      "Note: SettleMap provides research starting points only. All links and information must be verified directly from official sources before acting.",
     ],
   },
 };
@@ -199,7 +225,7 @@ export function generateStudentMovePack(meta: PackMetadata): StudentMovePack {
     : [];
 
   // Always include provider + parent + packing as core sections
-  const coreKeys: ConcernKey[] = ["provider", "parent", "packing", "firstweek"];
+  const coreKeys: ConcernKey[] = ["provider", "parent", "packing", "firstweek", "research"];
   const selectedKeys = new Set<ConcernKey>(coreKeys);
   for (const label of concernLabels) {
     const key = concernKey(label);
@@ -238,6 +264,8 @@ export function generateStudentMovePack(meta: PackMetadata): StudentMovePack {
     parentHandover: CONCERN_SECTIONS.parent,
 
     packingChecklist: CONCERN_SECTIONS.packing,
+
+    researchLinksSection: CONCERN_SECTIONS.research,
 
     officialSourceReminder: {
       title: "Official source reminder",
@@ -291,8 +319,12 @@ export function buildPackEmail(
     pack.ninetyDayPlan,
     pack.firstSevenDays,
     ...pack.concernSections.filter(
-      (s) => s.title !== pack.firstSevenDays.title && s.title !== pack.ninetyDayPlan.title,
+      (s) =>
+        s.title !== pack.firstSevenDays.title &&
+        s.title !== pack.ninetyDayPlan.title &&
+        s.title !== pack.researchLinksSection.title,
     ),
+    pack.researchLinksSection,
     pack.officialSourceReminder,
   ];
 

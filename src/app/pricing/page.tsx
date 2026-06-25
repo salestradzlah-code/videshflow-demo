@@ -18,14 +18,16 @@ export const metadata: Metadata = {
 };
 
 const studentPackFeatures = [
-  "Immediate paid pack summary on confirmation page",
-  "Full pack sent by email automatically after payment",
+  "Immediate paid pack on confirmation page",
+  "Email copy sent automatically after payment",
   "90-day route-aware project plan",
   "First 7 days setup guide",
-  "Concern-based checklist — SIM, banking, accommodation, insurance and more",
-  "Packing and bring-vs-buy checklist",
-  "Parent/student question checklist",
-  "Provider research scripts",
+  "Concern-based checklist — SIM/OTP, banking, accommodation, insurance, campus arrival and more",
+  "Packing and bring-vs-buy checklist with customs reminder",
+  "Parent and student handover checklist",
+  "Provider research scripts — housing, banking, SIM, insurance, school admin, healthcare",
+  "Research links — where to start for each category",
+  "Official source reminders throughout",
   "Support by email: support@settlemap.app",
 ];
 
@@ -88,7 +90,7 @@ export default function PricingPage() {
             </div>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Student Move Pack</h2>
             <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">A paid planning pack for student relocations — India to UK, Germany, Singapore, US, Australia or Canada. Includes campus arrival, SIM/OTP, accommodation, banking, packing, health insurance, parents checklist and first-week setup.</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">A paid AI-generated planning pack for student relocations — India to UK, Germany, Singapore, US, Australia, Canada or your own route. Includes concern-based checklists, packing guide, SIM/OTP continuity, banking, campus arrival, insurance research, parent handover, first-week setup and provider research scripts. Planning support only — not immigration or professional advice.</p>
             <ul className="mt-4 flex-1 space-y-2">
               {studentPackFeatures.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm text-zinc-700">

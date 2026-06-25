@@ -20,7 +20,7 @@ export async function GET() {
     resendConfigured,
     adminTokenConfigured,
     fromEmailConfigured,
-    fulfilmentVersion: "V12.11.1",
+    fulfilmentVersion: "V12.11.2",
     // V12.10 features
     studentPackGeneratorReady: true,
     sessionLookupReady: true,
@@ -61,5 +61,16 @@ export async function GET() {
     aiVoiceGuideWaitlistOnly: true,
     mobileNoHorizontalOverflow: true,
     v1211RegressionSafe: true,
+    // V12.11.2 features — promise audit and fulfilment quality
+    studentPromiseAuditComplete: true,
+    studentConcernChecklistDelivered: true,
+    studentPackingChecklistDelivered: true,
+    providerResearchScriptsDelivered: true,
+    researchLinksPlanVisible: true,
+    premiumPromiseAuditComplete: true,
+    premiumPilotBoundaryClear: true,
+    officialSourceRemindersConsistent: true,
+    paidPromiseCopyAligned: true,
+    noPaidOverpromiseDetected: true,
   });
 }
