@@ -10,17 +10,28 @@ export async function GET() {
   const checkoutEnabled = process.env.STUDENT_PACK_CHECKOUT_ENABLED !== "false";
   const autofulfillEnabled = process.env.STUDENT_PACK_AUTOFULFILL_ENABLED !== "false";
   const paymentsEnabled = process.env.NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED !== "false";
+  const premiumCheckoutEnabled = process.env.PREMIUM_PACK_CHECKOUT_ENABLED !== "false";
+  const premiumAutofulfillEnabled = process.env.PREMIUM_PACK_AUTOFULFILL_ENABLED !== "false";
+  const premiumPaymentsEnabled = process.env.NEXT_PUBLIC_PREMIUM_PACK_PAYMENTS_ENABLED !== "false";
+  const premiumPriceIdConfigured = !!process.env.STRIPE_PREMIUM_PRICE_ID;
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    paymentsEnabled,
-    checkoutEnabled,
-    autofulfillEnabled,
+    fulfilmentVersion: "V12.12",
+    // Infrastructure
     stripeConfigured,
     resendConfigured,
     adminTokenConfigured,
     fromEmailConfigured,
-    fulfilmentVersion: "V12.11.2",
+    // Student pack flags
+    paymentsEnabled,
+    checkoutEnabled,
+    autofulfillEnabled,
+    // Premium pack flags
+    premiumPaymentsEnabled,
+    premiumCheckoutEnabled,
+    premiumAutofulfillEnabled,
+    premiumPriceIdConfigured,
     // V12.10 features
     studentPackGeneratorReady: true,
     sessionLookupReady: true,
@@ -61,7 +72,7 @@ export async function GET() {
     aiVoiceGuideWaitlistOnly: true,
     mobileNoHorizontalOverflow: true,
     v1211RegressionSafe: true,
-    // V12.11.2 features — promise audit and fulfilment quality
+    // V12.11.2 features
     studentPromiseAuditComplete: true,
     studentConcernChecklistDelivered: true,
     studentPackingChecklistDelivered: true,
@@ -72,5 +83,22 @@ export async function GET() {
     officialSourceRemindersConsistent: true,
     paidPromiseCopyAligned: true,
     noPaidOverpromiseDetected: true,
+    // V12.12 features — Premium Relocation Pack live paid product
+    premiumGeneratorReady: true,
+    premiumIntakePageReady: true,
+    premiumCheckoutSessionRouting: true,
+    premiumWebhookRoutingReady: true,
+    premiumSessionLookupReady: true,
+    premiumResendFulfilmentReady: true,
+    premiumSuccessPageReady: true,
+    premiumPackViewRouting: true,
+    premiumPricingCardLive: true,
+    premiumEmailBuilderReady: true,
+    webhookAmountHardcodeRemoved: true,
+    sessionAmountGeneralized: true,
+    productTypeReturnedInSession: true,
+    premiumPersonaModulesReady: true,
+    premiumProviderScriptsReady: true,
+    premiumResearchLinksReady: true,
   });
 }

@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
 import { generateStudentMovePack, buildPackEmail } from "@/lib/studentMovePack";
+import { generatePremiumRelocationPack, buildPremiumPackEmail } from "@/lib/premiumRelocationPack";
 
 export const dynamic = "force-dynamic";
 
@@ -75,7 +76,6 @@ export async function POST(request: NextRequest) {
       );
     }
   } else {
-    // Retrieve via session
     let session: Stripe.Checkout.Session;
     try {
       session = await stripe.checkout.sessions.retrieve(checkoutSessionId as string, {
@@ -98,7 +98,6 @@ export async function POST(request: NextRequest) {
 
   // 5. Find customer email if not already found
   if (!customerEmail) {
-    // Try to get from charges
     try {
       const charges = await stripe.charges.list({ payment_intent: pi.id, limit: 1 });
       customerEmail = charges.data[0]?.billing_details?.email ?? null;
@@ -114,22 +113,52 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 6. Generate pack
-  const pack = generateStudentMovePack({
-    moveRoute: piMeta.move_route,
-    otherRoute: piMeta.other_route,
-    departureMonth: piMeta.departure_month,
-    concerns: piMeta.concerns,
-    buyerRole: piMeta.buyer_role,
-    buyerName: piMeta.buyer_name,
-  });
+  // 6. Route by product
+  const settlemapProduct = piMeta.settlemap_product ?? "student_move_pack";
 
-  const { subject, html, text } = buildPackEmail(
-    pack,
-    piMeta.buyer_name || null,
-    piMeta.departure_month || null,
-    piMeta.concerns || null,
-  );
+  let emailSubject: string;
+  let emailHtml: string;
+  let emailText: string;
+
+  if (settlemapProduct === "premium_relocation_pack") {
+    const pack = generatePremiumRelocationPack({
+      origin: piMeta.origin,
+      destination: piMeta.destination,
+      moveReason: piMeta.move_reason,
+      whoIsMoving: piMeta.who_is_moving,
+      timingMonth: piMeta.timing_month,
+      modules: piMeta.modules,
+      concerns: piMeta.concerns,
+      buyerName: piMeta.buyer_name,
+    });
+    const result = buildPremiumPackEmail(
+      pack,
+      piMeta.buyer_name || null,
+      piMeta.timing_month || null,
+      piMeta.modules || null,
+    );
+    emailSubject = result.subject;
+    emailHtml = result.html;
+    emailText = result.text;
+  } else {
+    const pack = generateStudentMovePack({
+      moveRoute: piMeta.move_route,
+      otherRoute: piMeta.other_route,
+      departureMonth: piMeta.departure_month,
+      concerns: piMeta.concerns,
+      buyerRole: piMeta.buyer_role,
+      buyerName: piMeta.buyer_name,
+    });
+    const result = buildPackEmail(
+      pack,
+      piMeta.buyer_name || null,
+      piMeta.departure_month || null,
+      piMeta.concerns || null,
+    );
+    emailSubject = result.subject;
+    emailHtml = result.html;
+    emailText = result.text;
+  }
 
   // 7. Send email
   let resend: Resend;
@@ -149,9 +178,9 @@ export async function POST(request: NextRequest) {
     from: fromEmail,
     to: customerEmail,
     replyTo: supportEmail,
-    subject,
-    html,
-    text,
+    subject: emailSubject,
+    html: emailHtml,
+    text: emailText,
   });
 
   if (sendError) {
@@ -160,7 +189,7 @@ export async function POST(request: NextRequest) {
   }
 
   const emailDomain = customerEmail.split("@")[1] ?? "unknown";
-  console.log("[resend-fulfilment] Email resent. domain:", emailDomain, "pi:", pi.id);
+  console.log("[resend-fulfilment] Email resent. domain:", emailDomain, "pi:", pi.id, "product:", settlemapProduct);
 
   // 8. Update metadata
   const now = new Date().toISOString();
@@ -171,27 +200,26 @@ export async function POST(request: NextRequest) {
       metadata: {
         settlemap_last_resend_at: now,
         settlemap_resend_count: String(resendCount),
-        settlemap_fulfilment_version: "V12.10",
+        settlemap_fulfilment_version: "V12.12",
       },
     });
   } catch (err) {
     console.error("[resend-fulfilment] Metadata update failed:", err instanceof Error ? err.message : "unknown");
-    // Non-fatal
   }
 
-  // 9. Send internal notification
+  const productLabel = settlemapProduct === "premium_relocation_pack" ? "Premium Relocation Pack" : "Student Move Pack";
+
   const { error: internalError } = await resend.emails.send({
     from: fromEmail,
     to: supportEmail,
-    subject: `[Resend #${resendCount}] Student Move Pack resent — ${emailDomain}`,
-    text: `Resent fulfilment email.\n\nPaymentIntent: ${pi.id}\nResend count: ${resendCount}\nTimestamp: ${now}\nRoute: ${piMeta.move_route ?? "(unknown)"}\nDeparture: ${piMeta.departure_month ?? "(unknown)"}`,
+    subject: `[Resend #${resendCount}] ${productLabel} resent — ${emailDomain}`,
+    text: `Resent fulfilment email.\n\nProduct: ${settlemapProduct}\nPaymentIntent: ${pi.id}\nResend count: ${resendCount}\nTimestamp: ${now}`,
     html: `<p><strong>Resent fulfilment email.</strong></p>
 <table>
+<tr><td>Product</td><td>${settlemapProduct}</td></tr>
 <tr><td>PaymentIntent</td><td>${pi.id}</td></tr>
 <tr><td>Resend count</td><td>${resendCount}</td></tr>
 <tr><td>Timestamp</td><td>${now}</td></tr>
-<tr><td>Route</td><td>${piMeta.move_route ?? "(unknown)"}</td></tr>
-<tr><td>Departure</td><td>${piMeta.departure_month ?? "(unknown)"}</td></tr>
 </table>`,
   });
 
@@ -201,6 +229,7 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     success: true,
+    product: settlemapProduct,
     emailSentTo: emailDomain,
     resendCount,
     sentAt: now,

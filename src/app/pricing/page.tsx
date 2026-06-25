@@ -124,20 +124,23 @@ export default function PricingPage() {
             </p>
           </div>
 
-          {/* Premium Pack — pilot */}
-          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">Pilot · Limited access</p>
+          {/* Premium Pack — live */}
+          <div className="relative flex flex-col rounded-xl border-2 border-violet-400 bg-white p-6 shadow-md">
+            <div className="absolute -top-3 left-6">
+              <span className="rounded-full bg-violet-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">Open now · S$49</span>
+            </div>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">Premium · Families, couples, corporate, returning</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
-            <p className="mt-1 text-2xl font-bold text-zinc-900">From S$49 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">For families, couples, solo movers, returning residents and corporate transfers. A detailed route-aware plan with budget template, document tracker, first-week setup and specialist add-ons.</p>
+            <p className="mt-1 text-2xl font-bold text-zinc-900">S$49 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">For families, couples, solo movers, returning residents and corporate transfers. Detailed route-aware checklist, budget template, document tracker, first-week plan, 6 specialist add-on modules and 11 provider research scripts. Planning support only — not professional advice.</p>
 
-            {/* Sample output previews */}
+            {/* Module highlights */}
             <div className="mt-4 space-y-2">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">Sample plan types</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">Add-on modules included</p>
               {[
-                { label: "Family move", desc: "School research, healthcare registration, family banking, housing shortlist, arrival day schedule." },
-                { label: "Corporate transfer", desc: "Work pass checklist, relocation allowance tracker, rental documentation, tax residency notes." },
-                { label: "Pet relocation", desc: "Microchip, vaccination, import permit, quarantine rules, airline cargo checklist by route." },
+                { label: "Family move", desc: "School research, healthcare registration, family banking, childcare and arrival day schedule." },
+                { label: "Corporate transfer", desc: "Work pass checklist, relocation allowance tracker, rental documentation and tax residency notes." },
+                { label: "Pet relocation", desc: "Microchip, vaccination, import permit, quarantine rules and airline cargo checklist by route." },
                 { label: "Returning home", desc: "Re-entry permit, tax filing status, local ID reinstatement, property and banking re-setup." },
               ].map((s) => (
                 <div key={s.label} className="rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2.5">
@@ -151,9 +154,21 @@ export default function PricingPage() {
               Planning support only. No human review. Not professional advice. Always verify with official sources and qualified advisers.
             </p>
 
-            <Link href="/early-access" className="mt-5 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-all duration-200 ease-in-out hover:border-zinc-400 hover:text-zinc-900">
-              Register interest <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            <div className="mt-5 space-y-2">
+              {process.env.NEXT_PUBLIC_PREMIUM_PACK_PAYMENTS_ENABLED !== "false" ? (
+                <Link href="/premium-relocation-pack" className="inline-flex w-full items-center justify-center rounded-full bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-violet-700">
+                  Start Premium Relocation Pack <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              ) : (
+                <Link href="/early-access" className="inline-flex w-full items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-all duration-200 ease-in-out hover:border-zinc-400 hover:text-zinc-900">
+                  Register interest <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              )}
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
+                <ShieldCheck className="h-3 w-3" />
+                Secure payment via Stripe · No SettleMap account needed
+              </div>
+            </div>
           </div>
 
           {/* Voice Guide */}
