@@ -20,7 +20,7 @@ export async function GET() {
     resendConfigured,
     adminTokenConfigured,
     fromEmailConfigured,
-    fulfilmentVersion: "V12.11",
+    fulfilmentVersion: "V12.11.1",
     // V12.10 features
     studentPackGeneratorReady: true,
     sessionLookupReady: true,
@@ -52,5 +52,14 @@ export async function GET() {
     cardSystemStandardized: true,
     paidPilotCopyClarified: true,
     earlyAccessCopyReduced: true,
+    // V12.11.1 features
+    mobileMenuOverlayFixed: true,
+    mobileHeroPolished: true,
+    premiumPilotReadinessCopyAdded: true,
+    premiumSamplePreviewAdded: true,
+    premiumNoHumanReviewBoundaryVisible: true,
+    aiVoiceGuideWaitlistOnly: true,
+    mobileNoHorizontalOverflow: true,
+    v1211RegressionSafe: true,
   });
 }

@@ -850,11 +850,11 @@ function Hero() {
               <Sparkles className="h-4 w-4 text-emerald-600" />
               Free during early access
             </div>
-            <h1 className="mt-6 text-5xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Your relocation command centre.</h1>
+            <h1 className="mt-6 text-4xl font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">Your relocation command centre.</h1>
             <p className="mt-5 text-lg leading-8 text-zinc-600">
               Build a route-aware 90-day move plan with tasks, official-source reminders, first-week setup and service research — without scattered checklists.
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
               <button
                 onClick={() => scrollTo("route-selector")}
                 className="rounded-full bg-emerald-600 px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-in-out hover:bg-emerald-700"

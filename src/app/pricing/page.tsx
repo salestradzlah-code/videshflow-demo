@@ -122,21 +122,34 @@ export default function PricingPage() {
             </p>
           </div>
 
-          {/* Premium Pack */}
-          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-70">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Coming later</p>
+          {/* Premium Pack — pilot */}
+          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">Pilot · Limited access</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
-            <p className="mt-1 text-2xl font-bold text-zinc-500">From S$49</p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">For families, couples, solo movers, returning residents, corporate transfers and more complex relocation plans. Includes a detailed move checklist, budget template, document tracker, first-week setup plan and optional family, student or pet add-ons.</p>
-            <ul className="mt-4 flex-1 space-y-2 text-sm text-zinc-500">
-              {["Everything in the Free Route Plan plus premium planning templates", "Detailed move checklist", "Budget template", "Document tracker", "First-week setup plan", "Optional family, student or pet add-ons"].map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-300" />
-                  {f}
-                </li>
+            <p className="mt-1 text-2xl font-bold text-zinc-900">From S$49 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">For families, couples, solo movers, returning residents and corporate transfers. A detailed route-aware plan with budget template, document tracker, first-week setup and specialist add-ons.</p>
+
+            {/* Sample output previews */}
+            <div className="mt-4 space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">Sample plan types</p>
+              {[
+                { label: "Family move", desc: "School research, healthcare registration, family banking, housing shortlist, arrival day schedule." },
+                { label: "Corporate transfer", desc: "Work pass checklist, relocation allowance tracker, rental documentation, tax residency notes." },
+                { label: "Pet relocation", desc: "Microchip, vaccination, import permit, quarantine rules, airline cargo checklist by route." },
+                { label: "Returning home", desc: "Re-entry permit, tax filing status, local ID reinstatement, property and banking re-setup." },
+              ].map((s) => (
+                <div key={s.label} className="rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2.5">
+                  <p className="text-xs font-semibold text-zinc-700">{s.label}</p>
+                  <p className="mt-0.5 text-[11px] leading-4 text-zinc-500">{s.desc}</p>
+                </div>
               ))}
-            </ul>
-            <Link href="/early-access" className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400">
+            </div>
+
+            <p className="mt-4 rounded-lg border border-amber-100 bg-amber-50 px-3 py-2.5 text-[11px] leading-5 text-amber-800">
+              Planning support only. No human review. Not professional advice. Always verify with official sources and qualified advisers.
+            </p>
+
+            <Link href="/early-access" className="mt-5 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-all duration-200 ease-in-out hover:border-zinc-400 hover:text-zinc-900">
               Register interest <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
