@@ -63,7 +63,7 @@ export default function PricingPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Available now · Free</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Free route plan</h2>
             <p className="mt-1 text-2xl font-bold text-zinc-900">Free</p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">Plan your move with a route-aware project tracker, scripts and checklists — no login or card required.</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">Free public route overview with starter tasks, route cards, timelines and research links. No personalised paid deliverable.</p>
             <ul className="mt-4 flex-1 space-y-2">
               {freeFeatures.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm text-zinc-700">
@@ -88,7 +88,7 @@ export default function PricingPage() {
             </div>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Student Move Pack</h2>
             <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">A focused planning pack for students moving abroad — India to UK, Germany, Singapore, US, Australia or Canada. Includes scripts, packing guides and a parent/student handover checklist.</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">A paid planning pack for student relocations — India to UK, Germany, Singapore, US, Australia or Canada. Includes campus arrival, SIM/OTP, accommodation, banking, packing, health insurance, parents checklist and first-week setup.</p>
             <ul className="mt-4 flex-1 space-y-2">
               {studentPackFeatures.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm text-zinc-700">
@@ -127,9 +127,9 @@ export default function PricingPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Coming later</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
             <p className="mt-1 text-2xl font-bold text-zinc-500">From S$49</p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">Everything in the Student Move Pack plus a detailed move checklist, budget template, document tracker, first-week setup plan, and family/student/pet add-ons.</p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">For families, couples, solo movers, returning residents, corporate transfers and more complex relocation plans. Includes a detailed move checklist, budget template, document tracker, first-week setup plan and optional family, student or pet add-ons.</p>
             <ul className="mt-4 flex-1 space-y-2 text-sm text-zinc-500">
-              {["Everything in Student Move Pack", "Budget worksheet starter", "Document tracker", "Housing comparison template", "Family/student/pet/senior add-ons"].map((f) => (
+              {["Everything in the Free Route Plan plus premium planning templates", "Detailed move checklist", "Budget template", "Document tracker", "First-week setup plan", "Optional family, student or pet add-ons"].map((f) => (
                 <li key={f} className="flex items-start gap-2">
                   <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-300" />
                   {f}

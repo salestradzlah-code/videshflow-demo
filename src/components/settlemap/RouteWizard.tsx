@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, GraduationCap, HelpCircle, ListOrdered, Luggage, MapPin, Globe2, MessageSquare, Plane, Route, Scale, ShieldCheck, Smartphone, Sparkles, UploadCloud, Users } from "lucide-react";
+import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, GraduationCap, HelpCircle, Home, ListOrdered, Luggage, MapPin, Globe2, MessageSquare, Plane, Route, Scale, ShieldCheck, Smartphone, Sparkles, UploadCloud, Users } from "lucide-react";
 import { addOnOptions, APP_CATEGORIES_DISCLAIMER, appEcosystemGuide, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
 import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
@@ -1890,30 +1890,43 @@ function SingaporeRentalSafetyChecklist() {
   );
 }
 
+const OFFICIAL_LINK_META: Record<string, { Icon: React.ComponentType<{ className?: string }>; borderTop: string; iconColor: string }> = {
+  hdb:  { Icon: Home,        borderTop: "border-t-sky-400",     iconColor: "text-sky-600" },
+  ura:  { Icon: MapPin,      borderTop: "border-t-violet-400",  iconColor: "text-violet-600" },
+  cea:  { Icon: Users,       borderTop: "border-t-amber-400",   iconColor: "text-amber-600" },
+  iras: { Icon: Scale,       borderTop: "border-t-rose-400",    iconColor: "text-rose-600" },
+  mom:  { Icon: ShieldCheck, borderTop: "border-t-emerald-400", iconColor: "text-emerald-600" },
+};
+
 function OfficialLinksSection() {
   return (
     <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-5 sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Official links to verify</p>
       <p className="mt-1 text-sm leading-6 text-zinc-600">Always confirm details directly on the official website before relying on them.</p>
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
-        {singaporeOfficialLinkCategories.map((category) => (
-          <div key={category.key} className="rounded-xl bg-zinc-50 p-3 text-sm leading-6 text-zinc-700">
-            <p className="font-medium text-zinc-900">{category.title}</p>
-            <p className="mt-1 text-xs leading-5 text-zinc-600">{category.whatToDo}</p>
-            {category.url ? (
-              <a
-                href={category.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 inline-block text-xs font-semibold text-emerald-700 underline hover:text-emerald-800"
-              >
-                Visit official website
-              </a>
-            ) : (
-              <p className="mt-1 text-xs font-semibold text-zinc-500">Check official source</p>
-            )}
-          </div>
-        ))}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {singaporeOfficialLinkCategories.map((category) => {
+          const meta = OFFICIAL_LINK_META[category.key] ?? { Icon: FileSearch, borderTop: "border-t-zinc-300", iconColor: "text-zinc-500" };
+          return (
+            <div key={category.key} className={`flex flex-col rounded-xl border border-zinc-200/80 border-t-4 ${meta.borderTop} bg-white p-4 shadow-sm`}>
+              <div className="flex items-center gap-2">
+                <meta.Icon className={`h-4 w-4 shrink-0 ${meta.iconColor}`} />
+                <p className="text-sm font-semibold text-zinc-900">{category.title}</p>
+                <span className="ml-auto shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500">Research</span>
+              </div>
+              <p className="mt-2 text-xs leading-5 text-zinc-600">{category.whatToDo}</p>
+              <div className="mt-3 border-t border-zinc-100 pt-2">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-400">Where to start</p>
+                <p className="mt-0.5 text-xs leading-5 text-zinc-600">{category.whereToStart}</p>
+              </div>
+              {category.url ? (
+                <a href={category.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center text-xs font-semibold text-emerald-700 underline hover:text-emerald-800">
+                  Visit official website <ArrowRight className="ml-1 h-3 w-3" />
+                </a>
+              ) : null}
+              <p className="mt-2 text-[10px] leading-4 text-zinc-400">Check official source. Not an endorsement.</p>
+            </div>
+          );
+        })}
       </div>
       <p className="mt-4 text-xs leading-5 text-zinc-500">{OFFICIAL_LINKS_DISCLAIMER}</p>
     </div>

@@ -212,6 +212,20 @@ const categoryStyles: Record<string, string> = {
   "Retirement": "bg-rose-50 text-rose-700",
 };
 
+const categoryBorderLeft: Record<string, string> = {
+  "Corporate Transfers": "border-l-sky-400",
+  "Student Moves": "border-l-emerald-400",
+  "Family Moves": "border-l-violet-400",
+  "Returning Home": "border-l-amber-400",
+  "Domestic Moves": "border-l-slate-400",
+  "Retirement": "border-l-rose-400",
+};
+
+// Derive category → icon from FILTERS so there is one source of truth
+const categoryIconMap: Record<string, React.ComponentType<{ className?: string }>> = Object.fromEntries(
+  FILTERS.filter((f) => f.label !== "All Corridors").map((f) => [f.label, f.Icon])
+);
+
 const studentChipStyle = "rounded-full bg-teal-50 px-2.5 py-1 text-[11px] font-semibold text-teal-700 border border-teal-200";
 
 export function RouteLibraryGrid() {
@@ -263,9 +277,10 @@ export function RouteLibraryGrid() {
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {filtered.map((corridor) => (
-          <article key={corridor.id} className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
+          <article key={corridor.id} className={`flex flex-col rounded-xl border border-zinc-200/80 border-l-4 ${categoryBorderLeft[corridor.category] ?? "border-l-zinc-300"} bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md`}>
             <div className="flex items-center justify-between gap-3">
-              <span className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] ${categoryStyles[corridor.category] ?? "bg-zinc-100 text-zinc-500"}`}>
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] ${categoryStyles[corridor.category] ?? "bg-zinc-100 text-zinc-500"}`}>
+                {(() => { const CatIcon = categoryIconMap[corridor.category]; return CatIcon ? <CatIcon className="h-3 w-3 shrink-0" /> : null; })()}
                 {corridor.category}
               </span>
               <span className={`rounded-full px-3 py-1 text-[11px] font-semibold ${complexityStyles[corridor.complexity]}`}>{corridor.complexity}</span>

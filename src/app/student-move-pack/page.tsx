@@ -252,8 +252,9 @@ export default function StudentMovePackPage() {
           {/* Role */}
           <div id="role">
             <p className="block text-sm font-semibold text-zinc-800">
-              Who is this for? <span className="text-red-500">*</span>
+              Who is completing this form? <span className="text-red-500">*</span>
             </p>
+            <p className="mt-1 text-xs leading-5 text-zinc-500">The pack is prepared for a student move. Parents or family members can complete this form on behalf of the student.</p>
             <div className="mt-2 flex flex-wrap gap-3">
               {ROLE_OPTIONS.map((option) => (
                 <button
