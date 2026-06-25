@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { generateStudentMovePack, type PackSection } from "@/lib/studentMovePack";
 import { generatePremiumRelocationPack } from "@/lib/premiumRelocationPack";
+import { generateVoiceGuide } from "@/lib/voiceGuide";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type SuccessState =
@@ -31,7 +32,7 @@ type SuccessState =
 
 interface SessionData {
   paid: boolean;
-  productType: "student" | "premium";
+  productType: "student" | "premium" | "voice";
   customerEmail: string | null;
   buyerName: string | null;
   // Student fields
@@ -50,6 +51,154 @@ interface SessionData {
   concerns: string | null;
   amountTotal: number | null;
   currency: string | null;
+}
+
+function VoiceGuideView({ data }: { data: SessionData }) {
+  const [copied, setCopied] = useState(false);
+
+  const guide = generateVoiceGuide({
+    origin: data.origin,
+    destination: data.destination,
+    moveReason: data.moveReason,
+    whoIsMoving: data.whoIsMoving,
+    timingMonth: data.timingMonth,
+    concerns: data.concerns,
+    buyerName: data.buyerName,
+  });
+
+  const allSections: PackSection[] = [
+    guide.routeSummary,
+    guide.topSevenFocus,
+    guide.firstSevenDays,
+    guide.checklistWalkthrough,
+    guide.documentsToPrepare,
+    guide.providerQuestions,
+    guide.researchLinks,
+    guide.commonMistakes,
+    guide.boundaryNote,
+  ];
+
+  function buildCopyText(): string {
+    const lines: string[] = [
+      "SettleMap Voice Guide",
+      `Route: ${guide.effectiveRoute}`,
+      data.timingMonth ? `Planned timing: ${data.timingMonth}` : "",
+      data.concerns ? `Main concerns: ${data.concerns}` : "",
+      "",
+    ];
+
+    for (const section of allSections) {
+      lines.push(section.title.toUpperCase());
+      for (const item of section.items) lines.push(`- ${item}`);
+      lines.push("");
+    }
+
+    lines.push(guide.safetyBoundaryNote);
+    lines.push("");
+    lines.push("SettleMap | support@settlemap.app | settlemap.app");
+    return lines.filter((line) => line !== undefined).join("\n");
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(buildCopyText()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }).catch(() => {/* silent */});
+  }
+
+  return (
+    <div className="mx-auto max-w-2xl">
+      <div className="text-center">
+        <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
+          <CheckCircle2 className="h-9 w-9 text-teal-700" />
+        </div>
+        <h1 className="mt-6 text-3xl font-semibold tracking-tight text-zinc-900">
+          Payment confirmed
+        </h1>
+        <p className="mt-3 text-base leading-7 text-zinc-600">
+          Your SettleMap Voice Guide script and walkthrough is ready below.
+        </p>
+      </div>
+
+      <div className="mt-6 rounded-xl border border-teal-200 bg-teal-50 p-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-teal-700">
+          Voice-style walkthrough
+        </p>
+        <div className="mt-3 grid gap-1.5 text-sm text-zinc-700">
+          {data.buyerName && <p><span className="font-medium">Name:</span> {data.buyerName}</p>}
+          <p><span className="font-medium">Route:</span> {guide.effectiveRoute}</p>
+          {data.moveReason && <p><span className="font-medium">Move reason:</span> {data.moveReason}</p>}
+          {data.timingMonth && <p><span className="font-medium">Timing:</span> {data.timingMonth}</p>}
+          {data.concerns && <p><span className="font-medium">Main concerns:</span> {data.concerns}</p>}
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-start gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
+        <Clock className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
+        <span>
+          This version provides a written conversational walkthrough, not generated audio and not a human call. If autofulfilment is enabled, an email copy is also sent to your checkout email address.
+        </span>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          onClick={() => window.print()}
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          <Printer className="h-4 w-4" />
+          Print / Save as PDF
+        </button>
+        <button
+          onClick={handleCopy}
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          {copied ? (
+            <><CheckCircle2 className="h-4 w-4 text-teal-700" /> Copied!</>
+          ) : (
+            <><Copy className="h-4 w-4" /> Copy guide</>
+          )}
+        </button>
+        <a
+          href="mailto:support@settlemap.app"
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          <Mail className="h-4 w-4" />
+          Email support
+        </a>
+      </div>
+
+      <div className="mt-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-zinc-500">
+          Your SettleMap Voice Guide
+        </p>
+        <div className="mt-3 space-y-3">
+          {allSections.map((section, i) => (
+            <PackSectionCard key={section.title} section={section} defaultOpen={i === 0} accentColor="emerald" />
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[11px] leading-5 text-amber-800">
+        {guide.safetyBoundaryNote}
+      </div>
+
+      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+        <Link
+          href="/#route-selector"
+          className="inline-flex items-center justify-center rounded-full bg-teal-700 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-800"
+        >
+          Build my move plan <ArrowRight className="ml-2 h-4 w-4" />
+        </Link>
+        <Link
+          href="/refund-request"
+          className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 transition-all hover:border-zinc-400"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
+          Need a refund review?
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 // ── Collapsible section ───────────────────────────────────────────────────────
@@ -519,6 +668,9 @@ function PaymentSuccessContent() {
   if (state === "verifiedPaid" && sessionData) {
     if (sessionData.productType === "premium") {
       return <PremiumPackView data={sessionData} />;
+    }
+    if (sessionData.productType === "voice") {
+      return <VoiceGuideView data={sessionData} />;
     }
     return <PaidPackView data={sessionData} />;
   }

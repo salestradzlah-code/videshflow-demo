@@ -11,6 +11,7 @@ import {
   SETTLEMAP_DOES_NOT_DO,
 } from "@/lib/constants";
 import { SuitcaseIllustration } from "@/components/illustrations/RelocationIllustrations";
+import { getPaidProductRuntime } from "@/lib/paidProducts";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -42,6 +43,10 @@ const freeFeatures = [
 ];
 
 export default function PricingPage() {
+  const studentProduct = getPaidProductRuntime("student_move_pack");
+  const premiumProduct = getPaidProductRuntime("premium_relocation_pack");
+  const voiceProduct = getPaidProductRuntime("voice_guide");
+
   return (
     <section className="bg-zinc-50 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -100,7 +105,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <div className="mt-6 space-y-2">
-              {process.env.NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED !== "false" ? (
+              {studentProduct.checkoutReady ? (
                 <Link href="/student-move-pack" className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700">
                   Start Student Move Pack <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -127,7 +132,9 @@ export default function PricingPage() {
           {/* Premium Pack — live */}
           <div className="relative flex flex-col rounded-xl border-2 border-violet-400 bg-white p-6 shadow-md">
             <div className="absolute -top-3 left-6">
-              <span className="rounded-full bg-violet-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">Open now · S$49</span>
+              <span className="rounded-full bg-violet-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">
+                {premiumProduct.checkoutReady ? "Open now · S$49" : "Ready to activate · S$49"}
+              </span>
             </div>
             <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-violet-600">Premium · Families, couples, corporate, returning</p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">Premium Relocation Pack</h2>
@@ -155,14 +162,21 @@ export default function PricingPage() {
             </p>
 
             <div className="mt-5 space-y-2">
-              {process.env.NEXT_PUBLIC_PREMIUM_PACK_PAYMENTS_ENABLED !== "false" ? (
+              {premiumProduct.checkoutReady ? (
                 <Link href="/premium-relocation-pack" className="inline-flex w-full items-center justify-center rounded-full bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-violet-700">
                   Start Premium Relocation Pack <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               ) : (
-                <Link href="/early-access" className="inline-flex w-full items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-all duration-200 ease-in-out hover:border-zinc-400 hover:text-zinc-900">
-                  Register interest <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-800">
+                  {premiumProduct.status === "configuring"
+                    ? "Checkout is being configured. Please contact support@settlemap.app or try again later."
+                    : "Checkout currently paused. Join the waitlist or contact support@settlemap.app."}
+                  <div className="mt-2">
+                    <Link href="/early-access" className="font-semibold underline hover:text-amber-900">
+                      Join waitlist
+                    </Link>
+                  </div>
+                </div>
               )}
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500">
                 <ShieldCheck className="h-3 w-3" />
@@ -172,22 +186,44 @@ export default function PricingPage() {
           </div>
 
           {/* Voice Guide */}
-          <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-zinc-50 p-6 shadow-sm opacity-70">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">Waitlist only · No pricing yet</p>
+          <div className="flex flex-col rounded-xl border border-teal-200/80 bg-white p-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
+              {voiceProduct.checkoutReady ? "Open now · Voice-style guide" : "Ready to activate · Voice-style guide"}
+            </p>
             <h2 className="mt-3 text-lg font-semibold text-zinc-900">SettleMap Voice Guide</h2>
-            <p className="mt-1 text-sm font-semibold text-zinc-400">Pricing to be decided</p>
-            <p className="mt-3 text-sm leading-6 text-zinc-600">A future AI-guided voice walkthrough that helps you understand your relocation plan, ask planning questions and prepare checklist notes. Not available today.</p>
-            <ul className="mt-4 flex-1 space-y-2 text-sm text-zinc-500">
-              {["Voice-guided plan walkthrough", "Guided planning questions", "Next-step summary", "Official-source reminders"].map((f) => (
+            <p className="mt-1 text-2xl font-bold text-zinc-900">S$19 <span className="text-sm font-normal text-zinc-500">one-time</span></p>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">
+              A self serve AI guided voice-style walkthrough for your relocation plan, checklist, first week setup and research questions. You receive a clear conversational guide that explains what to do first, what to verify and what to prepare before moving.
+            </p>
+            <ul className="mt-4 flex-1 space-y-2 text-sm text-zinc-600">
+              {["Voice Guide script and walkthrough", "Top 7 move priorities", "First 7 days explanation", "Documents to prepare", "Provider questions to ask", "Research links to verify", "Official-source reminders"].map((f) => (
                 <li key={f} className="flex items-start gap-2">
-                  <span className="mt-2 h-1 w-1 flex-none rounded-full bg-zinc-300" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
                   {f}
                 </li>
               ))}
             </ul>
-            <Link href="/early-access" className="mt-6 inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-600 transition-all duration-200 ease-in-out hover:border-zinc-400">
-              Join Voice Guide waitlist <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            <p className="mt-4 rounded-lg border border-amber-100 bg-amber-50 px-3 py-2.5 text-[11px] leading-5 text-amber-800">
+              Planning support only. No human review. Not professional advice. This is not a live human call and does not include generated audio in this version.
+            </p>
+            <div className="mt-5">
+              {voiceProduct.checkoutReady ? (
+                <Link href="/voice-guide" className="inline-flex w-full items-center justify-center rounded-full bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-teal-800">
+                  Start Voice Guide <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              ) : (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-800">
+                  {voiceProduct.status === "configuring"
+                    ? "Checkout being configured. Add STRIPE_VOICE_GUIDE_PRICE_ID and enable the Voice Guide flags."
+                    : "Checkout currently paused. Join the waitlist or contact support@settlemap.app."}
+                  <div className="mt-2">
+                    <Link href="/early-access" className="font-semibold underline hover:text-amber-900">
+                      Join waitlist
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

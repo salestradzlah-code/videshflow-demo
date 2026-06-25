@@ -11,6 +11,11 @@ function getStripe(): Stripe {
 }
 
 const VALID_AMOUNTS = [1900, 4900];
+const VALID_PRODUCTS = new Set([
+  "student_move_pack",
+  "premium_relocation_pack",
+  "voice_guide",
+]);
 
 export async function GET(request: NextRequest) {
   const sessionId = request.nextUrl.searchParams.get("session_id");
@@ -48,17 +53,13 @@ export async function GET(request: NextRequest) {
 
   const pi = session.payment_intent as Stripe.PaymentIntent | null;
   const piMeta = pi?.metadata ?? {};
-
   const settlemapProduct = piMeta.settlemap_product ?? "student_move_pack";
 
-  if (settlemapProduct !== "student_move_pack" && settlemapProduct !== "premium_relocation_pack") {
+  if (!VALID_PRODUCTS.has(settlemapProduct)) {
     return NextResponse.json({ error: "Unrecognised product.", paid: false }, { status: 400 });
   }
 
-  const productType: "student" | "premium" =
-    settlemapProduct === "premium_relocation_pack" ? "premium" : "student";
-
-  if (productType === "premium") {
+  if (settlemapProduct === "premium_relocation_pack") {
     return NextResponse.json({
       paid: true,
       productType: "premium",
@@ -78,7 +79,25 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  // Student
+  if (settlemapProduct === "voice_guide") {
+    return NextResponse.json({
+      paid: true,
+      productType: "voice",
+      customerEmail: session.customer_details?.email ?? null,
+      buyerName: piMeta.buyer_name || session.customer_details?.name || null,
+      origin: piMeta.origin || null,
+      destination: piMeta.destination || null,
+      moveReason: piMeta.move_reason || null,
+      whoIsMoving: piMeta.who_is_moving || null,
+      timingMonth: piMeta.timing_month || null,
+      concerns: piMeta.concerns || null,
+      amountTotal: session.amount_total,
+      currency: session.currency,
+      product: settlemapProduct,
+      created: session.created,
+    });
+  }
+
   return NextResponse.json({
     paid: true,
     productType: "student",

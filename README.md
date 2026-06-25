@@ -30,7 +30,7 @@ GEMINI_API_KEY=your_server_side_key
 
 For Vercel, add `GEMINI_API_KEY` in the project environment variables and redeploy. Never prefix the variable with `NEXT_PUBLIC_`; the browser calls SettleMap's `/api/chat` route and the server calls Gemini 2.5 Flash-Lite.
 
-The pilot is limited to checklist-style planning support. It uses an HTTP-only session cookie for a simple in-memory request limit. It does not add login, a database, document upload, OCR, payments, or provider contact automation.
+The pilot is limited to checklist-style planning support. It uses an HTTP-only session cookie for a simple in-memory request limit. It does not add login, a database, document upload, OCR, or provider contact automation. Paid products are handled separately through server-side Stripe checkout routes and environment-controlled activation switches.
 
 ## Deploy
 
@@ -44,7 +44,7 @@ The launch version includes `/start`, a first-click relocation path selector. It
 - Why are you moving?
 - Who is moving?
 
-This keeps the website from feeling like a generic relocation ocean. The selector is static and client-side only. It does not use login, a database, payment, or saved personal data.
+This keeps the website from feeling like a generic relocation ocean. The selector is static and client-side only. It does not use login, a database, or saved personal data. Paid product checkout is separate and controlled by Stripe/Vercel environment variables.
 
 ## AI assistant roadmap
 
@@ -93,7 +93,21 @@ Current pilot:
 - Route, move-reason, household-profile, and selected add-on context
 - Prompt chips and session request limits
 - Server-enforced professional-advice guardrails
-- No login, database, payment, document upload, OCR, or provider automation
+- No login, database, document upload, OCR, or provider automation. Paid checkout is server-side through Stripe and controlled by environment variables.
+
+## Paid product activation
+
+V12.12 supports environment-controlled paid products:
+
+- Student Move Pack — S$19, existing active paid flow unless paused by Student env flags
+- Premium Relocation Pack — S$49, ready to activate with Premium Stripe Price ID and flags
+- SettleMap Voice Guide — S$19, ready to activate after `STRIPE_VOICE_GUIDE_PRICE_ID` and Voice Guide flags are set
+
+See:
+
+- `STRIPE_PRODUCTS.md`
+- `VERCEL_ENVIRONMENT_VARIABLES.md`
+- `PAYMENT_ACTIVATION_RUNBOOK.md`
 
 Future work:
 - Add retrieval only from approved SettleMap content and official-source links

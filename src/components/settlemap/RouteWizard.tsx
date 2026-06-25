@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, GraduationCap, HelpCircle, Home, ListOrdered, Luggage, MapPin, Globe2, MessageSquare, Plane, Route, Scale, ShieldCheck, Smartphone, Sparkles, UploadCloud, Users } from "lucide-react";
+import { AlertTriangle, ArrowRight, Bot, CalendarDays, CheckCircle2, Copy, FileSearch, GraduationCap, HelpCircle, Home, ListOrdered, Luggage, MapPin, Globe2, MessageSquare, Plane, Route, Scale, ShieldCheck, Smartphone, Sparkles, Users } from "lucide-react";
 import { addOnOptions, APP_CATEGORIES_DISCLAIMER, appEcosystemGuide, cookingOptions, destinations, documentCategories, domesticEssentials, furnishingOptions, getTransportPrefOptions, moveDateOptions, moveInWindowOptions, moveReasons, occupancyOptions, OFFICIAL_LINKS_DISCLAIMER, passTypeOptions, petOptions, platformStats, profiles, realStories, roomTypeOptions, serviceCategories, singaporeOfficialLinkCategories, smokingOptions, type AddOnKey, type Destination, type DestinationKey, type MoveDateKey, type MoveReason, type MoveReasonKey, type PetKey, type Profile, type ProfileKey } from "@/data/demoPlatform";
 import { buildTimeline, calculateProgress } from "@/lib/relocationTimeline";
 import { buildProjectScripts, type TaskStatus } from "@/lib/projectPlan";
@@ -2458,12 +2458,11 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
         </div>
       </div>
       <p className="mt-4 text-sm leading-7 text-zinc-600">Document checklist preview for {routeLabel}. Document upload is not active today. No files are uploaded, sent or stored in this version.</p>
-      <label className="mt-6 flex cursor-not-allowed flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center">
-        <UploadCloud className="h-8 w-8 text-emerald-600" />
-        <span className="mt-3 text-sm font-semibold text-zinc-900">Drop passport, visa, offer, school or rental files</span>
+      <div className="mt-6 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center">
+        <FileSearch className="h-8 w-8 text-emerald-600" />
+        <span className="mt-3 text-sm font-semibold text-zinc-900">Review passport, visa, offer, school or rental document categories</span>
         <span className="mt-1 text-xs text-zinc-500">Preview only. No files are uploaded, sent or stored.</span>
-        <input type="file" className="hidden" disabled />
-      </label>
+      </div>
       <div className="mt-6 space-y-3">
         {visibleDocs.map((category) => (
           <div key={category.title} className="rounded-xl border border-zinc-200/80 p-4">

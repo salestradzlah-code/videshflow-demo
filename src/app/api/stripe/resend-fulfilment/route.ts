@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { Resend } from "resend";
 import { generateStudentMovePack, buildPackEmail } from "@/lib/studentMovePack";
 import { generatePremiumRelocationPack, buildPremiumPackEmail } from "@/lib/premiumRelocationPack";
+import { generateVoiceGuide, buildVoiceGuideEmail } from "@/lib/voiceGuide";
 
 export const dynamic = "force-dynamic";
 
@@ -140,6 +141,25 @@ export async function POST(request: NextRequest) {
     emailSubject = result.subject;
     emailHtml = result.html;
     emailText = result.text;
+  } else if (settlemapProduct === "voice_guide") {
+    const guide = generateVoiceGuide({
+      origin: piMeta.origin,
+      destination: piMeta.destination,
+      moveReason: piMeta.move_reason,
+      whoIsMoving: piMeta.who_is_moving,
+      timingMonth: piMeta.timing_month,
+      concerns: piMeta.concerns,
+      buyerName: piMeta.buyer_name,
+    });
+    const result = buildVoiceGuideEmail(
+      guide,
+      piMeta.buyer_name || null,
+      piMeta.timing_month || null,
+      piMeta.concerns || null,
+    );
+    emailSubject = result.subject;
+    emailHtml = result.html;
+    emailText = result.text;
   } else {
     const pack = generateStudentMovePack({
       moveRoute: piMeta.move_route,
@@ -207,7 +227,12 @@ export async function POST(request: NextRequest) {
     console.error("[resend-fulfilment] Metadata update failed:", err instanceof Error ? err.message : "unknown");
   }
 
-  const productLabel = settlemapProduct === "premium_relocation_pack" ? "Premium Relocation Pack" : "Student Move Pack";
+  const productLabel =
+    settlemapProduct === "premium_relocation_pack"
+      ? "Premium Relocation Pack"
+      : settlemapProduct === "voice_guide"
+        ? "SettleMap Voice Guide"
+        : "Student Move Pack";
 
   const { error: internalError } = await resend.emails.send({
     from: fromEmail,

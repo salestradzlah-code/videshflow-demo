@@ -23,9 +23,11 @@ const staticRoutes = [
   "/reference-links",
   "/refund-policy",
   "/security-and-data",
+  "/service-provider-reference-policy",
   "/services",
   "/share-story",
   "/start",
+  "/voice-guide",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

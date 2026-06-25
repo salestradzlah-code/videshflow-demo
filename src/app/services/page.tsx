@@ -28,6 +28,14 @@ export default function ServicesPage() {
           <ServicesDirectory />
         </div>
 
+        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">
+          Official links appear first where available. Commercial providers, apps or websites are for research convenience only. SettleMap does not recommend, verify, rank or endorse providers, and does not guarantee price, availability, licensing, quality or outcomes.{" "}
+          <Link href="/service-provider-reference-policy" className="font-semibold underline hover:text-amber-950">
+            Read the provider reference policy
+          </Link>
+          .
+        </div>
+
         <div className="mt-10">
           <Link href="/start" className="inline-flex items-center rounded-full border border-zinc-200/80 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
             Build your route plan <ArrowRight className="ml-2 h-4 w-4" />

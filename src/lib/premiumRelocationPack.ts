@@ -1,6 +1,11 @@
 // ── SettleMap Premium Relocation Pack Generator ───────────────────────────────
 // Pure helper — no side effects, no async. Used by webhook email + success page.
 
+import {
+  RESEARCH_LINKS_BOUNDARY_COPY,
+  getResearchLinkChecklistItems,
+} from "@/data/researchLinksRegistry";
+
 export interface PremiumPackMetadata {
   origin?: string | null;
   destination?: string | null;
@@ -329,22 +334,13 @@ export function generatePremiumRelocationPack(meta: PremiumPackMetadata): Premiu
   const researchLinks: PackSection = {
     title: "Research links — where to verify",
     items: [
-      "OFFICIAL GOVERNMENT PORTAL: Search '[destination country] official government portal' for immigration, tax, healthcare, and local registration. Bookmark this — it is the authoritative source for requirements and deadlines. Do not rely on third-party summaries for official rules.",
-      "IMMIGRATION AND ENTRY RULES: Search '[destination country] immigration official site' for visa, permit, entry requirements, and processing timelines. If employer-sponsored, your employer or HR should provide the official MOM, USCIS, UKVI, or equivalent contact.",
-      "HOUSING AND RENTAL: Search licensed property agents or official rental listing platforms in your destination city. Check for a local tenancy advisory service or housing authority — most countries have one that provides free guidance on tenant rights.",
-      "BANKING AND REMITTANCE: Search 'bank account for new residents [destination city]' or 'student/international account [bank name]'. For remittance, compare Wise, Revolut, your bank's international wire, or a licensed FX broker for your currency pair.",
-      "SIM, eSIM AND INTERNET: Search the three largest telecom providers in your destination country for prepaid and monthly plans. Check whether your destination has eSIM support on arrival.",
-      "HEALTHCARE: Search '[destination country] national health service' or 'GP registration [destination city]'. For private cover, compare licensed health insurance providers registered in your destination country.",
-      "INSURANCE: Search 'expat health insurance [destination country]' or 'renters insurance [destination city]'. Verify the insurer is licensed in your destination. Check the Financial Services Regulatory Authority or equivalent for your destination.",
-      "TRANSPORT: Search '[destination city] public transport card' or '[destination city] monthly pass'. Download the official transport authority app before arriving.",
-      "TAX AND PAYROLL: Search '[destination country] tax for new residents' or '[destination country] income tax for [visa type]'. Consult a qualified tax adviser for cross-border tax obligations — do not rely on general forum advice.",
-      "IDENTITY AND REGISTRATION: Search '[destination country] address registration for new arrivals' — many countries have mandatory registration (Anmeldung in Germany, address notification in Singapore, etc.) with deadlines. Check your destination's requirement.",
-      "SCHOOLS AND CHILDCARE: Search '[destination city] school enrollment international students' or '[destination city] nursery and childcare'. Check the local education authority website for catchment areas and enrollment deadlines.",
-      "PETS: Search '[destination country] pet import rules [official authority]' — e.g., Australian Department of Agriculture for Australia, APHA for UK, AVS for Singapore. Always use the official authority website, not third-party summaries.",
-      "MOVING AND SHIPPING: Compare at least 2–3 quotes from licensed international removals companies. Verify they are FIDI FAIM accredited or equivalent for your destination. Search '[destination country] customs rules for household goods' for duty-free allowances.",
-      "EMERGENCY NUMBERS: Research your destination country's emergency number (not always 999 or 911 — varies by country), nearest hospital, and nearest home country consulate or high commission before arrival.",
-      "CONSUMER PROTECTION: Search '[destination country] consumer protection authority' for your rights on housing, services, and financial products. If you experience a dispute with a provider, this is your first point of reference.",
-      "Note: SettleMap provides research starting points only. All links and information must be verified directly from official sources before acting. SettleMap does not recommend, verify, rank, or endorse providers.",
+      ...getResearchLinkChecklistItems({
+        audience: "premium",
+        destination,
+        personaTags: [whoIsMoving, moveReason, modules.has("pet") ? "pet" : "", modules.has("student") ? "student" : ""].filter(Boolean),
+        limit: 14,
+      }),
+      RESEARCH_LINKS_BOUNDARY_COPY,
     ],
   };
 

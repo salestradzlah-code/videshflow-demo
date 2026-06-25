@@ -1,6 +1,11 @@
 // ── SettleMap Student Move Pack Generator ────────────────────────────────────────────
 // Pure helper — no side effects, no async. Used by webhook email + success page.
 
+import {
+  RESEARCH_LINKS_BOUNDARY_COPY,
+  getResearchLinkChecklistItems,
+} from "@/data/researchLinksRegistry";
+
 export interface PackMetadata {
   moveRoute?: string | null;
   otherRoute?: string | null;
@@ -235,6 +240,18 @@ export function generateStudentMovePack(meta: PackMetadata): StudentMovePack {
   const concernSections: PackSection[] = Array.from(selectedKeys).map(
     (k) => CONCERN_SECTIONS[k],
   );
+  const researchLinksSection: PackSection = {
+    title: "Research links — where to start",
+    items: [
+      ...getResearchLinkChecklistItems({
+        audience: "student",
+        destination: route,
+        personaTags: ["student"],
+        limit: 10,
+      }),
+      RESEARCH_LINKS_BOUNDARY_COPY,
+    ],
+  };
 
   return {
     effectiveRoute: route,
@@ -265,7 +282,7 @@ export function generateStudentMovePack(meta: PackMetadata): StudentMovePack {
 
     packingChecklist: CONCERN_SECTIONS.packing,
 
-    researchLinksSection: CONCERN_SECTIONS.research,
+    researchLinksSection,
 
     officialSourceReminder: {
       title: "Official source reminder",

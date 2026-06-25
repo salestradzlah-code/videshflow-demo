@@ -18,3 +18,5 @@ package-lock.json
 run-*.bat
 
 tsconfig.tsbuildinfo
+.vercel
+.env*

@@ -9,6 +9,7 @@ const exploreLinks = [
   { href: "/services", label: "Services Directory" },
   { href: "/faq", label: "FAQ" },
   { href: "/reference-links", label: "Reference Links" },
+  { href: "/service-provider-reference-policy", label: "Provider Policy" },
   { href: "/early-access", label: "Early Access" },
 ];
 
@@ -16,6 +17,7 @@ const planningLinks = [
   { href: "/before-you-fly", label: "Before You Move" },
   { href: "/home-setup", label: "Home Setup" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/voice-guide", label: "Voice Guide" },
   { href: "/refund-policy", label: "Refund Policy" },
   { href: "/partner-with-us", label: "Partner With Us" },
   { href: "/privacy", label: "Privacy Policy" },

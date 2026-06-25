@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { Resend } from "resend";
 import { generateStudentMovePack, buildPackEmail } from "@/lib/studentMovePack";
 import { generatePremiumRelocationPack, buildPremiumPackEmail } from "@/lib/premiumRelocationPack";
+import { generateVoiceGuide, buildVoiceGuideEmail } from "@/lib/voiceGuide";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -59,8 +60,13 @@ function buildInternalEmail(params: {
     .join("");
 
   const isPremium = params.product === "premium_relocation_pack";
-  const accentColor = isPremium ? "#7c3aed" : "#059669";
-  const productLabel = isPremium ? "Premium Relocation Pack" : "Student Move Pack";
+  const isVoice = params.product === "voice_guide";
+  const accentColor = isPremium ? "#7c3aed" : isVoice ? "#0f766e" : "#059669";
+  const productLabel = isPremium
+    ? "Premium Relocation Pack"
+    : isVoice
+      ? "SettleMap Voice Guide"
+      : "Student Move Pack";
 
   const actionNote = !params.customerEmailSent
     ? params.autofulfillEnabled
@@ -152,7 +158,11 @@ export async function POST(request: NextRequest) {
   const settlemapProduct = piMeta.settlemap_product ?? "";
 
   // Route by product
-  if (settlemapProduct !== "student_move_pack" && settlemapProduct !== "premium_relocation_pack") {
+  if (
+    settlemapProduct !== "student_move_pack" &&
+    settlemapProduct !== "premium_relocation_pack" &&
+    settlemapProduct !== "voice_guide"
+  ) {
     return NextResponse.json({ received: true });
   }
 
@@ -181,8 +191,109 @@ export async function POST(request: NextRequest) {
   let timingLabel: string | null = null;
 
   // ── Premium Relocation Pack ────────────────────────────────────────────────
+  if (settlemapProduct === "voice_guide") {
+    const autofulfillEnabled = process.env.VOICE_GUIDE_AUTOFULFILL_ENABLED === "true";
+
+    const origin = piMeta.origin || null;
+    const destination = piMeta.destination || null;
+    const moveReason = piMeta.move_reason || null;
+    const whoIsMoving = piMeta.who_is_moving || null;
+    const timingMonth = piMeta.timing_month || null;
+    const concerns = piMeta.concerns || null;
+
+    routeLabel = origin && destination ? `${origin} to ${destination}` : null;
+    timingLabel = timingMonth;
+
+    const guide = generateVoiceGuide({
+      origin,
+      destination,
+      moveReason,
+      whoIsMoving,
+      timingMonth,
+      concerns,
+      buyerName,
+    });
+    packGenerated = true;
+
+    if (autofulfillEnabled && customerEmail) {
+      const { subject, html, text } = buildVoiceGuideEmail(
+        guide,
+        buyerName,
+        timingMonth,
+        concerns,
+      );
+
+      const { error: sendError } = await resend.emails.send({
+        from: fromEmail,
+        to: customerEmail,
+        replyTo: supportEmail,
+        subject,
+        html,
+        text,
+      });
+
+      if (sendError) {
+        console.error("[webhook-voice] Customer email failed:", (sendError as { name?: string }).name ?? "unknown");
+        return new Response("Customer email send failed", { status: 500 });
+      }
+
+      customerEmailSent = true;
+      console.log("[webhook-voice] Voice Guide email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
+    } else if (!autofulfillEnabled) {
+      console.log("[webhook-voice] Autofulfill disabled. session.id:", session.id);
+    }
+
+    try {
+      await stripe.paymentIntents.update(paymentIntentId, {
+        metadata: {
+          settlemap_product: "voice_guide",
+          settlemap_fulfilled_at: fulfilledAt,
+          settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
+          settlemap_fulfilment_version: "V12.12",
+          buyer_name: buyerName ?? "",
+          origin: origin ?? "",
+          destination: destination ?? "",
+          move_reason: moveReason ?? "",
+          who_is_moving: whoIsMoving ?? "",
+          timing_month: timingMonth ?? "",
+          concerns: concerns ?? "",
+        },
+      });
+    } catch (err) {
+      console.error("[webhook-voice] Metadata update failed:", err instanceof Error ? err.message : "unknown");
+    }
+
+    const internal = buildInternalEmail({
+      customerEmail,
+      buyerName,
+      product: "voice_guide",
+      amountTotal: session.amount_total ?? 0,
+      currency: session.currency ?? "sgd",
+      sessionId: session.id,
+      paymentIntentId,
+      route: routeLabel,
+      timing: timingLabel,
+      customerEmailSent,
+      packGenerated,
+      autofulfillEnabled,
+      fulfilledAt,
+    });
+
+    const { error: internalError } = await resend.emails.send({
+      from: fromEmail,
+      to: supportEmail,
+      subject: internal.subject,
+      html: internal.html,
+      text: internal.text,
+    });
+    if (internalError) console.error("[webhook-voice] Internal notification failed");
+
+    console.log("[webhook-voice] Done. session.id:", session.id, "emailSent:", customerEmailSent);
+    return NextResponse.json({ received: true });
+  }
+
   if (settlemapProduct === "premium_relocation_pack") {
-    const autofulfillEnabled = process.env.PREMIUM_PACK_AUTOFULFILL_ENABLED !== "false";
+    const autofulfillEnabled = process.env.PREMIUM_PACK_AUTOFULFILL_ENABLED === "true";
 
     const origin = piMeta.origin || null;
     const destination = piMeta.destination || null;

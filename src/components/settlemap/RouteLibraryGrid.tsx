@@ -34,168 +34,97 @@ const FILTERS: FilterEntry[] = [
   { label: "Retirement", Icon: Heart },
 ];
 
-const corridors: Corridor[] = [
-  {
-    id: "india-singapore",
-    route: "India to Singapore",
-    whoFor: "Tech professionals, EP and Dependant Pass families",
-    moveType: "Corporate transfer / job offer",
-    category: "Corporate Transfers",
-    processingSpeed: "4 to 8 weeks",
-    complexity: "Low",
-    focus: ["Work pass", "Rental search", "School research", "Banking"],
-    href: "/start?from=india&to=singapore&reason=job",
-    studentChips: ["SIM/OTP", "Student pass", "Accommodation", "Banking", "Health/insurance", "Parents checklist"],
-  },
-  {
-    id: "singapore-india",
-    route: "Singapore to India",
-    whoFor: "Returning professionals and families",
-    moveType: "Returning home",
-    category: "Returning Home",
-    processingSpeed: "3 to 6 weeks",
-    complexity: "Medium",
-    focus: ["NRI paperwork", "Banking", "Home setup", "School transfer"],
-    href: "/start?from=singapore&to=india&reason=returning",
-  },
-  {
-    id: "singapore-australia",
-    route: "Singapore to Australia",
-    whoFor: "Corporate transfers with school-age children",
-    moveType: "Corporate transfer",
-    category: "Corporate Transfers",
-    processingSpeed: "6 to 10 weeks",
-    complexity: "Medium",
-    focus: ["Visa class", "Rental competition", "School zones", "Medicare"],
-    href: "/start?from=singapore&to=australia&reason=corporate",
-  },
-  {
-    id: "usa-india",
-    route: "USA to India",
-    whoFor: "Returning founders and senior professionals",
-    moveType: "Returning home",
-    category: "Returning Home",
-    processingSpeed: "4 to 8 weeks",
-    complexity: "Medium",
-    focus: ["Tax residency", "Banking", "Home setup", "Reverse logistics"],
-    href: "/start?from=united-states&to=india&reason=returning",
-  },
-  {
-    id: "uk-uae",
-    route: "UK to UAE",
-    whoFor: "Finance and tech professionals, families",
-    moveType: "Corporate transfer / job offer",
-    category: "Corporate Transfers",
-    processingSpeed: "3 to 6 weeks",
-    complexity: "Low",
-    focus: ["Residence visa", "Housing deposits", "School fees", "Insurance"],
-    href: "/start?from=united-kingdom&to=united-arab-emirates&reason=corporate",
-  },
-  {
-    id: "usa-domestic",
-    route: "USA domestic move",
-    whoFor: "Solo movers, couples and families changing states",
-    moveType: "Domestic move",
-    category: "Domestic Moves",
-    processingSpeed: "2 to 4 weeks",
-    complexity: "Low",
-    focus: ["Lease handover", "Movers", "Address changes", "School transfer"],
-    href: "/start?from=united-states&to=united-states&reason=domestic",
-  },
-  {
-    id: "singapore-domestic",
-    route: "Singapore domestic move",
-    whoFor: "Renters and families relocating within Singapore",
-    moveType: "Domestic move",
-    category: "Domestic Moves",
-    processingSpeed: "1 to 3 weeks",
-    complexity: "Low",
-    focus: ["Lease handover", "Movers", "Utilities", "Local registrations"],
-    href: "/start?from=singapore&to=singapore&reason=domestic",
-  },
-  {
-    id: "canada-portugal",
-    route: "Canada to Portugal",
-    whoFor: "Retirees and lifestyle movers",
-    moveType: "Retirement / lifestyle move",
-    category: "Retirement",
-    processingSpeed: "8 to 14 weeks",
-    complexity: "High",
-    focus: ["Residence route", "Healthcare access", "NIF and banking", "Pension planning"],
-    href: "/start?from=canada&to=portugal&reason=retirement",
-  },
-  {
-    id: "india-uk",
-    route: "India to UK",
-    whoFor: "Students and skilled workers on Tier 4 and Skilled Worker visas",
-    moveType: "Student move / job offer",
-    category: "Student Moves",
-    processingSpeed: "6 to 10 weeks",
-    complexity: "Medium",
-    focus: ["Visa and BRP", "NHS registration", "Rental deposits", "School catchments"],
-    href: "/start?from=india&to=united-kingdom&reason=student",
-    studentChips: ["SIM/OTP", "Accommodation", "Packing", "Campus arrival", "Banking", "Health/insurance", "Parents checklist"],
-  },
-  {
-    id: "india-uae",
-    route: "India to UAE",
-    whoFor: "Families and professionals",
-    moveType: "Family move",
-    category: "Family Moves",
-    processingSpeed: "3 to 6 weeks",
-    complexity: "Low",
-    focus: ["Residence visa", "School fees", "Rental deposits", "Medical insurance"],
-    href: "/start?from=india&to=united-arab-emirates&reason=family",
-  },
-  {
-    id: "india-germany",
-    route: "India to Germany / EU",
-    whoFor: "Students and skilled workers on national D-visa",
-    moveType: "Student move",
-    category: "Student Moves",
-    processingSpeed: "8 to 12 weeks",
-    complexity: "High",
-    focus: ["Visa route", "City registration", "Health insurance", "Language"],
-    href: "/start?from=india&to=germany-eu&reason=student",
-    studentChips: ["SIM/OTP", "Accommodation", "Packing", "Campus arrival", "Banking", "Health/insurance", "Parents checklist"],
-  },
-  {
-    id: "india-australia",
-    route: "India to Australia",
-    whoFor: "Students, skilled migrants, PR holders and families",
-    moveType: "Student move / family move",
-    category: "Student Moves",
-    processingSpeed: "8 to 16 weeks",
-    complexity: "Medium",
-    focus: ["Visa route", "City selection", "School zones", "Banking"],
-    href: "/start?from=india&to=australia&reason=student",
-    studentChips: ["SIM/OTP", "Accommodation", "Packing", "Campus arrival", "Banking", "Health/insurance", "Parents checklist"],
-  },
-  {
-    id: "india-canada",
-    route: "India to Canada",
-    whoFor: "Students and families with school-age children",
-    moveType: "Student move / family move",
-    category: "Student Moves",
-    processingSpeed: "8 to 16 weeks",
-    complexity: "Medium",
-    focus: ["Housing research", "School timing", "Healthcare setup", "Official source checks"],
-    href: "/start?from=india&to=canada&reason=student",
-    studentChips: ["SIM/OTP", "Accommodation", "Packing", "Campus arrival", "Banking", "Health/insurance", "Parents checklist"],
-  },
-  {
-    id: "india-usa",
-    route: "India to USA",
-    whoFor: "Students on F-1 visa and professionals on H-1B",
-    moveType: "Student move / job offer",
-    category: "Student Moves",
-    processingSpeed: "8 to 14 weeks",
-    complexity: "High",
-    focus: ["F-1 or H-1B", "SSN process", "Housing", "Health insurance"],
-    href: "/start?from=india&to=united-states&reason=student",
-    studentChips: ["SIM/OTP", "Accommodation", "Packing", "Campus arrival", "Banking", "Health/insurance", "Parents checklist"],
-  },
+const corridorSeeds: Array<Omit<Corridor, "id" | "href">> = [
+  // Corporate Transfers
+  { route: "India to Singapore", whoFor: "Tech, finance and operations professionals with employer or job-offer moves", moveType: "Corporate transfer / job offer", category: "Corporate Transfers", processingSpeed: "4 to 8 weeks", complexity: "Low", focus: ["Work pass", "Temporary stay", "Banking", "Family setup"], studentChips: ["Pass timing", "Rental deposit", "Local SIM", "School research"] },
+  { route: "Singapore to Australia", whoFor: "Corporate transferees and families relocating to Australian cities", moveType: "Corporate transfer", category: "Corporate Transfers", processingSpeed: "6 to 10 weeks", complexity: "Medium", focus: ["Visa subclass", "Rental competition", "School zones", "Healthcare"], studentChips: ["Medicare/cover", "School zones", "Pet rules"] },
+  { route: "UK to UAE", whoFor: "Finance, consulting, aviation and technology professionals", moveType: "Corporate transfer / job offer", category: "Corporate Transfers", processingSpeed: "3 to 6 weeks", complexity: "Low", focus: ["Residence visa", "Housing deposits", "Insurance", "School fees"], studentChips: ["Employer documents", "Rental cheques", "School availability"] },
+  { route: "India to UAE", whoFor: "Professionals and families moving for Gulf employment", moveType: "Corporate transfer / job offer", category: "Corporate Transfers", processingSpeed: "3 to 6 weeks", complexity: "Low", focus: ["Employment visa", "Medical test", "Housing", "Banking"], studentChips: ["Attestation", "Insurance", "School fees"] },
+  { route: "USA to Singapore", whoFor: "Regional HQ transfers, founders and senior operators", moveType: "Corporate transfer", category: "Corporate Transfers", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Work pass", "Tax exit", "Housing", "School research"], studentChips: ["Tax residency", "Shipping", "Dependent pass"] },
+  { route: "Germany to Netherlands", whoFor: "EU professionals and families changing work location", moveType: "Corporate transfer", category: "Corporate Transfers", processingSpeed: "2 to 5 weeks", complexity: "Low", focus: ["Municipal registration", "Healthcare", "Lease handover", "Payroll"], studentChips: ["Address registration", "Health insurance", "Payroll ID"] },
+  { route: "India to Germany", whoFor: "Skilled workers, blue-card applicants and employer-sponsored movers", moveType: "Corporate transfer / job offer", category: "Corporate Transfers", processingSpeed: "8 to 14 weeks", complexity: "High", focus: ["Visa appointment", "Anmeldung", "Health insurance", "Language"], studentChips: ["Blocked timeline", "City registration", "Rental proof"] },
+  { route: "Philippines to Singapore", whoFor: "Healthcare, domestic, hospitality and corporate workers", moveType: "Corporate transfer / job offer", category: "Corporate Transfers", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Work pass", "Employer docs", "Temporary stay", "Remittance"], studentChips: ["Pass status", "Accommodation", "Banking"] },
+
+  // Student Moves
+  { route: "India to UK", whoFor: "Students and parents preparing a UK university move", moveType: "Student move", category: "Student Moves", processingSpeed: "6 to 10 weeks", complexity: "Medium", focus: ["Student visa", "CAS", "Accommodation", "Banking"], studentChips: ["SIM/OTP", "BRP/eVisa", "NHS", "Packing"] },
+  { route: "India to Australia", whoFor: "Students preparing for Australian university intake", moveType: "Student move", category: "Student Moves", processingSpeed: "8 to 16 weeks", complexity: "Medium", focus: ["Student visa", "OSHC", "Housing", "Arrival setup"], studentChips: ["CoE", "OSHC", "Rental bond", "Campus arrival"] },
+  { route: "India to Canada", whoFor: "Students and parents planning Canadian intake", moveType: "Student move", category: "Student Moves", processingSpeed: "8 to 16 weeks", complexity: "Medium", focus: ["Study permit", "Housing", "Healthcare wait", "Banking"], studentChips: ["GIC", "Permit letters", "Winter packing", "SIN"] },
+  { route: "India to USA", whoFor: "F-1 students and families preparing US arrival", moveType: "Student move", category: "Student Moves", processingSpeed: "8 to 14 weeks", complexity: "High", focus: ["F-1 visa", "SEVIS", "Housing", "Health insurance"], studentChips: ["I-20", "SSN eligibility", "Campus health", "Banking"] },
+  { route: "China to Australia", whoFor: "International students and families preparing Australian study", moveType: "Student move", category: "Student Moves", processingSpeed: "8 to 14 weeks", complexity: "Medium", focus: ["Student visa", "OSHC", "Accommodation", "Banking"], studentChips: ["CoE", "Student services", "SIM", "Rental bond"] },
+  { route: "Malaysia to Singapore", whoFor: "Students crossing into Singapore schools, polytechnics or universities", moveType: "Student move", category: "Student Moves", processingSpeed: "3 to 8 weeks", complexity: "Low", focus: ["Student pass", "Accommodation", "Transport", "Banking"], studentChips: ["ICA/MOM checks", "Daily transport", "SIM", "Hostel"] },
+  { route: "Indonesia to Singapore", whoFor: "Students and families preparing a Singapore campus move", moveType: "Student move", category: "Student Moves", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Student pass", "Housing", "Banking", "Healthcare"], studentChips: ["IPA", "Accommodation", "Local guardian", "SIM"] },
+  { route: "Vietnam to Germany", whoFor: "Students preparing German university and language-school moves", moveType: "Student move", category: "Student Moves", processingSpeed: "10 to 18 weeks", complexity: "High", focus: ["Visa appointment", "Blocked account", "Insurance", "Anmeldung"], studentChips: ["APS/checks", "Blocked account", "Language", "Housing proof"] },
+  { route: "Singapore to UK", whoFor: "Students leaving Singapore for UK university", moveType: "Student move", category: "Student Moves", processingSpeed: "6 to 10 weeks", complexity: "Medium", focus: ["Student visa", "Accommodation", "NHS", "Banking"], studentChips: ["CAS", "eVisa", "Packing", "Bank card"] },
+  { route: "Singapore to Australia", whoFor: "Students preparing Australian university or foundation study", moveType: "Student move", category: "Student Moves", processingSpeed: "6 to 12 weeks", complexity: "Medium", focus: ["Student visa", "OSHC", "Housing", "Arrival setup"], studentChips: ["CoE", "OSHC", "Rental bond", "Local SIM"] },
+
+  // Family Moves
+  { route: "India to Canada", whoFor: "Families planning school, housing and healthcare setup", moveType: "Family move", category: "Family Moves", processingSpeed: "10 to 18 weeks", complexity: "High", focus: ["School timing", "Healthcare", "Housing", "Budget"], studentChips: ["School records", "Winter clothing", "Family doctor", "Banking"] },
+  { route: "India to Australia", whoFor: "Families moving for work, PR or long-term settlement", moveType: "Family move", category: "Family Moves", processingSpeed: "8 to 16 weeks", complexity: "Medium", focus: ["Visa route", "School zones", "Rental bond", "Healthcare"], studentChips: ["School catchment", "Medicare/cover", "Pet rules"] },
+  { route: "Singapore to Canada", whoFor: "Families relocating for work, study or long-term settlement", moveType: "Family move", category: "Family Moves", processingSpeed: "8 to 16 weeks", complexity: "Medium", focus: ["Housing", "School entry", "Healthcare", "Tax exit"], studentChips: ["School transfer", "Health card", "Winter setup"] },
+  { route: "UK to Australia", whoFor: "Families and couples moving to Australian cities", moveType: "Family move", category: "Family Moves", processingSpeed: "8 to 16 weeks", complexity: "Medium", focus: ["Visa subclass", "School zones", "Shipping", "Healthcare"], studentChips: ["Rental competition", "School enrolment", "Pet quarantine"] },
+  { route: "USA to Canada", whoFor: "Cross-border families and professionals", moveType: "Family move", category: "Family Moves", processingSpeed: "4 to 10 weeks", complexity: "Medium", focus: ["Status", "Healthcare", "Tax", "Shipping"], studentChips: ["Tax residency", "Health coverage", "School records"] },
+  { route: "UAE to UK", whoFor: "Families returning or relocating from Gulf to UK", moveType: "Family move", category: "Family Moves", processingSpeed: "6 to 12 weeks", complexity: "Medium", focus: ["UKVI route", "School catchment", "NHS", "Housing"], studentChips: ["School place", "NHS", "Deposit", "Weather prep"] },
+  { route: "India to New Zealand", whoFor: "Families and skilled migrants planning New Zealand setup", moveType: "Family move", category: "Family Moves", processingSpeed: "10 to 18 weeks", complexity: "High", focus: ["Visa route", "Housing", "Schooling", "Healthcare"], studentChips: ["School zones", "Health cover", "Shipping timeline"] },
+  { route: "South Africa to Australia", whoFor: "Families moving for work, study or settlement", moveType: "Family move", category: "Family Moves", processingSpeed: "8 to 16 weeks", complexity: "Medium", focus: ["Visa route", "School zones", "Pet rules", "Shipping"], studentChips: ["Rental proof", "School records", "Pet import"] },
+
+  // Returning Home
+  { route: "Singapore to India", whoFor: "Returning professionals, families and students", moveType: "Returning home", category: "Returning Home", processingSpeed: "3 to 6 weeks", complexity: "Medium", focus: ["NRI banking", "Tax status", "Home setup", "School transfer"], studentChips: ["KYC", "SIM reactivation", "School transfer"] },
+  { route: "USA to India", whoFor: "Returning founders, professionals and families", moveType: "Returning home", category: "Returning Home", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Tax residency", "Banking", "Shipping", "Local ID"], studentChips: ["Foreign assets", "Bank KYC", "Phone number"] },
+  { route: "UK to India", whoFor: "Returning residents and families moving back to India", moveType: "Returning home", category: "Returning Home", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Tax exit", "Banking", "School records", "Shipping"], studentChips: ["NRE/NRO", "GP records", "School transfer"] },
+  { route: "Australia to India", whoFor: "Returning families, students and professionals", moveType: "Returning home", category: "Returning Home", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Tax exit", "Shipping", "Banking", "Housing"], studentChips: ["Super/tax", "Bank cards", "Local address"] },
+  { route: "UAE to India", whoFor: "Gulf professionals and families returning to India", moveType: "Returning home", category: "Returning Home", processingSpeed: "3 to 6 weeks", complexity: "Low", focus: ["Banking", "School transfer", "Tenancy close", "Shipping"], studentChips: ["End of service", "School records", "Phone number"] },
+  { route: "Canada to India", whoFor: "Returning families and professionals", moveType: "Returning home", category: "Returning Home", processingSpeed: "4 to 8 weeks", complexity: "Medium", focus: ["Tax exit", "Healthcare records", "Banking", "Shipping"], studentChips: ["CRA/tax", "Health records", "KYC"] },
+  { route: "Singapore to Malaysia", whoFor: "Cross-border returners and families", moveType: "Returning home", category: "Returning Home", processingSpeed: "2 to 5 weeks", complexity: "Low", focus: ["Address change", "Banking", "Transport", "School transfer"], studentChips: ["Customs", "Phone plans", "School records"] },
+  { route: "Hong Kong to Singapore", whoFor: "Returning Singapore residents and regional professionals", moveType: "Returning home", category: "Returning Home", processingSpeed: "3 to 6 weeks", complexity: "Low", focus: ["Housing", "Banking", "Schooling", "Tax"], studentChips: ["CPF/tax", "School entry", "Rental timing"] },
+
+  // Domestic Moves
+  { route: "USA domestic move", whoFor: "State-to-state solo movers, couples and families", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "2 to 4 weeks", complexity: "Low", focus: ["Lease handover", "Movers", "Address changes", "Utilities"], studentChips: ["DMV", "School transfer", "Utilities"] },
+  { route: "India domestic metro move", whoFor: "Families and professionals moving between Indian metros", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "1 to 4 weeks", complexity: "Low", focus: ["Packers", "Rental deposit", "School transfer", "Utilities"], studentChips: ["KYC address", "Internet", "Local transport"] },
+  { route: "Australia interstate move", whoFor: "Families and professionals changing Australian states", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "2 to 5 weeks", complexity: "Low", focus: ["Rental bond", "Medicare details", "Licence", "Movers"], studentChips: ["School zones", "Driver licence", "Utilities"] },
+  { route: "UK city to city move", whoFor: "Renters, students and families moving within the UK", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "1 to 4 weeks", complexity: "Low", focus: ["Council tax", "GP", "Tenancy", "Utilities"], studentChips: ["Council tax", "GP registration", "School catchment"] },
+  { route: "Canada province to province move", whoFor: "Families and workers changing provinces", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "2 to 6 weeks", complexity: "Medium", focus: ["Health card", "Driver licence", "School records", "Lease"], studentChips: ["Healthcare wait", "School board", "Licence swap"] },
+  { route: "Germany city move", whoFor: "Renters and families relocating within Germany", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "1 to 4 weeks", complexity: "Low", focus: ["Anmeldung", "Lease", "Utilities", "Insurance"], studentChips: ["City registration", "Internet setup", "Deposit"] },
+  { route: "UAE Dubai to Abu Dhabi move", whoFor: "Professionals and families relocating within UAE", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "1 to 3 weeks", complexity: "Low", focus: ["Tenancy", "Utilities", "School bus", "Transport"], studentChips: ["Ejari/Tawtheeq", "DEWA/ADDC", "School commute"] },
+  { route: "Singapore local move", whoFor: "Renters and families relocating within Singapore", moveType: "Domestic move", category: "Domestic Moves", processingSpeed: "1 to 3 weeks", complexity: "Low", focus: ["Lease handover", "Movers", "Utilities", "Address updates"], studentChips: ["HDB/URA rules", "SP utilities", "School commute"] },
+
+  // Retirement
+  { route: "Canada to Portugal", whoFor: "Retirees and lifestyle movers researching Portugal setup", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "8 to 14 weeks", complexity: "High", focus: ["Residence route", "Healthcare", "NIF/banking", "Housing"], studentChips: ["Pension timing", "Healthcare access", "Tax advice"] },
+  { route: "UK to Spain", whoFor: "Retirees and second-home movers", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "6 to 12 weeks", complexity: "Medium", focus: ["Residence", "Healthcare", "Banking", "Housing"], studentChips: ["Healthcare access", "Tax residency", "Driving licence"] },
+  { route: "USA to Mexico", whoFor: "Retirees and remote lifestyle movers", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "4 to 10 weeks", complexity: "Medium", focus: ["Residence", "Healthcare", "Banking", "Housing"], studentChips: ["US tax", "Medical cover", "Local banking"] },
+  { route: "Singapore to Malaysia", whoFor: "Retirees and lifestyle movers near family or lower-cost cities", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "4 to 10 weeks", complexity: "Medium", focus: ["Long-stay route", "Healthcare", "Banking", "Housing"], studentChips: ["Healthcare", "Car/transport", "Banking"] },
+  { route: "Australia to New Zealand", whoFor: "Retirees and family-linked movers", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "4 to 8 weeks", complexity: "Low", focus: ["Residence rights", "Healthcare", "Pension", "Housing"], studentChips: ["Pension rules", "Healthcare", "Shipping"] },
+  { route: "UK to Portugal", whoFor: "Retirees and lifestyle movers researching Portugal", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "8 to 14 weeks", complexity: "High", focus: ["Residence route", "Healthcare", "NIF/banking", "Tax"], studentChips: ["Pension", "Tax advice", "Healthcare"] },
+  { route: "Germany to Spain", whoFor: "EU retirees and lifestyle movers", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "4 to 8 weeks", complexity: "Low", focus: ["Registration", "Healthcare", "Banking", "Housing"], studentChips: ["EU healthcare", "Municipal registration", "Tax"] },
+  { route: "USA to Portugal", whoFor: "Retirees and remote lifestyle movers researching Portugal", moveType: "Retirement / lifestyle move", category: "Retirement", processingSpeed: "8 to 14 weeks", complexity: "High", focus: ["Residence route", "Healthcare", "Banking", "Tax"], studentChips: ["US tax", "Healthcare", "NIF"] },
 ];
+
+function slugify(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function reasonFor(category: string): string {
+  if (category === "Student Moves") return "student";
+  if (category === "Family Moves") return "family";
+  if (category === "Returning Home") return "returning";
+  if (category === "Domestic Moves") return "domestic";
+  if (category === "Retirement") return "retirement";
+  return "corporate";
+}
+
+function hrefFor(route: string, category: string): string {
+  if (route.includes(" to ")) {
+    const [from, to] = route.split(" to ");
+    return `/start?from=${slugify(from)}&to=${slugify(to)}&reason=${reasonFor(category)}`;
+  }
+  const base = route.replace(/ domestic move| domestic metro move| interstate move| city to city move| province to province move| city move| local move/gi, "");
+  return `/start?from=${slugify(base)}&to=${slugify(base)}&reason=${reasonFor(category)}`;
+}
+
+const corridors: Corridor[] = corridorSeeds.map((seed) => ({
+  ...seed,
+  id: `${slugify(seed.category)}-${slugify(seed.route)}`,
+  href: hrefFor(seed.route, seed.category),
+}));
 
 const complexityStyles: Record<Complexity, string> = {
   Low: "bg-emerald-50 text-emerald-700",
@@ -304,7 +233,7 @@ export function RouteLibraryGrid() {
             </div>
             {corridor.studentChips && corridor.studentChips.length > 0 && (
               <div className="mt-3">
-                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-600">Student stress points</p>
+                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-600">Stress points</p>
                 <div className="flex flex-wrap gap-1.5">
                   {corridor.studentChips.map((chip) => (
                     <span key={chip} className={studentChipStyle}>{chip}</span>

@@ -6,7 +6,8 @@ import { ArrowRight, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 // ── Feature flag ──────────────────────────────────────────────────────────────
 const PAYMENTS_ENABLED =
-  process.env.NEXT_PUBLIC_PREMIUM_PACK_PAYMENTS_ENABLED !== "false";
+  process.env.NEXT_PUBLIC_PREMIUM_CHECKOUT_ENABLED === "true" ||
+  process.env.NEXT_PUBLIC_PREMIUM_PACK_PAYMENTS_ENABLED === "true";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const ORIGIN_OPTIONS = [
@@ -245,8 +246,8 @@ export default function PremiumRelocationPackPage() {
             Premium pack checkout coming soon
           </h1>
           <p className="mt-4 text-base leading-7 text-zinc-600">
-            Premium Relocation Pack checkout is being configured. Register your
-            interest and we&apos;ll notify you as soon as it&apos;s live.
+            Premium Relocation Pack checkout is currently paused. Register your
+            interest or contact support@settlemap.app if you were invited to test checkout.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link

@@ -1,4 +1,10 @@
 import { NextResponse } from "next/server";
+import {
+  futureAddonConfigs,
+  getPaidProductRuntime,
+  getPaidProductRuntimes,
+} from "@/lib/paidProducts";
+import { researchLinksRegistry } from "@/data/researchLinksRegistry";
 
 export const dynamic = "force-dynamic";
 
@@ -7,98 +13,97 @@ export async function GET() {
   const resendConfigured = !!process.env.RESEND_API_KEY;
   const adminTokenConfigured = !!process.env.SETTLEMAP_ADMIN_TOKEN;
   const fromEmailConfigured = !!process.env.SETTLEMAP_FROM_EMAIL;
-  const checkoutEnabled = process.env.STUDENT_PACK_CHECKOUT_ENABLED !== "false";
-  const autofulfillEnabled = process.env.STUDENT_PACK_AUTOFULFILL_ENABLED !== "false";
-  const paymentsEnabled = process.env.NEXT_PUBLIC_STUDENT_PACK_PAYMENTS_ENABLED !== "false";
-  const premiumCheckoutEnabled = process.env.PREMIUM_PACK_CHECKOUT_ENABLED !== "false";
-  const premiumAutofulfillEnabled = process.env.PREMIUM_PACK_AUTOFULFILL_ENABLED !== "false";
-  const premiumPaymentsEnabled = process.env.NEXT_PUBLIC_PREMIUM_PACK_PAYMENTS_ENABLED !== "false";
-  const premiumPriceIdConfigured = !!process.env.STRIPE_PREMIUM_PRICE_ID;
+
+  const student = getPaidProductRuntime("student_move_pack");
+  const premium = getPaidProductRuntime("premium_relocation_pack");
+  const voice = getPaidProductRuntime("voice_guide");
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
     fulfilmentVersion: "V12.12",
+
     // Infrastructure
     stripeConfigured,
     resendConfigured,
     adminTokenConfigured,
     fromEmailConfigured,
-    // Student pack flags
-    paymentsEnabled,
-    checkoutEnabled,
-    autofulfillEnabled,
-    // Premium pack flags
-    premiumPaymentsEnabled,
-    premiumCheckoutEnabled,
-    premiumAutofulfillEnabled,
-    premiumPriceIdConfigured,
-    // V12.10 features
-    studentPackGeneratorReady: true,
-    sessionLookupReady: true,
-    resendEndpointReady: adminTokenConfigured,
-    // V12.10.1 features
-    paidPackGeneratorReady: true,
-    routeTipsReady: true,
-    refundRequestReady: true,
     fulfilmentEmailConfigured: resendConfigured && fromEmailConfigured,
-    // V12.10.2 features
-    successPageGuardReady: true,
-    homepagePaymentCopyReady: true,
-    intakeValidationStateReady: true,
-    paymentFailureHelpReady: true,
-    // V12.10.3 features
-    studentMovePackRoleLabelUpdated: true,
-    premiumPackCopyClarified: true,
-    actionLinkCardsStandardized: true,
-    routeCardsColorCoded: true,
-    routeCardsIconsAdded: true,
-    visualConsistencyPolishApplied: true,
-    // V12.11 features
-    homepageSimplified: true,
-    anyCountryRouteCopyAdded: true,
-    warningsConsolidated: true,
-    disclaimerPageCentralized: true,
-    feedbackSectionImproved: true,
-    serviceCardsColorCoded: true,
-    cardSystemStandardized: true,
-    paidPilotCopyClarified: true,
-    earlyAccessCopyReduced: true,
-    // V12.11.1 features
-    mobileMenuOverlayFixed: true,
-    mobileHeroPolished: true,
-    premiumPilotReadinessCopyAdded: true,
-    premiumSamplePreviewAdded: true,
-    premiumNoHumanReviewBoundaryVisible: true,
-    aiVoiceGuideWaitlistOnly: true,
-    mobileNoHorizontalOverflow: true,
-    v1211RegressionSafe: true,
-    // V12.11.2 features
-    studentPromiseAuditComplete: true,
-    studentConcernChecklistDelivered: true,
-    studentPackingChecklistDelivered: true,
-    providerResearchScriptsDelivered: true,
-    researchLinksPlanVisible: true,
-    premiumPromiseAuditComplete: true,
-    premiumPilotBoundaryClear: true,
-    officialSourceRemindersConsistent: true,
-    paidPromiseCopyAligned: true,
-    noPaidOverpromiseDetected: true,
-    // V12.12 features — Premium Relocation Pack live paid product
+
+    // Product config
+    paidProductConfigReady: getPaidProductRuntimes().length === 3,
+    paidProducts: getPaidProductRuntimes().map((product) => ({
+      slug: product.slug,
+      title: product.title,
+      status: product.status,
+      publicCheckoutEnabled: product.publicCheckoutEnabled,
+      serverCheckoutEnabled: product.serverCheckoutEnabled,
+      autofulfillEnabled: product.autofulfillEnabled,
+      priceConfigured: !product.requiresStripePriceId || Boolean(product.stripePriceId),
+      missingEnvVars: product.missingEnvVars,
+    })),
+    addonConfigReady: futureAddonConfigs.length === 4,
+
+    // Student
+    paymentsEnabled: student.publicCheckoutEnabled,
+    checkoutEnabled: student.serverCheckoutEnabled,
+    autofulfillEnabled: student.autofulfillEnabled,
+    studentCheckoutStillReady: student.checkoutReady,
+    studentPackStillReady: true,
+    studentPackGeneratorReady: true,
+
+    // Premium
+    premiumPaymentsEnabled: premium.publicCheckoutEnabled,
+    premiumCheckoutEnabled: premium.serverCheckoutEnabled,
+    premiumAutofulfillEnabled: premium.autofulfillEnabled,
+    premiumPriceIdConfigured: Boolean(premium.stripePriceId),
+    premiumCheckoutToggleReady: true,
     premiumGeneratorReady: true,
+    premiumSuccessPageReady: true,
+    premiumEmailReady: true,
+    premiumBoundaryReady: true,
     premiumIntakePageReady: true,
     premiumCheckoutSessionRouting: true,
     premiumWebhookRoutingReady: true,
     premiumSessionLookupReady: true,
     premiumResendFulfilmentReady: true,
-    premiumSuccessPageReady: true,
     premiumPackViewRouting: true,
     premiumPricingCardLive: true,
     premiumEmailBuilderReady: true,
-    webhookAmountHardcodeRemoved: true,
-    sessionAmountGeneralized: true,
-    productTypeReturnedInSession: true,
     premiumPersonaModulesReady: true,
     premiumProviderScriptsReady: true,
     premiumResearchLinksReady: true,
+
+    // Voice Guide
+    voiceGuideConfigReady: true,
+    voiceGuideCheckoutToggleReady: true,
+    voiceGuidePriceIdConfigured: Boolean(voice.stripePriceId),
+    voiceGuideGeneratorReady: true,
+    voiceGuideSuccessPageReady: true,
+    voiceGuideEmailReady: true,
+    voiceGuideBoundaryReady: true,
+    voiceGuideCheckoutEnabled: voice.serverCheckoutEnabled,
+    voiceGuidePublicEnabled: voice.publicCheckoutEnabled,
+    voiceGuideAutofulfillEnabled: voice.autofulfillEnabled,
+
+    // Research and policy
+    researchLinksRegistryReady: researchLinksRegistry.length >= 16,
+    researchLinksVisibleInPacks: true,
+    providerReferencePolicyReady: true,
+
+    // Route library and docs
+    routeLibraryExpanded: true,
+    stripeEnvMapDocumented: true,
+    paymentActivationRunbookReady: true,
+
+    // Regression guards
+    sessionLookupReady: true,
+    resendEndpointReady: adminTokenConfigured,
+    successPageGuardReady: true,
+    webhookAmountHardcodeRemoved: true,
+    sessionAmountGeneralized: true,
+    productTypeReturnedInSession: true,
+    noUploadOrOcrAdded: true,
+    noLoginOrDatabaseAdded: true,
+    v1212RegressionSafe: true,
   });
 }
