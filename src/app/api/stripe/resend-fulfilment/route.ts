@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         settlemap_last_resend_at: now,
         settlemap_resend_count: String(resendCount),
-        settlemap_fulfilment_version: "V12.12",
+        settlemap_fulfilment_version: "V12.12.2",
       },
     });
   } catch (err) {

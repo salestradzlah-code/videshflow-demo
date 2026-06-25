@@ -28,8 +28,11 @@ function booleanField(body: Record<string, unknown>, key: string): boolean {
   return body[key] === true;
 }
 
-function productSlug(body: Record<string, unknown>): PaidProductSlug {
+function productSlug(body: Record<string, unknown>): PaidProductSlug | null {
   const value = body.productType;
+  if (value === undefined || value === null || value === "") {
+    return "student_move_pack";
+  }
   if (
     value === "premium_relocation_pack" ||
     value === "voice_guide" ||
@@ -38,7 +41,7 @@ function productSlug(body: Record<string, unknown>): PaidProductSlug {
     return value;
   }
 
-  return "student_move_pack";
+  return null;
 }
 
 function missingFields(fields: Record<string, boolean>): string[] {
@@ -89,6 +92,9 @@ export async function POST(request: NextRequest) {
   }
 
   const slug = productSlug(body);
+  if (!slug) {
+    return NextResponse.json({ error: "Invalid product type." }, { status: 400 });
+  }
   const runtime = getPaidProductRuntime(slug);
 
   if (!runtime.checkoutReady) {
@@ -166,7 +172,7 @@ export async function POST(request: NextRequest) {
           timing_month: timingMonth,
           modules,
           concerns,
-          fulfilment_version: "V12.12",
+          fulfilment_version: "V12.12.2",
         }),
       });
 
@@ -240,7 +246,7 @@ export async function POST(request: NextRequest) {
           who_is_moving: whoIsMoving,
           timing_month: timingMonth,
           concerns,
-          fulfilment_version: "V12.12",
+          fulfilment_version: "V12.12.2",
         }),
       });
 
@@ -318,7 +324,7 @@ export async function POST(request: NextRequest) {
           other_route: moveRoute === "Other route" ? otherRoute : "",
           departure_month: departureMonth,
           concerns,
-          fulfilment_version: "V12.12",
+          fulfilment_version: "V12.12.2",
         }),
       },
       success_url: `${baseUrl()}/payment-success?session_id={CHECKOUT_SESSION_ID}`,

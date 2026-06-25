@@ -9,6 +9,8 @@ const GEMINI_MODELS = [
 ];
 
 const REQUIRED_REMINDER = "Verify official requirements with official sources.";
+const AI_PILOT_BOUNDARY_COPY =
+  "This AI pilot provides checklist-style planning support only. Verify important details with official sources.";
 const REGULATED_REFUSAL =
   "I can help organise your checklist, but I cannot give professional advice. Please verify with official sources or a qualified professional.";
 const FALLBACK_PREFIX =
@@ -21,6 +23,8 @@ const REGULATED_ADVICE_PATTERN =
   /\b(guarantee[sd]?|will (i|we) (definitely |surely )?(get|be|receive) (approved|accepted|granted)|which visa (should|do|can|would) (i|we)\b|(legal|immigration|tax|financial|insurance|medical|property|school admission) (advice|guidance|opinion|interpretation|recommendation|strategy|eligibility)|am i( actually)? eligible|are (we|i) eligible|should (i|we) (apply for|choose|pick) (which |what )?(visa|permit)|interpret(ing)? (the |an? )?(law|rule|regulation)|will (my|our) (application|visa|case) (be )?approved|diagnos(e|is|ed)\b)/i;
 
 const SYSTEM_PROMPT = `You are the SettleMap AI planning assistant, a limited relocation planning pilot.
+
+Boundary copy: ${AI_PILOT_BOUNDARY_COPY}
 
 Your role is strictly limited to neutral, self-serve planning support. Help users organise relocation tasks, dependencies, document-readiness checklists, service-research categories, questions to ask, packing preparation, and first-week setup.
 
@@ -128,7 +132,7 @@ function buildFallbackAnswer(message: string, context: ChatContext): string {
   const orig = context.origin || "your origin";
   const reason = context.moveReason || "relocation";
   const who = context.whoIsMoving || "you";
-  const header = FALLBACK_PREFIX + "\n\nRoute: " + orig + " to " + dest + " | " + reason + " | " + who + ".\n\n";
+  const header = AI_PILOT_BOUNDARY_COPY + "\n\n" + FALLBACK_PREFIX + "\n\nRoute: " + orig + " to " + dest + " | " + reason + " | " + who + ".\n\n";
   const lower = message.toLowerCase();
 
   if (/\b(7 days?|seven day|first week|first 7|arrival|day one|day 1|after i land)\b/.test(lower)) {

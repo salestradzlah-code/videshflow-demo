@@ -1,4 +1,4 @@
-# SettleMap Vercel Environment Variables — V12.12
+# SettleMap Vercel Environment Variables - V12.12.2
 
 Do not delete existing production variables in this release. Old names are supported where safe so production does not break.
 
@@ -72,4 +72,4 @@ If `STRIPE_VOICE_GUIDE_PRICE_ID` is missing, the site does not break. It shows a
 |---|---|
 | `NEXT_PUBLIC_GEMINI_API_KEY` | Do not add. Gemini key must remain server-side only. |
 | `GEMINI_API_KEY` | Server-side only for `/api/chat`. |
-| Upload/OCR/login/database envs | None required in V12.12. |
+| Upload/OCR/login/database envs | None required in V12.12.2. |

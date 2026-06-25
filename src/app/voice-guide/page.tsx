@@ -145,7 +145,7 @@ export default function VoiceGuidePage() {
           </div>
           <h1 className="mt-6 text-2xl font-semibold tracking-tight text-zinc-900">Voice Guide checkout currently paused</h1>
           <p className="mt-4 text-base leading-7 text-zinc-600">
-            SettleMap Voice Guide is ready in the code but checkout is controlled by launch switches. Join the waitlist or contact support if you were invited to test.
+            SettleMap Voice Guide checkout is currently paused. Join the waitlist or contact support if you need help.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link href="/early-access" className="inline-flex items-center rounded-full bg-teal-700 px-6 py-3 text-sm font-semibold text-white hover:bg-teal-800">

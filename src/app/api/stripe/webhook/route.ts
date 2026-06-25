@@ -76,7 +76,7 @@ function buildInternalEmail(params: {
 
   const html = `<div style="font-family:system-ui,sans-serif;padding:24px;max-width:600px;">
 <h2 style="color:${accentColor};margin:0 0 8px 0;">New ${productLabel} Payment</h2>
-<p style="color:#71717a;font-size:13px;margin:0 0 20px 0;">SettleMap · V12.12 Automated Fulfilment</p>
+<p style="color:#71717a;font-size:13px;margin:0 0 20px 0;">SettleMap · V12.12.2 Automated Fulfilment</p>
 <table style="width:100%;border-collapse:collapse;">${tableRows}</table>
 ${actionNote}
 </div>`;
@@ -249,7 +249,7 @@ export async function POST(request: NextRequest) {
           settlemap_product: "voice_guide",
           settlemap_fulfilled_at: fulfilledAt,
           settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
-          settlemap_fulfilment_version: "V12.12",
+          settlemap_fulfilment_version: "V12.12.2",
           buyer_name: buyerName ?? "",
           origin: origin ?? "",
           destination: destination ?? "",
@@ -340,7 +340,7 @@ export async function POST(request: NextRequest) {
           settlemap_product: "premium_relocation_pack",
           settlemap_fulfilled_at: fulfilledAt,
           settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
-          settlemap_fulfilment_version: "V12.12",
+          settlemap_fulfilment_version: "V12.12.2",
           buyer_name: buyerName ?? "",
           origin: origin ?? "",
           destination: destination ?? "",
@@ -409,13 +409,13 @@ export async function POST(request: NextRequest) {
         settlemap_product: "student_move_pack",
         settlemap_fulfilled_at: fulfilledAt,
         settlemap_fulfilment_email_sent: customerEmailSent ? "true" : "false",
-        settlemap_fulfilment_version: "V12.12",
+        settlemap_fulfilment_version: "V12.12.2",
         buyer_name: buyerName ?? "",
         buyer_role: buyerRole ?? "",
         move_route: moveRoute ?? "",
         departure_month: departureMonth ?? "",
         concerns: concerns ?? "",
-        fulfilment_version: "V12.12",
+        fulfilment_version: "V12.12.2",
       },
     });
   } catch (err) {

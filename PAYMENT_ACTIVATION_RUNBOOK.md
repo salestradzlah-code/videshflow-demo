@@ -1,20 +1,53 @@
-# SettleMap Payment Activation Runbook — V12.12
+# SettleMap Payment Activation Runbook - V12.12.2
 
-This runbook lets Ash activate or pause Student, Premium and Voice Guide without code changes.
+This runbook lets Ash activate or pause Student, Premium Relocation Pack and SettleMap Voice Guide without code changes.
 
-Do not enable billing changes, archive Stripe products, rename the repository, rename the Vercel project, change DNS, or expose secrets as public env variables.
+Do not enable billing changes, archive Stripe products, rename the repository, rename the Vercel project, change DNS, or expose secrets as public environment variables.
+
+## V12.12.2 quick controls
+
+V12.12.2 adds security headers, activation health flags and quick helper scripts for Premium and Voice Guide.
+
+To activate Premium and Voice Guide:
+
+```bat
+activate-premium-and-voice-v12-12-2.bat
+redeploy-v12-12-2.bat
+health-check-v12-12-2.bat
+```
+
+To pause Premium and Voice Guide:
+
+```bat
+pause-premium-and-voice-v12-12-2.bat
+redeploy-v12-12-2.bat
+health-check-v12-12-2.bat
+```
+
+The activation and pause scripts only update Premium and Voice Guide booleans. They do not change Stripe price IDs, Stripe secrets, Gemini keys, DNS, billing or add-on flags. Add-ons remain prepared only until a safe bundled checkout flow exists.
+
+Security headers added in V12.12.2:
+
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- Restrictive `Permissions-Policy`
+- `X-Frame-Options: SAMEORIGIN`
+- HTTPS `Strict-Transport-Security`
+- CSP in `Content-Security-Policy-Report-Only` mode first, so Stripe checkout, Vercel assets, fonts and current images are not accidentally blocked during launch.
 
 ## General deployment steps
 
 1. Update the relevant Vercel environment variables.
-2. Redeploy Production after any env variable change.
-3. Run `health-check-v12-12.bat`.
+2. Redeploy Production after any environment variable change.
+3. Run `health-check-v12-12-2.bat`.
 4. Test checkout using the product page.
 5. Confirm `/payment-success?session_id=...` renders the correct product.
 6. Confirm fulfilment email goes to the checkout email if autofulfilment is enabled.
 7. If anything looks wrong, set the public and server checkout flags back to `false` and redeploy.
 
 ## Activate Student Move Pack
+
+Student remains active and unaffected by the Premium/Voice activation scripts.
 
 Set:
 
@@ -59,7 +92,7 @@ Premium current Stripe Price ID:
 price_1Tm7fSCRU6atVrqjWwxa3j68
 ```
 
-Set:
+Required variables:
 
 ```text
 STRIPE_PREMIUM_RELOCATION_PACK_PRICE_ID=price_1Tm7fSCRU6atVrqjWwxa3j68
@@ -70,7 +103,13 @@ PREMIUM_PACK_CHECKOUT_ENABLED=true
 PREMIUM_PACK_AUTOFULFILL_ENABLED=true
 ```
 
-Redeploy Production.
+Shortcut:
+
+```bat
+activate-premium-and-voice-v12-12-2.bat
+redeploy-v12-12-2.bat
+health-check-v12-12-2.bat
+```
 
 Test:
 
@@ -94,7 +133,15 @@ PREMIUM_PACK_CHECKOUT_ENABLED=false
 PREMIUM_PACK_AUTOFULFILL_ENABLED=false
 ```
 
-Redeploy Production. Premium remains visible but shows a safe waitlist/paused state.
+Shortcut:
+
+```bat
+pause-premium-and-voice-v12-12-2.bat
+redeploy-v12-12-2.bat
+health-check-v12-12-2.bat
+```
+
+Premium remains visible but shows a safe paused state.
 
 ## Activate SettleMap Voice Guide
 
@@ -104,7 +151,7 @@ Voice Guide current Stripe Price ID:
 price_1Tm8PNCRU6atVrqjYi3A3sAr
 ```
 
-Set:
+Required variables:
 
 ```text
 STRIPE_VOICE_GUIDE_PRICE_ID=price_1Tm8PNCRU6atVrqjYi3A3sAr
@@ -113,7 +160,13 @@ VOICE_GUIDE_CHECKOUT_ENABLED=true
 VOICE_GUIDE_AUTOFULFILL_ENABLED=true
 ```
 
-Redeploy Production.
+Shortcut:
+
+```bat
+activate-premium-and-voice-v12-12-2.bat
+redeploy-v12-12-2.bat
+health-check-v12-12-2.bat
+```
 
 Test:
 
@@ -136,7 +189,15 @@ VOICE_GUIDE_CHECKOUT_ENABLED=false
 VOICE_GUIDE_AUTOFULFILL_ENABLED=false
 ```
 
-Redeploy Production. Voice Guide remains visible but shows a safe paused/configuring state.
+Shortcut:
+
+```bat
+pause-premium-and-voice-v12-12-2.bat
+redeploy-v12-12-2.bat
+health-check-v12-12-2.bat
+```
+
+Voice Guide remains visible but shows a safe paused state.
 
 ## Add-ons
 
@@ -153,37 +214,51 @@ ADDONS_CHECKOUT_ENABLED=false
 ADDONS_AUTOFULFILL_ENABLED=false
 ```
 
-V12.12 shows add-ons as prepared modules only. Do not set `ADDONS_CHECKOUT_ENABLED=true` until bundled checkout and add-on fulfilment are implemented and tested. Premium already includes persona modules, so there is no need to activate standalone add-on checkout for this launch.
+V12.12.2 shows add-ons as prepared modules only. Do not set `ADDONS_CHECKOUT_ENABLED=true` until bundled checkout and add-on fulfilment are implemented and tested. Premium already includes persona modules, so there is no need to activate standalone add-on checkout for this launch.
 
-## Rollback quickly
+## Roll back quickly
 
 If checkout, success page or email has any issue:
 
-1. Set the affected product public checkout flag to `false`.
-2. Set the affected product server checkout flag to `false`.
-3. Set the affected product autofulfilment flag to `false`.
-4. Redeploy Production.
-5. Confirm `/pricing` shows paused/waitlist state.
-6. Confirm checkout API returns a safe paused/configuring error.
+1. Run `pause-premium-and-voice-v12-12-2.bat`.
+2. Run `redeploy-v12-12-2.bat`.
+3. Run `health-check-v12-12-2.bat`.
+4. Confirm `/pricing` shows paused state for Premium and Voice Guide.
+5. Confirm checkout API returns a safe paused/configuring error.
+
+For Student-specific issues, set the Student public/server/autofulfilment flags to `false` and redeploy.
 
 ## Health checks
 
 Run:
 
 ```bat
-health-check-v12-12.bat
+health-check-v12-12-2.bat
 ```
 
 Expected:
 
-- `fulfilmentVersion` is `V12.12`
+- `fulfilmentVersion` is `V12.12.2`
 - `paidProductConfigReady` is `true`
-- `studentCheckoutStillReady` reflects Student env flags
-- `premiumPriceIdConfigured` reflects Premium env
-- `voiceGuidePriceIdConfigured` reflects Voice Guide env
+- `studentCheckoutStillReady` reflects Student environment flags
+- `premiumPriceIdConfigured` reflects Premium environment variables
+- `voiceGuidePriceIdConfigured` reflects Voice Guide environment variables
+- `securityHeadersConfigured` is `true`
+- `stripeWebhookSignatureVerified` is `true`
+- `paymentSuccessSessionGuardReady` is `true`
+- `serverSideProductValidationReady` is `true`
+- `clientSecretExposureBlocked` is `true`
+- `aiAssistantSecurityChecked` is `true`
+- `aiAssistantFallbackReady` is `true`
+- `documentUploadStillDisabled` is `true`
+- `premiumActivationToggleReady` is `true`
+- `voiceGuideActivationToggleReady` is `true`
+- `premiumCanActivate` is `true` when Premium price IDs are configured
+- `voiceGuideCanActivate` is `true` when Voice Guide price ID is configured
+- `addonsStillSafelyOff` is `true`
 - `researchLinksRegistryReady` is `true`
 - `providerReferencePolicyReady` is `true`
-- `v1212RegressionSafe` is `true`
+- `v12122RegressionSafe` is `true`
 
 ## Safety boundaries to verify after activation
 

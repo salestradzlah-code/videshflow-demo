@@ -1,4 +1,4 @@
-# SettleMap Stripe Products — V12.12
+# SettleMap Stripe Products - V12.12.2
 
 Public product name: SettleMap by Tradzlah LLP.
 
@@ -77,7 +77,7 @@ Voice Guide is a written conversational guide and walkthrough. It does not promi
 
 ## Future add-ons
 
-These are config/runbook-ready only. Checkout is not activated in V12.12.
+These are config/runbook-ready only. Checkout is not activated in V12.12.2.
 
 | Add-on | Price | Preferred env var |
 |---|---:|---|
@@ -96,4 +96,4 @@ Server-side add-on switches are also documented for future bundled checkout:
 - `ADDONS_CHECKOUT_ENABLED`
 - `ADDONS_AUTOFULFILL_ENABLED`
 
-In V12.12, add-ons are visible as prepared modules only. Standalone or bundled add-on checkout is not exposed until a safe bundled purchase flow exists.
+In V12.12.2, add-ons are visible as prepared modules only. Standalone or bundled add-on checkout is not exposed until a safe bundled purchase flow exists.

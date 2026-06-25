@@ -15,16 +15,25 @@ export async function GET() {
   const resendConfigured = !!process.env.RESEND_API_KEY;
   const adminTokenConfigured = !!process.env.SETTLEMAP_ADMIN_TOKEN;
   const fromEmailConfigured = !!process.env.SETTLEMAP_FROM_EMAIL;
+  const clientSecretExposureBlocked =
+    !process.env.NEXT_PUBLIC_GEMINI_API_KEY &&
+    !process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY &&
+    !process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET &&
+    !process.env.NEXT_PUBLIC_RESEND_API_KEY;
 
   const student = getPaidProductRuntime("student_move_pack");
   const premium = getPaidProductRuntime("premium_relocation_pack");
   const voice = getPaidProductRuntime("voice_guide");
   const addonFlags = getAddonFlags();
   const addonRuntimes = getAddonRuntimes();
+  const addonsStillSafelyOff =
+    !addonFlags.publicAddonsEnabled &&
+    !addonFlags.checkoutEnabled &&
+    !addonFlags.autofulfillEnabled;
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12",
+    fulfilmentVersion: "V12.12.2",
 
     // Infrastructure
     stripeConfigured,
@@ -77,6 +86,8 @@ export async function GET() {
     premiumCheckoutEnabled: premium.serverCheckoutEnabled,
     premiumAutofulfillEnabled: premium.autofulfillEnabled,
     premiumPriceIdConfigured: Boolean(premium.stripePriceId),
+    premiumCanActivate: Boolean(premium.stripePriceId),
+    premiumActivationToggleReady: true,
     premiumCheckoutToggleReady: true,
     premiumGeneratorReady: true,
     premiumSuccessPageReady: true,
@@ -98,6 +109,8 @@ export async function GET() {
     voiceGuideConfigReady: true,
     voiceGuideCheckoutToggleReady: true,
     voiceGuidePriceIdConfigured: Boolean(voice.stripePriceId),
+    voiceGuideCanActivate: Boolean(voice.stripePriceId),
+    voiceGuideActivationToggleReady: true,
     voiceGuideGeneratorReady: true,
     voiceGuideSuccessPageReady: true,
     voiceGuideEmailReady: true,
@@ -116,6 +129,17 @@ export async function GET() {
     stripeEnvMapDocumented: true,
     paymentActivationRunbookReady: true,
 
+    // Security hardening
+    securityHeadersConfigured: true,
+    stripeWebhookSignatureVerified: true,
+    paymentSuccessSessionGuardReady: true,
+    serverSideProductValidationReady: true,
+    clientSecretExposureBlocked,
+    aiAssistantSecurityChecked: true,
+    aiAssistantFallbackReady: true,
+    documentUploadStillDisabled: true,
+    addonsStillSafelyOff,
+
     // Regression guards
     sessionLookupReady: true,
     resendEndpointReady: adminTokenConfigured,
@@ -126,5 +150,6 @@ export async function GET() {
     noUploadOrOcrAdded: true,
     noLoginOrDatabaseAdded: true,
     v1212RegressionSafe: true,
+    v12122RegressionSafe: true,
   });
 }

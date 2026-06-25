@@ -97,7 +97,7 @@ Current pilot:
 
 ## Paid product activation
 
-V12.12 supports environment-controlled paid products:
+V12.12.2 supports environment-controlled paid products:
 
 - Student Move Pack — S$19, existing active paid flow unless paused by Student env flags
 - Premium Relocation Pack — S$49, ready to activate with Premium Stripe Price ID and flags

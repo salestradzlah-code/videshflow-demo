@@ -2461,7 +2461,7 @@ function DocumentAuditor({ routeLabel, reasonKey, profileKey }: { routeLabel: st
       <div className="mt-6 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-zinc-50 p-6 text-center">
         <FileSearch className="h-8 w-8 text-emerald-600" />
         <span className="mt-3 text-sm font-semibold text-zinc-900">Review passport, visa, offer, school or rental document categories</span>
-        <span className="mt-1 text-xs text-zinc-500">Preview only. No files are uploaded, sent or stored.</span>
+        <span className="mt-1 text-xs text-zinc-500">Preview only. No files are uploaded, sent or stored in this version.</span>
       </div>
       <div className="mt-6 space-y-3">
         {visibleDocs.map((category) => (
@@ -2558,12 +2558,12 @@ function AiPlanningAssistant({
           <h2 className="text-2xl font-semibold">AI planning assistant</h2>
         </div>
       </div>
-      <p className="mt-4 text-sm leading-7 text-emerald-50">Ask checklist-style relocation planning questions based on your selected route. This pilot does not provide professional advice.</p>
+      <p className="mt-4 text-sm leading-7 text-emerald-50">Ask checklist-style relocation planning questions based on your selected route. This AI pilot provides checklist-style planning support only. Verify important details with official sources.</p>
       <div className="mt-6 rounded-xl bg-white/10 p-4">
         <div className="max-h-80 space-y-3 overflow-auto pr-1" aria-live="polite">
           {messages.length === 0 && (
             <div className="rounded-xl bg-white/10 p-3 text-sm leading-6 text-white/90">
-              This AI assistant provides checklist-style planning support. Always verify official requirements with official sources.
+              This AI pilot provides checklist-style planning support only. Verify important details with official sources.
             </div>
           )}
           {messages.map((message, index) => (

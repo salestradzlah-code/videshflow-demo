@@ -303,7 +303,7 @@ const reasonAddOns: Record<MoveReasonKey, TimelineTask[]> = {
       providerQuestions: ["What is the full list of documents needed for admission and any visa/pass application?", "What is the deadline for each document?", "Is there a waitlist or conditional-offer process?"],
       buttonLabel: "Open document folder",
       sourceType: "Research option",
-      aiAssistIdea: "Future AI assist could check off documents as you upload them and flag which ones are still missing.",
+      aiAssistIdea: "Future AI assist could help you check off documents as you mark them ready and flag which ones are still missing.",
     },
   ],
   family: [

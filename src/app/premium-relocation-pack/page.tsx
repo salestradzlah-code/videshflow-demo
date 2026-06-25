@@ -243,11 +243,11 @@ export default function PremiumRelocationPackPage() {
             <AlertCircle className="h-7 w-7 text-violet-600" />
           </div>
           <h1 className="mt-6 text-2xl font-semibold tracking-tight text-zinc-900">
-            Premium pack checkout coming soon
+            Premium pack checkout currently paused
           </h1>
           <p className="mt-4 text-base leading-7 text-zinc-600">
             Premium Relocation Pack checkout is currently paused. Register your
-            interest or contact support@settlemap.app if you were invited to test checkout.
+            interest or contact support@settlemap.app if you need help.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
