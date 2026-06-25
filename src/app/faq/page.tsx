@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "Is SettleMap free?",
-    a: "Yes, today. The route-aware project tracker is free to use during early access. Some future AI-generated plans and the Voice Guide are pilot-priced ideas only — payments are not active yet.",
+    a: "The route planner is free. The Student Move Pack is available as a S$19 early-access digital planning pack — pay securely via Stripe, no account needed. The Voice Guide is a future feature and is not available today.",
   },
   {
     q: "Is SettleMap a travel agency?",
@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     q: "Does SettleMap process payments?",
-    a: "Not yet. SettleMap is in early feedback mode. No payments are active today. Early-access users will be contacted before any payment is requested, and any future payments will be handled by Stripe — SettleMap will not store card details.",
+    a: "Yes. The Student Move Pack costs S$19 and is paid securely via Stripe — SettleMap does not store card details. The free route planner does not require payment.",
   },
   {
     q: "Can I use SettleMap for student moves?",

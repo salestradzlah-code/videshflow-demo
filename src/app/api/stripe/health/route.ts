@@ -20,7 +20,7 @@ export async function GET() {
     resendConfigured,
     adminTokenConfigured,
     fromEmailConfigured,
-    fulfilmentVersion: "V12.10.1",
+    fulfilmentVersion: "V12.10.2",
     // V12.10 features
     studentPackGeneratorReady: true,
     sessionLookupReady: true,
@@ -30,5 +30,10 @@ export async function GET() {
     routeTipsReady: true,
     refundRequestReady: true,
     fulfilmentEmailConfigured: resendConfigured && fromEmailConfigured,
+    // V12.10.2 features
+    successPageGuardReady: true,
+    homepagePaymentCopyReady: true,
+    intakeValidationStateReady: true,
+    paymentFailureHelpReady: true,
   });
 }

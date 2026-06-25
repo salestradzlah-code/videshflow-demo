@@ -1512,11 +1512,18 @@ function EarlyAccessPricingSection() {
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Pricing</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Free during early access</h2>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Free route planner · Student Move Pack S$19</h2>
             <p className="mt-4 text-sm leading-7 text-zinc-700">
-              SettleMap is free to use during early access while we collect feedback. Pilot pricing may be introduced later — only after the planning experience is stable and payment testing is complete.
+              The route planner is free. The Student Move Pack is a S$19 early-access digital planning pack for students and parents who want a route-aware checklist, first-week setup guide, provider questions, packing checklist and parent/student handover.
             </p>
-            <p className="mt-3 text-xs leading-6 text-zinc-500">No card required. No payment processing active today.</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link href="/#route-selector" className="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">
+                Start free route plan <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+              <Link href="/student-move-pack" className="inline-flex items-center rounded-full border border-emerald-600 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">
+                View Student Move Pack <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
           </div>
           <div className="space-y-3">
             {["Full 90-day route-aware move plan", "Document readiness checklist", "Services research categories", "First-week setup guide", "AI planning assistant (limited pilot)", "Copy-ready scripts and rental safety checklist"].map((item) => (
@@ -2638,7 +2645,7 @@ function ArchitectureSection() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Safety and architecture</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Global route planning now, scalable integrations later</h2>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This early access version uses a limited server-side AI planning pilot, local progress state and static data panels to support the planning experience. It does not upload documents, run OCR, contact providers, make bookings or take payments.</p>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This early access version uses a limited server-side AI planning pilot, local progress state and static data panels to support the planning experience. It does not upload documents, run OCR, contact providers, or make bookings on your behalf.</p>
             <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">{DISCLAIMER_SHORT}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">

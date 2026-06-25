@@ -363,7 +363,7 @@ export default function StudentMovePackPage() {
                 id="consentPlanning"
                 type="checkbox"
                 checked={form.consentPlanning}
-                onChange={(e) => { setForm((f) => ({ ...f, consentPlanning: e.target.checked })); setErrors((er) => { const n = { ...er }; delete n.consentPlanning; return n; }); }}
+                onChange={(e) => { const checked = e.target.checked; setForm((f) => ({ ...f, consentPlanning: checked })); setErrors((er) => { const n = { ...er }; delete n.consentPlanning; return n; }); }}
                 className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-400 text-emerald-600 focus:ring-emerald-500"
               />
               <span className="text-sm leading-6">
@@ -377,7 +377,7 @@ export default function StudentMovePackPage() {
                 id="consentSensitive"
                 type="checkbox"
                 checked={form.consentSensitive}
-                onChange={(e) => { setForm((f) => ({ ...f, consentSensitive: e.target.checked })); setErrors((er) => { const n = { ...er }; delete n.consentSensitive; return n; }); }}
+                onChange={(e) => { const checked = e.target.checked; setForm((f) => ({ ...f, consentSensitive: checked })); setErrors((er) => { const n = { ...er }; delete n.consentSensitive; return n; }); }}
                 className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-400 text-emerald-600 focus:ring-emerald-500"
               />
               <span className="text-sm leading-6">
@@ -409,6 +409,10 @@ export default function StudentMovePackPage() {
             <p className="mt-3 text-xs text-zinc-500">
               You will be redirected to Stripe for secure payment. SettleMap does not see or store your card details.
             </p>
+            <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-xs leading-5 text-zinc-600">
+              <span className="font-semibold">Payment failed or card declined?</span> Check that international online payments are enabled on your card, approve any OTP or 3D Secure prompt from your bank, try another card, or contact{" "}
+              <a href="mailto:support@settlemap.app" className="font-semibold text-emerald-700 underline">support@settlemap.app</a>. SettleMap does not see or store your card details.
+            </div>
           </div>
 
         </form>

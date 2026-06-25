@@ -7,7 +7,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  ExternalLink,
   Mail,
   AlertCircle,
   Loader2,
@@ -16,10 +15,19 @@ import {
   Printer,
   Copy,
   RefreshCw,
+  XCircle,
 } from "lucide-react";
 import { generateStudentMovePack, type PackSection } from "@/lib/studentMovePack";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────────────────
+type SuccessState =
+  | "loading"
+  | "verifiedPaid"
+  | "missingSession"
+  | "invalidSession"
+  | "notPaid"
+  | "error";
+
 interface SessionData {
   paid: boolean;
   customerEmail: string | null;
@@ -33,7 +41,7 @@ interface SessionData {
   currency: string | null;
 }
 
-// ── Collapsible section ───────────────────────────────────────────────────────
+// ── Collapsible section ────────────────────────────────────────────────────────────────
 function PackSectionCard({ section, defaultOpen = false }: { section: PackSection; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -63,7 +71,7 @@ function PackSectionCard({ section, defaultOpen = false }: { section: PackSectio
   );
 }
 
-// ── Full paid pack view ───────────────────────────────────────────────────────
+// ── Full paid pack view ───────────────────────────────────────────────────────────────────────
 function PaidPackView({ data }: { data: SessionData }) {
   const [copied, setCopied] = useState(false);
 
@@ -123,7 +131,7 @@ function PaidPackView({ data }: { data: SessionData }) {
 
   return (
     <div className="mx-auto max-w-2xl">
-      {/* Header */}
+      {/* Header — only verifiedPaid shows green tick and Payment confirmed */}
       <div className="text-center">
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
           <CheckCircle2 className="h-9 w-9 text-emerald-600" />
@@ -167,7 +175,7 @@ function PaidPackView({ data }: { data: SessionData }) {
         </div>
       </div>
 
-      {/* Email status — safe wording, no false "email sent" claim */}
+      {/* Email status */}
       <div className="mt-4 flex items-start gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
         <Clock className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
         <span>
@@ -250,93 +258,130 @@ function PaidPackView({ data }: { data: SessionData }) {
   );
 }
 
-// ── Fallback (no session_id or session lookup failed) ─────────────────────────
-function FallbackView({ reason }: { reason: "no-session" | "lookup-failed" }) {
+// ── Neutral error view: missingSession | invalidSession | error ──────────────────────
+// No green tick. No "Payment confirmed". No payment claims of any kind.
+function NeutralView({ state }: { state: SuccessState }) {
   return (
     <div className="mx-auto max-w-xl text-center">
-      <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-        <CheckCircle2 className="h-9 w-9 text-emerald-600" />
+      <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100">
+        <AlertCircle className="h-9 w-9 text-zinc-400" />
       </div>
       <h1 className="mt-6 text-3xl font-semibold tracking-tight text-zinc-900">
-        Payment confirmed
+        Payment status unavailable
       </h1>
       <p className="mt-4 text-base leading-7 text-zinc-600">
-        Your Stripe receipt confirms your payment. Your Student Move Pack email should arrive within 15 minutes.
+        We could not verify a payment from this page. If you completed payment, please check your Stripe receipt email or contact{" "}
+        <a href="mailto:support@settlemap.app" className="font-semibold text-emerald-700 underline">
+          support@settlemap.app
+        </a>
+        .
       </p>
-      {reason === "lookup-failed" && (
+      {state === "invalidSession" && (
         <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 text-left">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          We could not load your pack summary right now. Your payment was successful — the email copy will include your full pack.
+          The payment session link appears to be invalid or expired. Please use the link from your Stripe confirmation email.
         </div>
       )}
-      <div className="mt-6 rounded-xl border border-zinc-200/80 bg-white p-5 text-left">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
-          If you do not receive your email within 15 minutes
-        </p>
-        <ul className="mt-3 space-y-2 text-sm text-zinc-600">
-          {[
-            "Check your spam or junk folder.",
-            "Email support@settlemap.app with your payment email and move route.",
-            "Include your Stripe receipt as confirmation of payment.",
-          ].map((item) => (
-            <li key={item} className="flex items-start gap-2">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
       <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
         <Link
-          href="/#route-selector"
+          href="/pricing"
           className="inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
         >
-          Build my move plan <ArrowRight className="ml-2 h-4 w-4" />
+          Return to pricing <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
         <a
           href="mailto:support@settlemap.app"
           className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 hover:border-zinc-400"
         >
           <Mail className="mr-2 h-4 w-4" />
-          support@settlemap.app
+          Contact support
         </a>
-        <Link
-          href="/refund-request"
-          className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 hover:border-zinc-400"
-        >
-          <ExternalLink className="mr-2 h-4 w-4" />
-          Request refund review
-        </Link>
       </div>
     </div>
   );
 }
 
-// ── Main content (inside Suspense) ────────────────────────────────────────────
+// ── Not paid view ────────────────────────────────────────────────────────────────────────────────
+// No green tick. Clearly states payment was not confirmed.
+function NotPaidView() {
+  return (
+    <div className="mx-auto max-w-xl text-center">
+      <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
+        <XCircle className="h-9 w-9 text-amber-500" />
+      </div>
+      <h1 className="mt-6 text-3xl font-semibold tracking-tight text-zinc-900">
+        Payment not confirmed
+      </h1>
+      <p className="mt-4 text-base leading-7 text-zinc-600">
+        We could not confirm a completed payment for this session. If your card was charged, please contact{" "}
+        <a href="mailto:support@settlemap.app" className="font-semibold text-emerald-700 underline">
+          support@settlemap.app
+        </a>{" "}
+        with your Stripe receipt as confirmation.
+      </p>
+      <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <Link
+          href="/pricing"
+          className="inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+        >
+          Return to pricing <ArrowRight className="ml-2 h-4 w-4" />
+        </Link>
+        <a
+          href="mailto:support@settlemap.app"
+          className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 hover:border-zinc-400"
+        >
+          <Mail className="mr-2 h-4 w-4" />
+          Contact support
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ── Main content (inside Suspense) ────────────────────────────────────────────────────────────────
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
-  const [loading, setLoading] = useState(!!sessionId);
+  // Initialise state: if no session_id present we already know the state
+  const [state, setState] = useState<SuccessState>(
+    sessionId ? "loading" : "missingSession",
+  );
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
-  const [lookupFailed, setLookupFailed] = useState(false);
 
   useEffect(() => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      setState("missingSession");
+      return;
+    }
+
+    setState("loading");
+
     fetch(`/api/stripe/session?session_id=${encodeURIComponent(sessionId)}`)
       .then(async (res) => {
-        if (!res.ok) throw new Error("Session lookup failed");
+        // 402 / 403 = session found but payment not confirmed
+        if (res.status === 402 || res.status === 403) {
+          setState("notPaid");
+          return;
+        }
+        // 400 / 404 = bad or unknown session_id
+        if (!res.ok) {
+          setState("invalidSession");
+          return;
+        }
         const data = (await res.json()) as SessionData;
-        if (!data.paid) throw new Error("Not paid");
+        if (!data.paid) {
+          setState("notPaid");
+          return;
+        }
         setSessionData(data);
+        setState("verifiedPaid");
       })
-      .catch(() => {
-        setLookupFailed(true);
-      })
-      .finally(() => setLoading(false));
+      .catch(() => setState("error"));
   }, [sessionId]);
 
-  if (loading) {
+  // ─ Loading spinner ────────────────────────────────────────────────────────────────
+  if (state === "loading") {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <div className="text-center">
@@ -347,16 +392,21 @@ function PaymentSuccessContent() {
     );
   }
 
-  if (sessionData?.paid) {
+  // ─ Verified paid: the ONLY state that may show green tick + "Payment confirmed" ─
+  if (state === "verifiedPaid" && sessionData) {
     return <PaidPackView data={sessionData} />;
   }
 
-  return (
-    <FallbackView reason={lookupFailed ? "lookup-failed" : "no-session"} />
-  );
+  // ─ Payment exists but not paid ──────────────────────────────────────────────────
+  if (state === "notPaid") {
+    return <NotPaidView />;
+  }
+
+  // ─ missingSession | invalidSession | error: all render neutral page ────────────────
+  return <NeutralView state={state} />;
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Page ──────────────────────────────────────────────────────────────────────────────────────
 export default function PaymentSuccessPage() {
   return (
     <section className="min-h-[60vh] bg-zinc-50 px-4 py-16 sm:px-6 lg:px-8">

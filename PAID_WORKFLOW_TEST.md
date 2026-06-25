@@ -49,13 +49,23 @@ For each route, fill `/student-move-pack`, select the route, and confirm the cor
    { "paymentIntentId": "pi_..." }
    ```
 
+## V12.10.2 guard tests
+
+| # | Test | Expected |
+|---|---|---|
+| 1 | Open `/payment-success` with no `session_id` | No green tick. No "Payment confirmed". Neutral page: "Payment status unavailable". |
+| 2 | Open `/payment-success?session_id=cs_test_FAKEID` | No green tick. No "Payment confirmed". Neutral page or invalid-session message. |
+| 3 | Open homepage | No copy saying payments are inactive or "No payment processing active today". |
+| 4 | On `/student-move-pack`, check both consent boxes, leave email blank, click Submit | Both consent checkboxes remain checked after validation error appears. |
+| 5 | On `/student-move-pack`, scroll below the payment CTA | Payment failure help note visible: international payments, OTP/3DS, try another card, contact support. |
+
 ## Health check
 After deployment, verify: https://settlemap.app/api/stripe/health
 
 Expected response:
 ```json
 {
-  "fulfilmentVersion": "V12.10.1",
+  "fulfilmentVersion": "V12.10.2",
   "paymentsEnabled": true,
   "checkoutEnabled": true,
   "autofulfillEnabled": true,
