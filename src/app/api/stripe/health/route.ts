@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import {
   futureAddonConfigs,
+  getAddonFlags,
+  getAddonRuntimes,
   getPaidProductRuntime,
   getPaidProductRuntimes,
 } from "@/lib/paidProducts";
@@ -17,6 +19,8 @@ export async function GET() {
   const student = getPaidProductRuntime("student_move_pack");
   const premium = getPaidProductRuntime("premium_relocation_pack");
   const voice = getPaidProductRuntime("voice_guide");
+  const addonFlags = getAddonFlags();
+  const addonRuntimes = getAddonRuntimes();
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
@@ -41,7 +45,24 @@ export async function GET() {
       priceConfigured: !product.requiresStripePriceId || Boolean(product.stripePriceId),
       missingEnvVars: product.missingEnvVars,
     })),
-    addonConfigReady: futureAddonConfigs.length === 4,
+    addonConfigReady: futureAddonConfigs.length === 5,
+    addonsPublicEnabled: addonFlags.publicAddonsEnabled,
+    addonsCheckoutEnabled: addonFlags.checkoutEnabled,
+    addonsAutofulfillEnabled: addonFlags.autofulfillEnabled,
+    addOnsCheckoutSafelyOff: !addonFlags.checkoutEnabled,
+    addonProducts: addonRuntimes.map((addon) => ({
+      slug: addon.slug,
+      title: addon.title,
+      priceLabel: addon.priceLabel,
+      stripePriceEnvVar: addon.stripePriceEnvVar,
+      priceConfigured: addon.priceConfigured,
+    })),
+    addonPriceIdsConfigured: addonRuntimes.every((addon) => addon.priceConfigured),
+    familyAddonPriceIdConfigured: Boolean(process.env.STRIPE_FAMILY_ADDON_PRICE_ID),
+    petAddonPriceIdConfigured: Boolean(process.env.STRIPE_PET_ADDON_PRICE_ID),
+    corporateAddonPriceIdConfigured: Boolean(process.env.STRIPE_CORPORATE_ADDON_PRICE_ID),
+    returnHomeAddonPriceIdConfigured: Boolean(process.env.STRIPE_RETURN_HOME_ADDON_PRICE_ID),
+    parentHelperAddonPriceIdConfigured: Boolean(process.env.STRIPE_PARENT_HELPER_ADDON_PRICE_ID),
 
     // Student
     paymentsEnabled: student.publicCheckoutEnabled,

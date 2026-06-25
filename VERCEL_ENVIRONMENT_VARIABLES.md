@@ -46,7 +46,7 @@ Premium is payable only when:
 
 | Current env var | Used in code | Purpose | Canonical name | Alias support | Keep or remove later | Risk |
 |---|---:|---|---|---|---|---|
-| `STRIPE_VOICE_GUIDE_PRICE_ID` | Yes | Voice Guide Stripe Price ID | `STRIPE_VOICE_GUIDE_PRICE_ID` | No | Keep | Required before Voice Guide checkout can work. |
+| `STRIPE_VOICE_GUIDE_PRICE_ID` | Yes | Voice Guide Stripe Price ID (`price_1Tm8PNCRU6atVrqjYi3A3sAr`) | `STRIPE_VOICE_GUIDE_PRICE_ID` | No | Keep | Required before Voice Guide checkout can work. |
 | `NEXT_PUBLIC_VOICE_GUIDE_CHECKOUT_ENABLED` | Yes | Public Voice Guide checkout visibility | `NEXT_PUBLIC_VOICE_GUIDE_CHECKOUT_ENABLED` | No | Keep | Must be `true` to show active CTA. |
 | `VOICE_GUIDE_CHECKOUT_ENABLED` | Yes | Server-side Voice Guide checkout gate | `VOICE_GUIDE_CHECKOUT_ENABLED` | No | Keep | Must be `true` for checkout API. |
 | `VOICE_GUIDE_AUTOFULFILL_ENABLED` | Yes | Send Voice Guide email automatically | `VOICE_GUIDE_AUTOFULFILL_ENABLED` | No | Keep | Must be `true` for automated email. |
@@ -57,11 +57,14 @@ If `STRIPE_VOICE_GUIDE_PRICE_ID` is missing, the site does not break. It shows a
 
 | Current env var | Used in code | Purpose | Canonical name | Alias support | Keep or remove later | Risk |
 |---|---:|---|---|---|---|---|
-| `STRIPE_FAMILY_ADDON_PRICE_ID` | Config only | Future Family Add-on | `STRIPE_FAMILY_ADDON_PRICE_ID` | No | Keep when added | Not active in checkout today. |
-| `STRIPE_PET_ADDON_PRICE_ID` | Config only | Future Pet Add-on | `STRIPE_PET_ADDON_PRICE_ID` | No | Keep when added | Not active in checkout today. |
-| `STRIPE_CORPORATE_ADDON_PRICE_ID` | Config only | Future Corporate Add-on | `STRIPE_CORPORATE_ADDON_PRICE_ID` | No | Keep when added | Not active in checkout today. |
-| `STRIPE_RETURN_HOME_ADDON_PRICE_ID` | Config only | Future Returning Home Add-on | `STRIPE_RETURN_HOME_ADDON_PRICE_ID` | No | Keep when added | Not active in checkout today. |
-| `NEXT_PUBLIC_ADDONS_ENABLED` | Config only | Future add-on UI gate | `NEXT_PUBLIC_ADDONS_ENABLED` | No | Keep when added | Do not enable until bundled checkout is implemented and tested. |
+| `STRIPE_FAMILY_ADDON_PRICE_ID` | Config only | Future Family Add-on (`price_1Tm8R2CRU6atVrqjeN4MZAlt`) | `STRIPE_FAMILY_ADDON_PRICE_ID` | No | Keep | Not active in checkout today. |
+| `STRIPE_PET_ADDON_PRICE_ID` | Config only | Future Pet Add-on (`price_1Tm8RlCRU6atVrqjyU4QZFcA`) | `STRIPE_PET_ADDON_PRICE_ID` | No | Keep | Not active in checkout today. |
+| `STRIPE_CORPORATE_ADDON_PRICE_ID` | Config only | Future Corporate Add-on (`price_1Tm8SVCRU6atVrqj1kiN4JKQ`) | `STRIPE_CORPORATE_ADDON_PRICE_ID` | No | Keep | Not active in checkout today. |
+| `STRIPE_RETURN_HOME_ADDON_PRICE_ID` | Config only | Future Returning Home Add-on (`price_1Tm8TkCRU6atVrqjOTV9keix`) | `STRIPE_RETURN_HOME_ADDON_PRICE_ID` | No | Keep | Not active in checkout today. |
+| `STRIPE_PARENT_HELPER_ADDON_PRICE_ID` | Config only | Future Parent Helper Add-on (`price_1Tm8UmCRU6atVrqjuLw9ZATl`) | `STRIPE_PARENT_HELPER_ADDON_PRICE_ID` | No | Keep | Not active in checkout today. |
+| `NEXT_PUBLIC_ADDONS_ENABLED` | Config only | Future add-on UI visibility gate | `NEXT_PUBLIC_ADDONS_ENABLED` | No | Keep | Does not enable checkout by itself. |
+| `ADDONS_CHECKOUT_ENABLED` | Config only | Future server-side add-on checkout gate | `ADDONS_CHECKOUT_ENABLED` | No | Keep | Keep `false` until bundled checkout is implemented and tested. |
+| `ADDONS_AUTOFULFILL_ENABLED` | Config only | Future add-on fulfilment gate | `ADDONS_AUTOFULFILL_ENABLED` | No | Keep | Keep `false` until add-on fulfilment exists. |
 
 ## Non-payment safeguards
 

@@ -24,6 +24,10 @@ Premium current Price ID:
 
 `price_1Tm7fSCRU6atVrqjWwxa3j68`
 
+Voice Guide current Price ID:
+
+`price_1Tm8PNCRU6atVrqjYi3A3sAr`
+
 Do not place Stripe secret keys or Gemini keys in browser code. Do not add `NEXT_PUBLIC_STRIPE_SECRET_KEY`, `NEXT_PUBLIC_GEMINI_API_KEY`, or any public secret variable.
 
 ## Deliverables
@@ -77,11 +81,19 @@ These are config/runbook-ready only. Checkout is not activated in V12.12.
 
 | Add-on | Price | Preferred env var |
 |---|---:|---|
-| Family Add-on | S$15 | `STRIPE_FAMILY_ADDON_PRICE_ID` |
-| Pet Add-on | S$15 | `STRIPE_PET_ADDON_PRICE_ID` |
-| Corporate Transfer Add-on | S$25 | `STRIPE_CORPORATE_ADDON_PRICE_ID` |
-| Returning Home Add-on | S$15 | `STRIPE_RETURN_HOME_ADDON_PRICE_ID` |
+| Family Add-on | S$15 | `STRIPE_FAMILY_ADDON_PRICE_ID=price_1Tm8R2CRU6atVrqjeN4MZAlt` |
+| Pet Add-on | S$15 | `STRIPE_PET_ADDON_PRICE_ID=price_1Tm8RlCRU6atVrqjyU4QZFcA` |
+| Corporate Transfer Add-on | S$25 | `STRIPE_CORPORATE_ADDON_PRICE_ID=price_1Tm8SVCRU6atVrqj1kiN4JKQ` |
+| Returning Home Add-on | S$15 | `STRIPE_RETURN_HOME_ADDON_PRICE_ID=price_1Tm8TkCRU6atVrqjOTV9keix` |
+| Parent Helper Add-on | S$15 | `STRIPE_PARENT_HELPER_ADDON_PRICE_ID=price_1Tm8UmCRU6atVrqjuLw9ZATl` |
 
 Public add-on switch for future bundled checkout:
 
 `NEXT_PUBLIC_ADDONS_ENABLED`
+
+Server-side add-on switches are also documented for future bundled checkout:
+
+- `ADDONS_CHECKOUT_ENABLED`
+- `ADDONS_AUTOFULFILL_ENABLED`
+
+In V12.12, add-ons are visible as prepared modules only. Standalone or bundled add-on checkout is not exposed until a safe bundled purchase flow exists.

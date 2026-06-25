@@ -117,26 +117,44 @@ export const futureAddonConfigs = [
     title: "Family Add-on",
     priceLabel: "S$15",
     stripePriceEnvVar: "STRIPE_FAMILY_ADDON_PRICE_ID",
+    description: "Family planning module for school, childcare, family healthcare and household setup research.",
   },
   {
     slug: "pet_addon",
     title: "Pet Add-on",
     priceLabel: "S$15",
     stripePriceEnvVar: "STRIPE_PET_ADDON_PRICE_ID",
+    description: "Pet relocation planning module for microchip, vaccination, import permit and provider research questions.",
   },
   {
     slug: "corporate_addon",
     title: "Corporate Transfer Add-on",
     priceLabel: "S$25",
     stripePriceEnvVar: "STRIPE_CORPORATE_ADDON_PRICE_ID",
+    description: "Corporate transfer planning module for HR, relocation allowance, work-start and payroll research.",
   },
   {
     slug: "return_home_addon",
     title: "Returning Home Add-on",
     priceLabel: "S$15",
     stripePriceEnvVar: "STRIPE_RETURN_HOME_ADDON_PRICE_ID",
+    description: "Returning-home planning module for banking reactivation, address updates, local IDs and home setup.",
+  },
+  {
+    slug: "parent_helper_addon",
+    title: "Parent Helper Add-on",
+    priceLabel: "S$15",
+    stripePriceEnvVar: "STRIPE_PARENT_HELPER_ADDON_PRICE_ID",
+    description: "Parent-facing planning helper for student handover, emergency contacts, budget review and first-week check-ins.",
   },
 ] as const;
+
+export type FutureAddonConfig = (typeof futureAddonConfigs)[number];
+
+export type AddonRuntime = FutureAddonConfig & {
+  stripePriceId: string | null;
+  priceConfigured: boolean;
+};
 
 function envValue(name: string): string | undefined {
   const value = process.env[name];
@@ -230,4 +248,23 @@ export function getPaidProductRuntimes(): PaidProductRuntime[] {
     getPaidProductRuntime("premium_relocation_pack"),
     getPaidProductRuntime("voice_guide"),
   ];
+}
+
+export function getAddonRuntimes(): AddonRuntime[] {
+  return futureAddonConfigs.map((addon) => {
+    const stripePriceId = envValue(addon.stripePriceEnvVar) ?? null;
+    return {
+      ...addon,
+      stripePriceId,
+      priceConfigured: Boolean(stripePriceId),
+    };
+  });
+}
+
+export function getAddonFlags() {
+  return {
+    publicAddonsEnabled: readFlag("NEXT_PUBLIC_ADDONS_ENABLED", false),
+    checkoutEnabled: readFlag("ADDONS_CHECKOUT_ENABLED", false),
+    autofulfillEnabled: readFlag("ADDONS_AUTOFULFILL_ENABLED", false),
+  };
 }

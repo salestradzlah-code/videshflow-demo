@@ -98,10 +98,16 @@ Redeploy Production. Premium remains visible but shows a safe waitlist/paused st
 
 ## Activate SettleMap Voice Guide
 
-First create a Stripe product/price for SettleMap Voice Guide at S$19 one time. Then set:
+Voice Guide current Stripe Price ID:
 
 ```text
-STRIPE_VOICE_GUIDE_PRICE_ID=<voice_guide_stripe_price_id>
+price_1Tm8PNCRU6atVrqjYi3A3sAr
+```
+
+Set:
+
+```text
+STRIPE_VOICE_GUIDE_PRICE_ID=price_1Tm8PNCRU6atVrqjYi3A3sAr
 NEXT_PUBLIC_VOICE_GUIDE_CHECKOUT_ENABLED=true
 VOICE_GUIDE_CHECKOUT_ENABLED=true
 VOICE_GUIDE_AUTOFULFILL_ENABLED=true
@@ -131,6 +137,23 @@ VOICE_GUIDE_AUTOFULFILL_ENABLED=false
 ```
 
 Redeploy Production. Voice Guide remains visible but shows a safe paused/configuring state.
+
+## Add-ons
+
+Add-on Stripe Price IDs are configured for future use:
+
+```text
+STRIPE_FAMILY_ADDON_PRICE_ID=price_1Tm8R2CRU6atVrqjeN4MZAlt
+STRIPE_PET_ADDON_PRICE_ID=price_1Tm8RlCRU6atVrqjyU4QZFcA
+STRIPE_CORPORATE_ADDON_PRICE_ID=price_1Tm8SVCRU6atVrqj1kiN4JKQ
+STRIPE_RETURN_HOME_ADDON_PRICE_ID=price_1Tm8TkCRU6atVrqjOTV9keix
+STRIPE_PARENT_HELPER_ADDON_PRICE_ID=price_1Tm8UmCRU6atVrqjuLw9ZATl
+NEXT_PUBLIC_ADDONS_ENABLED=false
+ADDONS_CHECKOUT_ENABLED=false
+ADDONS_AUTOFULFILL_ENABLED=false
+```
+
+V12.12 shows add-ons as prepared modules only. Do not set `ADDONS_CHECKOUT_ENABLED=true` until bundled checkout and add-on fulfilment are implemented and tested. Premium already includes persona modules, so there is no need to activate standalone add-on checkout for this launch.
 
 ## Rollback quickly
 
