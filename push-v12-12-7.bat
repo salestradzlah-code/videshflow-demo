@@ -24,21 +24,7 @@ git status --short
 
 echo.
 echo Committing as V12.12.7...
-git commit -m "V12.12.7: Stripe test integration BATs, env map verified, emergency control fixed
-
-- settlemap-setup-stripe-test-env.bat: safe Vercel env setup for Stripe test
-- settlemap-test-checkout-flow.bat: guided end-to-end checkout test script
-- settlemap-emergency-control.bat: fix Windows <<< bash syntax -> piped echo
-- settlemap-health-check.bat: version check updated to V12.12.7
-- health/route.ts: bump fulfilmentVersion to V12.12.7, add 13 new flags
-- Env map verified from code: no publishable key used, student uses inline
-  price_data (no price ID env var), premium needs STRIPE_PREMIUM_RELOCATION
-  _PACK_PRICE_ID, voice guide flags off by default
-- push-v12-12-7.bat: this commit BAT
-
-Safety: No Stripe dashboard changes. No live keys. No login/DB/OCR added.
-QA emails: confirmed allSuccess=true to sales.tradzlah@gmail.com (V12.12.6)
-Webhook: signature verification + idempotency + product routing all present"
+git commit -m "V12.12.7: Stripe test integration BATs, env map verified, emergency control fixed. Setup bat, checkout flow bat, health check v12127, emergency control Windows CMD fix, health route bumped to V12.12.7 with 13 new flags."
 
 echo.
 echo Pushing to GitHub main...
