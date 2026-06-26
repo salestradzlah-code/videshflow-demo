@@ -190,7 +190,9 @@ export async function POST(request: NextRequest) {
     return new Response("Email service not configured", { status: 500 });
   }
 
-  const fromEmail = process.env.SETTLEMAP_FROM_EMAIL ?? "SettleMap <support@settlemap.app>";
+  // V12.12.8: Pilot-safe sender. onboarding@resend.dev only delivers to Resend account owner.
+  // Set SETTLEMAP_FROM_EMAIL to a verified Resend domain sender for real customer delivery.
+  const fromEmail = process.env.SETTLEMAP_FROM_EMAIL ?? "onboarding@resend.dev";
   const supportEmail = process.env.SETTLEMAP_SUPPORT_EMAIL ?? "support@settlemap.app";
   const fulfilledAt = new Date().toISOString();
   let customerEmailSent = false;
@@ -241,11 +243,12 @@ export async function POST(request: NextRequest) {
       });
 
       if (sendError) {
-        console.error("[webhook-voice] Customer email failed:", (sendError as { name?: string }).name ?? "unknown");
-        return new Response("Customer email send failed", { status: 500 });
+        // V12.12.8: Non-fatal. Payment IS processed. Return 200 so Stripe doesn't retry.
+        // Email skipped — set SETTLEMAP_FROM_EMAIL to a verified Resend sender for delivery.
+        console.error("[webhook-voice] Customer email failed:", (sendError as { name?: string }).name ?? "unknown", "— payment processed, email skipped.");
+      } else {
+        customerEmailSent = true;
       }
-
-      customerEmailSent = true;
       console.log("[webhook-voice] Voice Guide email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
     } else if (!autofulfillEnabled) {
       console.log("[webhook-voice] Autofulfill disabled. session:", safeIdSuffix(session.id));
@@ -330,11 +333,11 @@ export async function POST(request: NextRequest) {
       });
 
       if (sendError) {
-        console.error("[webhook-premium] Customer email failed:", (sendError as { name?: string }).name ?? "unknown");
-        return new Response("Customer email send failed", { status: 500 });
+        // V12.12.8: Non-fatal. Payment IS processed. Return 200 so Stripe doesn't retry.
+        console.error("[webhook-premium] Customer email failed:", (sendError as { name?: string }).name ?? "unknown", "— payment processed, email skipped.");
+      } else {
+        customerEmailSent = true;
       }
-
-      customerEmailSent = true;
       console.log("[webhook-premium] Premium pack email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
     } else if (!autofulfillEnabled) {
       console.log("[webhook-premium] Autofulfill disabled. session:", safeIdSuffix(session.id));
@@ -399,11 +402,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (sendError) {
-      console.error("[webhook] Customer email failed:", (sendError as { name?: string }).name ?? "unknown");
-      return new Response("Customer email send failed", { status: 500 });
+      // V12.12.8: Non-fatal. Payment IS processed. Return 200 so Stripe doesn't retry.
+      console.error("[webhook] Customer email failed:", (sendError as { name?: string }).name ?? "unknown", "— payment processed, email skipped.");
+    } else {
+      customerEmailSent = true;
     }
-
-    customerEmailSent = true;
     console.log("[webhook] Pack email sent. domain:", customerEmail.split("@")[1] ?? "unknown");
   } else if (!autofulfillEnabled) {
     console.log("[webhook] Autofulfill disabled. session:", safeIdSuffix(session.id));
@@ -431,7 +434,6 @@ export async function POST(request: NextRequest) {
   const internal = buildInternalEmail({
     customerEmail, buyerName, product: "student_move_pack",
     amountTotal: session.amount_total ?? 0, currency: session.currency ?? "sgd",
-    sessionId: session.id, paymentStatus: session.payment_status,
     customerEmailSent, packGenerated, autofulfillEnabled, fulfilledAt,
   });
 

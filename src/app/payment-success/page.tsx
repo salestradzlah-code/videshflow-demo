@@ -313,9 +313,9 @@ function PremiumPackView({ data }: { data: SessionData }) {
       </div>
 
       <div className="mt-4 flex items-start gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
-        <Clock className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" />
+        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" />
         <span>
-          Your Premium pack is shown below. An email copy is also being sent to your checkout email address. If it does not arrive within 15 minutes, contact{" "}
+          Your pack is fully available below — print, copy, or download it now. For support, contact{" "}
           <a href="mailto:support@settlemap.app" className="font-semibold text-violet-700 underline">
             support@settlemap.app
           </a>.
@@ -339,6 +339,20 @@ function PremiumPackView({ data }: { data: SessionData }) {
           ) : (
             <><Copy className="h-4 w-4" /> Copy pack summary</>
           )}
+        </button>
+        <button
+          onClick={() => {
+            const csv = buildCopyText().split("\n").map(line => `"${line.replace(/"/g, '""')}"`).join("\r\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; a.download = "settlemap-premium-pack.csv"; a.click();
+            URL.revokeObjectURL(url);
+          }}
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          <Copy className="h-4 w-4" />
+          Download CSV
         </button>
         <a
           href="mailto:support@settlemap.app"
@@ -472,9 +486,9 @@ function PaidPackView({ data }: { data: SessionData }) {
       </div>
 
       <div className="mt-4 flex items-start gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
-        <Clock className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
         <span>
-          Your paid pack is shown below. The email copy is also being sent to your checkout email. If it does not arrive within 15 minutes, use the plan shown here and contact{" "}
+          Your pack is fully available below — print, copy, or download it now. For support, contact{" "}
           <a href="mailto:support@settlemap.app" className="font-semibold text-emerald-700 underline">
             support@settlemap.app
           </a>.
@@ -498,6 +512,20 @@ function PaidPackView({ data }: { data: SessionData }) {
           ) : (
             <><Copy className="h-4 w-4" /> Copy pack summary</>
           )}
+        </button>
+        <button
+          onClick={() => {
+            const csv = buildCopyText().split("\n").map(line => `"${line.replace(/"/g, '""')}"`).join("\r\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; a.download = "settlemap-student-pack.csv"; a.click();
+            URL.revokeObjectURL(url);
+          }}
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          <Copy className="h-4 w-4" />
+          Download CSV
         </button>
         <a
           href="mailto:support@settlemap.app"

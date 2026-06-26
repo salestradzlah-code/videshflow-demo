@@ -4,7 +4,9 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { AlertCircle, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
-const CHECKOUT_ENABLED = process.env.NEXT_PUBLIC_VOICE_GUIDE_CHECKOUT_ENABLED === "true";
+// V12.12.8: Hard-disabled pending product readiness. Do not remove this line to re-enable —
+// set NEXT_PUBLIC_VOICE_GUIDE_CHECKOUT_ENABLED=true in Vercel AND change this line to use it.
+const CHECKOUT_ENABLED = false;
 
 const ORIGIN_OPTIONS = ["India", "Singapore", "UK", "US", "Australia", "Canada", "Germany / EU", "Other origin"];
 const DESTINATION_OPTIONS = ["UK", "Germany / EU", "Singapore", "Australia", "Canada", "US", "New Zealand", "Other destination"];

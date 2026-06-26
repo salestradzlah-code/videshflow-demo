@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AlertCircle, ArrowLeft, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, ShieldCheck } from "lucide-react";
 
 const REASONS = [
   "Paid by mistake",
   "Duplicate payment",
-  "Did not receive email",
+  "Did not receive pack",
   "Product not suitable",
   "Other",
 ];
@@ -23,15 +23,24 @@ const ROUTES = [
   "Not sure / prefer not to say",
 ];
 
+const PRODUCTS = [
+  "Student Move Pack",
+  "Premium Relocation Pack",
+  "Not sure",
+];
+
 export default function RefundRequestPage() {
   const [paymentEmail, setPaymentEmail] = useState("");
   const [name, setName] = useState("");
   const [receiptRef, setReceiptRef] = useState("");
+  const [productName, setProductName] = useState("");
   const [moveRoute, setMoveRoute] = useState("");
   const [reason, setReason] = useState("");
   const [comments, setComments] = useState("");
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   function validate(): boolean {
     if (!paymentEmail.trim() || !paymentEmail.includes("@")) {
@@ -54,30 +63,74 @@ export default function RefundRequestPage() {
     return true;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
 
-    const subject = encodeURIComponent("Refund request - SettleMap Student Move Pack");
-    const body = encodeURIComponent(
-      [
-        "Refund request — SettleMap Student Move Pack",
-        "",
-        `Name: ${name}`,
-        `Payment email: ${paymentEmail}`,
-        receiptRef ? `Receipt / payment reference: ${receiptRef}` : "Receipt / payment reference: not provided",
-        moveRoute ? `Move route: ${moveRoute}` : "Move route: not provided",
-        `Reason: ${reason}`,
-        comments ? `Comments: ${comments}` : "Comments: none",
-        "",
-        "I understand SettleMap may contact me by email about this request.",
-        "",
-        "---",
-        "IMPORTANT: Do not include passport numbers, visa numbers, card numbers, bank details, medical details or ID documents in any follow-up.",
-      ].join("\n"),
-    );
+    setSubmitting(true);
+    setError("");
 
-    window.location.href = `mailto:support@settlemap.app?subject=${subject}&body=${body}`;
+    try {
+      const res = await fetch("/api/refund-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentEmail: paymentEmail.trim(),
+          name: name.trim(),
+          receiptRef: receiptRef.trim(),
+          productName: productName || "SettleMap Pack",
+          moveRoute,
+          reason,
+          comments: comments.trim(),
+          consent,
+        }),
+      });
+
+      const data = (await res.json()) as { success?: boolean; error?: string };
+
+      if (!res.ok || !data.success) {
+        setError(data.error ?? "Could not submit your request. Please email support@settlemap.app directly.");
+        setSubmitting(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("Could not submit your request. Please email support@settlemap.app directly.");
+      setSubmitting(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <section className="bg-zinc-50 px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-xl text-center">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+            <CheckCircle2 className="h-9 w-9 text-emerald-600" />
+          </div>
+          <h1 className="mt-6 text-2xl font-semibold tracking-tight text-zinc-900">
+            Refund request received
+          </h1>
+          <p className="mt-4 text-base leading-7 text-zinc-600">
+            Your request has been submitted to support@settlemap.app. We review requests individually during early access and will respond within 2 business days.
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/"
+              className="inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+            >
+              Return to SettleMap
+            </Link>
+            <Link
+              href="/refund-policy"
+              className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 hover:border-zinc-400"
+            >
+              View refund policy
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -92,7 +145,7 @@ export default function RefundRequestPage() {
 
         <h1 className="mt-6 text-3xl font-semibold tracking-tight text-zinc-900">Request a refund</h1>
         <p className="mt-3 text-base leading-7 text-zinc-600">
-          If you paid for the SettleMap Student Move Pack and need help or a refund review, submit the details below. Refunds are reviewed case by case during early access.
+          If you paid for a SettleMap pack and need a refund review, submit the details below. Refunds are reviewed case by case during early access.
         </p>
 
         {/* Sensitive data warning */}
@@ -135,6 +188,24 @@ export default function RefundRequestPage() {
               placeholder="Your full name"
               className="mt-2 block w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
             />
+          </div>
+
+          {/* Product */}
+          <div>
+            <label htmlFor="product-name" className="block text-sm font-medium text-zinc-700">
+              Which product? <span className="text-zinc-400 font-normal">(optional)</span>
+            </label>
+            <select
+              id="product-name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              className="mt-2 block w-full rounded-lg border border-zinc-300 px-3.5 py-2.5 text-sm text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+            >
+              <option value="">Select product (optional)</option>
+              {PRODUCTS.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
           </div>
 
           {/* Receipt reference */}
@@ -224,7 +295,10 @@ export default function RefundRequestPage() {
           {error && (
             <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-              {error}
+              <span>
+                {error}{" "}
+                <a href="mailto:support@settlemap.app" className="font-semibold underline">Email support directly</a>
+              </span>
             </div>
           )}
 
@@ -232,13 +306,15 @@ export default function RefundRequestPage() {
           <div className="pt-2">
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              disabled={submitting}
+              className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Submit refund request
+              {submitting ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>
+              ) : (
+                "Submit refund request"
+              )}
             </button>
-            <p className="mt-2 text-center text-xs text-zinc-500">
-              This opens your email app with a pre-filled message to support@settlemap.app.
-            </p>
           </div>
 
           {/* Trust note */}

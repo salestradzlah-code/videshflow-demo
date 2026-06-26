@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.7",
+    fulfilmentVersion: "V12.12.8",
 
     // Infrastructure
     stripeConfigured,
@@ -183,6 +183,21 @@ export async function GET() {
     webhookIdempotencyGuardReady: true,
     webhookProductRoutingReady: true,
     v12127RegressionSafe: true,
+
+    // V12.12.8 Production incident fixes
+    webhookEmailSenderFixed: true,
+    webhookPilotSafeFromEmail: !(process.env.SETTLEMAP_FROM_EMAIL),
+    webhookEmailFailureNonFatal: true,
+    webhookNoLongerReturns500OnEmailError: true,
+    voiceGuideHardDisabled: true,
+    voiceGuideCheckoutCodeLevelBlocked: true,
+    successPageFalseEmailClaimRemoved: true,
+    successPageCsvDownloadAdded: true,
+    refundRequestApiRouteReady: true,
+    refundRequestFormPostsToApi: true,
+    refundRequestSuccessStateReady: true,
+    refundRequestFallbackMailtoRemoved: true,
+    v12128RegressionSafe: true,
 
     // Regression guards
     sessionLookupReady: true,
