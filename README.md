@@ -13,6 +13,23 @@ npm run dev
 
 Open http://localhost:3000.
 
+## Use GitHub Codespaces (no local setup needed)
+
+If you do not want to set up a local development environment — for example when travelling with a new MacBook — you can use GitHub Codespaces to get a full VS Code environment running in your browser in under 2 minutes.
+
+1. Go to https://github.com/salestradzlah-code/videshflow-demo
+2. Click the green **Code** button → select the **Codespaces** tab
+3. Click **Create codespace on main**
+4. Wait ~90 seconds — VS Code opens in your browser with Node 22 already installed
+5. Codespaces runs `npm install` automatically via the devcontainer config
+6. In the terminal, run: `npm run dev` and open the forwarded port 3000 to preview the site
+
+**Environment variables in Codespaces:** Go to GitHub → Settings → Codespaces → Secrets and add each secret from Vercel. See `.env.local.example` for the full list of variables.
+
+**To push changes from Codespaces:** Use the Source Control panel (left sidebar) — commit and push exactly like VS Code on your desktop.
+
+**Note:** Codespaces compute is free up to 60 hours/month on a free GitHub account. The devcontainer config is in `.devcontainer/devcontainer.json`.
+
 ## Build
 
 ```bash

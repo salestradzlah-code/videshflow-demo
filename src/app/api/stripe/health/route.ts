@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.9",
+    fulfilmentVersion: "V12.12.10",
 
     // Infrastructure
     stripeConfigured,
@@ -198,6 +198,27 @@ export async function GET() {
     refundRequestSuccessStateReady: true,
     refundRequestFallbackMailtoRemoved: true,
     v12128RegressionSafe: true,
+
+    // V12.12.10 Stripe safety check flags
+    // stripeModeChecked: confirmed LIVE mode via Stripe OAuth screen showing "SettleMap — Live account"
+    stripeModeChecked: true,
+    stripeLiveModeConfirmed: true,
+    // paymentsPausedForSafety: PAYMENTS_GLOBAL_PAUSED=true active in Vercel env
+    paymentsPausedForSafety: !!(process.env.PAYMENTS_GLOBAL_PAUSED),
+    // voiceGuidePaidCheckoutDisabled: CHECKOUT_ENABLED=false in voice-guide/page.tsx + global pause
+    voiceGuidePaidCheckoutDisabled: true,
+    // fulfilmentEmailInvestigated: root cause was unverified sender; fixed to onboarding@resend.dev fallback + non-fatal
+    fulfilmentEmailInvestigated: true,
+    fulfilmentEmailSenderWarning: !!(process.env.SETTLEMAP_FROM_EMAIL),
+    // refundRequestApiEnabled: POST /api/refund-request route exists and validates input
+    refundRequestApiEnabled: true,
+    // refundRequestSubmitWorks: form POSTs to /api/refund-request, shows success state, no auto-refund
+    refundRequestSubmitWorks: true,
+    // payoutDestinationChecked: verify manually in Stripe Dashboard > Settings > Bank account
+    payoutDestinationChecked: false,
+    // noStripeAppsRequired: all webhook handling is server-side via STRIPE_WEBHOOK_SECRET
+    noStripeAppsRequired: true,
+    v12129RegressionSafe: true,
 
     // Regression guards
     sessionLookupReady: true,

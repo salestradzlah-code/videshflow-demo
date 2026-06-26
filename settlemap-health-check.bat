@@ -49,7 +49,7 @@ powershell -NoProfile -Command ^
   "if ($r.maintenanceModeActive)       { $warn += 'MAINTENANCE MODE IS ON' }; " ^
   "if ($r.paymentsGlobalPauseActive)   { $warn += 'PAYMENTS ARE PAUSED' }; " ^
   "if ($r.aiGlobalPauseActive)         { $warn += 'AI ASSISTANT IS PAUSED' }; " ^
-  "if ($r.fulfilmentVersion -ne 'V12.12.8') { $warn += ('VERSION: expected V12.12.8, got ' + $r.fulfilmentVersion) };" ^
+  "if ($r.fulfilmentVersion -ne 'V12.12.9') { $warn += ('VERSION: expected V12.12.9, got ' + $r.fulfilmentVersion) };" ^
   "if (-not $r.stripeConfigured)       { $warn += 'Stripe not configured' }; " ^
   "if (-not $r.resendConfigured)       { $warn += 'Resend not configured' }; " ^
   "if (-not $r.adminTokenConfigured)   { $warn += 'Admin token not configured' }; " ^
