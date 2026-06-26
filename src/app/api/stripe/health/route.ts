@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.8",
+    fulfilmentVersion: "V12.12.9",
 
     // Infrastructure
     stripeConfigured,

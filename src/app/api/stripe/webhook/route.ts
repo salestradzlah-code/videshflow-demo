@@ -434,6 +434,7 @@ export async function POST(request: NextRequest) {
   const internal = buildInternalEmail({
     customerEmail, buyerName, product: "student_move_pack",
     amountTotal: session.amount_total ?? 0, currency: session.currency ?? "sgd",
+    sessionId: session.id, paymentStatus: session.payment_status,
     customerEmailSent, packGenerated, autofulfillEnabled, fulfilledAt,
   });
 
