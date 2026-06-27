@@ -83,6 +83,12 @@ export async function POST(request: NextRequest) {
 
   const resend = new Resend(resendKey);
 
+  // V12.12.11: Log which sender is being used so failures are diagnosable in Vercel logs
+  const usingFallbackSender = !process.env.SETTLEMAP_FROM_EMAIL;
+  if (!usingFallbackSender) {
+    console.warn("[refund-request] Using SETTLEMAP_FROM_EMAIL:", fromEmail, "— ensure this domain is verified in Resend or remove the env var to use onboarding@resend.dev");
+  }
+
   const { error } = await resend.emails.send({
     from: fromEmail,
     to: supportEmail,
@@ -93,13 +99,24 @@ export async function POST(request: NextRequest) {
   });
 
   if (error) {
-    console.error("[refund-request] Email send failed:", (error as { name?: string }).name ?? "unknown");
+    // V12.12.11: Non-fatal. Do not return 500. Email failure is likely an unverified sender domain.
+    // The user must email support directly. Returning 200 so the page shows a controlled fallback, not a crash.
+    const errName = (error as { name?: string }).name ?? "unknown";
+    console.error(
+      "[refund-request] Email send failed:", errName,
+      "— from:", fromEmail,
+      "— to:", supportEmail,
+      "— If validation_error: SETTLEMAP_FROM_EMAIL domain is not verified in Resend. Remove env var or verify domain."
+    );
     return NextResponse.json(
-      { error: "Could not submit your request. Please email support@settlemap.app directly with your payment details." },
-      { status: 500 },
+      {
+        error: `We could not send your request automatically (email system: ${errName}). Please email support@settlemap.app directly, quoting your payment email and receipt number.`,
+        emailFailed: true,
+      },
+      { status: 200 }, // V12.12.11: Controlled fallback — not a 500
     );
   }
 
-  console.log("[refund-request] Refund request submitted. from:", paymentEmail, "reason:", reason);
+  console.log("[refund-request] Refund request submitted successfully. from:", fromEmail, "customer:", paymentEmail, "reason:", reason);
   return NextResponse.json({ success: true });
 }

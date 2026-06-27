@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.10",
+    fulfilmentVersion: "V12.12.11",
 
     // Infrastructure
     stripeConfigured,
@@ -212,8 +212,15 @@ export async function GET() {
     fulfilmentEmailSenderWarning: !!(process.env.SETTLEMAP_FROM_EMAIL),
     // refundRequestApiEnabled: POST /api/refund-request route exists and validates input
     refundRequestApiEnabled: true,
-    // refundRequestSubmitWorks: form POSTs to /api/refund-request, shows success state, no auto-refund
-    refundRequestSubmitWorks: true,
+    // refundRequestSubmitWorks: false when SETTLEMAP_FROM_EMAIL is set to unverified domain (validation_error)
+    // true only when using onboarding@resend.dev fallback (no SETTLEMAP_FROM_EMAIL set)
+    refundRequestSubmitWorks: !(process.env.SETTLEMAP_FROM_EMAIL),
+    // refundRequestEmailWarning: true when SETTLEMAP_FROM_EMAIL is set to a potentially unverified domain
+    refundRequestEmailWarning: !!(process.env.SETTLEMAP_FROM_EMAIL),
+    // refundRequestEmailFailureNonFatal: V12.12.11 fix — email failure returns 200 + controlled message, not 500
+    refundRequestEmailFailureNonFatal: true,
+    // resendDomainVerified: set to true only after verifying settlemap.app domain in Resend dashboard
+    resendDomainVerified: false,
     // payoutDestinationChecked: verify manually in Stripe Dashboard > Settings > Bank account
     payoutDestinationChecked: false,
     // noStripeAppsRequired: all webhook handling is server-side via STRIPE_WEBHOOK_SECRET
