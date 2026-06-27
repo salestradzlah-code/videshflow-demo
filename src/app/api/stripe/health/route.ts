@@ -33,7 +33,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.12",
+    fulfilmentVersion: "V12.12.13",
 
     // Infrastructure
     stripeConfigured,
@@ -237,6 +237,9 @@ export async function GET() {
     safetyCopyCustomerFriendly: true,
     paymentsStillPaused: !!(process.env.PAYMENTS_GLOBAL_PAUSED),
     voiceGuidePaidCheckoutStillDisabled: true,
+
+    // V12.12.13 cleanup flags
+    strayRouteStarterKitFileRemoved: true,
 
     // Regression guards
     sessionLookupReady: true,
