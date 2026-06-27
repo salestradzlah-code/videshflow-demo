@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { generateStudentMovePack, buildPackEmail } from "@/lib/studentMovePack";
 import { generatePremiumRelocationPack, buildPremiumPackEmail } from "@/lib/premiumRelocationPack";
 import { generateVoiceGuide, buildVoiceGuideEmail } from "@/lib/voiceGuide";
+import { getEmailReadiness } from "@/lib/emailReadiness";
 
 export const dynamic = "force-dynamic";
 
@@ -195,7 +196,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const fromEmail = process.env.SETTLEMAP_FROM_EMAIL ?? "SettleMap <support@settlemap.app>";
+  // V12.12.14: Use central email readiness helper
+  const emailReadiness = getEmailReadiness();
+  const fromEmail = emailReadiness.fromEmail;
   const supportEmail = process.env.SETTLEMAP_SUPPORT_EMAIL ?? "support@settlemap.app";
 
   const { error: sendError } = await resend.emails.send({

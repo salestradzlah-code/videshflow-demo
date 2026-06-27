@@ -7,6 +7,7 @@ import {
   getPaidProductRuntimes,
 } from "@/lib/paidProducts";
 import { researchLinksRegistry } from "@/data/researchLinksRegistry";
+import { getEmailReadiness } from "@/lib/emailReadiness";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export async function GET() {
   const stripeConfigured = !!process.env.STRIPE_SECRET_KEY && !!process.env.STRIPE_WEBHOOK_SECRET;
   const resendConfigured = !!process.env.RESEND_API_KEY;
   const adminTokenConfigured = !!process.env.SETTLEMAP_ADMIN_TOKEN;
-  const fromEmailConfigured = !!process.env.SETTLEMAP_FROM_EMAIL;
+  const emailReadiness = getEmailReadiness();
   const clientSecretExposureBlocked =
     !process.env.NEXT_PUBLIC_GEMINI_API_KEY &&
     !process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY &&
@@ -33,14 +34,14 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.13",
+    fulfilmentVersion: "V12.12.14",
 
     // Infrastructure
     stripeConfigured,
     resendConfigured,
     adminTokenConfigured,
-    fromEmailConfigured,
-    fulfilmentEmailConfigured: resendConfigured && fromEmailConfigured,
+    fromEmailConfigured: emailReadiness.fromEmailConfigured,
+    fulfilmentEmailConfigured: resendConfigured && emailReadiness.fromEmailConfigured,
 
     // Product config
     paidProductConfigReady: getPaidProductRuntimes().length === 3,
@@ -186,7 +187,6 @@ export async function GET() {
 
     // V12.12.8 Production incident fixes
     webhookEmailSenderFixed: true,
-    webhookPilotSafeFromEmail: !(process.env.SETTLEMAP_FROM_EMAIL),
     webhookEmailFailureNonFatal: true,
     webhookNoLongerReturns500OnEmailError: true,
     voiceGuideHardDisabled: true,
@@ -200,32 +200,32 @@ export async function GET() {
     v12128RegressionSafe: true,
 
     // V12.12.10 Stripe safety check flags
-    // stripeModeChecked: confirmed LIVE mode via Stripe OAuth screen showing "SettleMap — Live account"
     stripeModeChecked: true,
     stripeLiveModeConfirmed: true,
-    // paymentsPausedForSafety: PAYMENTS_GLOBAL_PAUSED=true active in Vercel env
     paymentsPausedForSafety: !!(process.env.PAYMENTS_GLOBAL_PAUSED),
-    // voiceGuidePaidCheckoutDisabled: CHECKOUT_ENABLED=false in voice-guide/page.tsx + global pause
     voiceGuidePaidCheckoutDisabled: true,
-    // fulfilmentEmailInvestigated: root cause was unverified sender; fixed to onboarding@resend.dev fallback + non-fatal
     fulfilmentEmailInvestigated: true,
-    fulfilmentEmailSenderWarning: !!(process.env.SETTLEMAP_FROM_EMAIL),
-    // refundRequestApiEnabled: POST /api/refund-request route exists and validates input
     refundRequestApiEnabled: true,
-    // refundRequestSubmitWorks: false when SETTLEMAP_FROM_EMAIL is set to unverified domain (validation_error)
-    // true only when using onboarding@resend.dev fallback (no SETTLEMAP_FROM_EMAIL set)
-    refundRequestSubmitWorks: !(process.env.SETTLEMAP_FROM_EMAIL),
-    // refundRequestEmailWarning: true when SETTLEMAP_FROM_EMAIL is set to a potentially unverified domain
-    refundRequestEmailWarning: !!(process.env.SETTLEMAP_FROM_EMAIL),
-    // refundRequestEmailFailureNonFatal: V12.12.11 fix — email failure returns 200 + controlled message, not 500
     refundRequestEmailFailureNonFatal: true,
-    // resendDomainVerified: set to true only after verifying settlemap.app domain in Resend dashboard
-    resendDomainVerified: false,
-    // payoutDestinationChecked: verify manually in Stripe Dashboard > Settings > Bank account
     payoutDestinationChecked: false,
-    // noStripeAppsRequired: all webhook handling is server-side via STRIPE_WEBHOOK_SECRET
     noStripeAppsRequired: true,
     v12129RegressionSafe: true,
+
+    // V12.12.14 Email readiness — fixed flags (V12.12.8 era logic was inverted)
+    // All derived from emailReadiness helper (src/lib/emailReadiness.ts)
+    emailReadinessVersion: "V12.12.14",
+    fromEmailDomain: emailReadiness.fromEmailDomain,
+    resendDomainVerified: emailReadiness.resendDomainVerified,
+    resendDomainVerificationSource: emailReadiness.resendDomainVerificationSource,
+    settlemapFromEmailUsesVerifiedDomain: emailReadiness.settlemapFromEmailUsesVerifiedDomain,
+    resendVerifiedSenderConfigured: emailReadiness.resendVerifiedSenderConfigured,
+    fulfilmentEmailSenderWarning: emailReadiness.fulfilmentEmailSenderWarning,
+    webhookPilotSafeFromEmail: emailReadiness.webhookPilotSafeFromEmail,
+    refundRequestEmailWarning: emailReadiness.refundRequestEmailWarning,
+    refundRequestSubmitWorks: emailReadiness.resendVerifiedSenderConfigured,
+    emailSenderWarningCleared: emailReadiness.emailSenderWarningCleared,
+    fulfilmentEmailReadyForPilot: emailReadiness.fulfilmentEmailReadyForPilot,
+    refundRequestEmailReady: emailReadiness.refundRequestEmailReady,
 
     // V12.12.12 customer copy polish flags
     customerCopyPolished: true,
@@ -240,6 +240,10 @@ export async function GET() {
 
     // V12.12.13 cleanup flags
     strayRouteStarterKitFileRemoved: true,
+
+    // V12.12.14 payment + voice safety confirmation
+    paymentsStillPausedV1214: process.env.PAYMENTS_GLOBAL_PAUSED === "true",
+    voiceGuideStillBlocked: true,
 
     // Regression guards
     sessionLookupReady: true,

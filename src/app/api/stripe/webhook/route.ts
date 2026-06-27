@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { generateStudentMovePack, buildPackEmail } from "@/lib/studentMovePack";
 import { generatePremiumRelocationPack, buildPremiumPackEmail } from "@/lib/premiumRelocationPack";
 import { generateVoiceGuide, buildVoiceGuideEmail } from "@/lib/voiceGuide";
+import { getEmailReadiness } from "@/lib/emailReadiness";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -190,9 +191,13 @@ export async function POST(request: NextRequest) {
     return new Response("Email service not configured", { status: 500 });
   }
 
-  // V12.12.8: Pilot-safe sender. onboarding@resend.dev only delivers to Resend account owner.
-  // Set SETTLEMAP_FROM_EMAIL to a verified Resend domain sender for real customer delivery.
-  const fromEmail = process.env.SETTLEMAP_FROM_EMAIL ?? "onboarding@resend.dev";
+  // V12.12.14: Use central email readiness helper.
+  // fromEmail is always the verified sender when SETTLEMAP_FROM_EMAIL is set to a verified domain.
+  const emailReadiness = getEmailReadiness();
+  const fromEmail = emailReadiness.fromEmail;
+  if (emailReadiness.usingFallbackSender) {
+    console.warn("[webhook] SETTLEMAP_FROM_EMAIL not set — using onboarding@resend.dev fallback (delivers to Resend account owner only)");
+  }
   const supportEmail = process.env.SETTLEMAP_SUPPORT_EMAIL ?? "support@settlemap.app";
   const fulfilledAt = new Date().toISOString();
   let customerEmailSent = false;

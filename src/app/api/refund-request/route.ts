@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { getEmailReadiness } from "@/lib/emailReadiness";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +45,9 @@ export async function POST(request: NextRequest) {
   }
 
   const supportEmail = process.env.SETTLEMAP_SUPPORT_EMAIL ?? "support@settlemap.app";
-  // V12.12.8: Pilot-safe sender — see webhook for same pattern
-  const fromEmail = process.env.SETTLEMAP_FROM_EMAIL ?? "onboarding@resend.dev";
+  // V12.12.14: Use central email readiness helper
+  const emailReadiness = getEmailReadiness();
+  const fromEmail = emailReadiness.fromEmail;
   const submittedAt = new Date().toISOString();
 
   const rows: [string, string][] = [
@@ -83,10 +85,13 @@ export async function POST(request: NextRequest) {
 
   const resend = new Resend(resendKey);
 
-  // V12.12.11: Log which sender is being used so failures are diagnosable in Vercel logs
-  const usingFallbackSender = !process.env.SETTLEMAP_FROM_EMAIL;
-  if (!usingFallbackSender) {
-    console.warn("[refund-request] Using SETTLEMAP_FROM_EMAIL:", fromEmail, "— ensure this domain is verified in Resend or remove the env var to use onboarding@resend.dev");
+  // V12.12.14: Log sender readiness from central helper
+  if (emailReadiness.usingFallbackSender) {
+    console.warn("[refund-request] SETTLEMAP_FROM_EMAIL not set — using onboarding@resend.dev fallback");
+  } else if (!emailReadiness.resendVerifiedSenderConfigured) {
+    console.warn("[refund-request] SETTLEMAP_FROM_EMAIL is set but domain not verified. If send fails, verify domain in Resend dashboard.");
+  } else {
+    console.log("[refund-request] Using verified sender:", emailReadiness.fromEmailDomain);
   }
 
   const { error } = await resend.emails.send({
