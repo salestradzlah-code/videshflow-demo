@@ -1022,7 +1022,7 @@ function AIPreviewSection() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Limited AI planning pilot</p>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">AI planning support</p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">AI assistance that stays honest about what it can do</h2>
             <p className="mt-3 text-sm leading-7 text-zinc-600">
               Ask checklist-style questions based on your selected route. If the live AI is temporarily rate-limited, SettleMap shows built-in checklist guidance so the plan still works.
@@ -1521,7 +1521,7 @@ function EarlyAccessPricingSection() {
             </div>
           </div>
           <div className="space-y-3">
-            {["Full 90-day route-aware move plan", "Document readiness checklist", "Services research categories", "First-week setup guide", "AI planning assistant (limited pilot)", "Copy-ready scripts and rental safety checklist"].map((item) => (
+            {["Full 90-day route-aware move plan", "Document readiness checklist", "Services research categories", "First-week setup guide", "AI planning assistant", "Copy-ready scripts and rental safety checklist"].map((item) => (
               <div key={item} className="flex items-center gap-2.5 text-sm text-zinc-700">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
                 {item}
@@ -2041,7 +2041,7 @@ function RouteReadyCard({ isReady, isDomestic, routeLabel, routeMeta, onViewPlan
           <Route className="mt-1 h-6 w-6 text-emerald-600" />
           <div>
             <p className="text-lg font-semibold">Complete the route choices above</p>
-            <p className="mt-1 text-sm leading-6 text-zinc-600">The full dashboard, timeline, document checklist and AI planning assistant stay hidden until your route is selected. Cities and pets are optional. This keeps the first action clear.</p>
+            <p className="mt-1 text-sm leading-6 text-zinc-600">Your personalised plan — tasks, documents, services and AI planning support — builds from your route details. Cities and add-ons are optional.</p>
           </div>
         </div>
       )}
@@ -2421,7 +2421,7 @@ function RouteStarterKit({ origin, destination, reasonFocus, profileFocus, route
           onClick={() => trackEvent("action_link_clicked", { source: "route_starter_kit", route: routeLabel })}
           className="mt-6 inline-flex items-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-emerald-700"
         >
-          Open route starter kit <ArrowRight className="ml-2 h-4 w-4" />
+          View route starter kit <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       ) : (
         <div className="mt-6 rounded-xl bg-zinc-50 p-4 text-sm leading-6 text-zinc-600">
@@ -2554,7 +2554,7 @@ function AiPlanningAssistant({
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-white/10 p-3"><Bot className="h-6 w-6 text-white" /></div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Limited AI pilot</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">AI planning support</p>
           <h2 className="text-2xl font-semibold">AI planning assistant</h2>
         </div>
       </div>
@@ -2645,7 +2645,7 @@ function RealStoriesSection() {
   return (
     <section id="real-stories" className="scroll-mt-24 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="Human proof" title="Real stories grid" description="Community insights can become searchable, anonymised relocation wisdom across many global routes." />
+        <SectionHeader eyebrow="Move planning examples" title="Common move scenarios" description="Illustrative planning scenarios showing common relocation challenges and approaches. Not real user stories — real stories will be added only with explicit permission." />
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {realStories.map((story) => (
             <article key={story.name} className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-sm transition-all duration-200 ease-in-out hover:border-zinc-300">
@@ -2666,18 +2666,27 @@ function RealStoriesSection() {
 }
 
 function ArchitectureSection() {
+  const trustCards = [
+    "No account needed to try",
+    "No document upload required",
+    "Route-first checklist",
+    "Official-source reminders",
+    "Printable plan",
+    "Clear planning boundaries",
+  ];
+
   return (
     <section className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl rounded-xl bg-emerald-600 p-8 text-white shadow-sm sm:p-10">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Safety and architecture</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Global route planning now, scalable integrations later</h2>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">This early access version uses a limited server-side AI planning pilot, local progress state and static data panels to support the planning experience. It does not upload documents, run OCR, contact providers, or make bookings on your behalf.</p>
-            <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">{DISCLAIMER_SHORT}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Built for safer planning</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Planning support designed to stay in its lane</h2>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-emerald-50">SettleMap helps you build a route-aware move plan without uploading documents, contacting providers, or making bookings on your behalf. Your progress is saved in your browser only — no account, no server storage.</p>
+            <p className="mt-5 rounded-xl bg-white/10 p-4 text-xs leading-6 text-emerald-50">SettleMap provides planning support only. Always verify important details with official sources before acting.</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {["No forced login", "Dashboard hidden until route is selected", "Document checklist preview", "Server-side AI chat pilot", "Route-first service research", "Safe non-advisory wording"].map((item) => (
+            {trustCards.map((item) => (
               <div key={item} className="rounded-xl border border-white/10 bg-white/10 p-4 text-sm font-semibold text-white/90">
                 <CheckCircle2 className="mb-3 h-5 w-5 text-white" />
                 {item}
