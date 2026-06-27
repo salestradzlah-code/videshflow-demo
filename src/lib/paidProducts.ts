@@ -156,6 +156,10 @@ export type AddonRuntime = FutureAddonConfig & {
   priceConfigured: boolean;
 };
 
+// V12.12.15 safety: Voice Guide remains intentionally blocked for checkout.
+// Do not activate Voice Guide by env flags alone; remove this hard block only in an approved Voice activation release.
+const VOICE_GUIDE_CHECKOUT_HARD_BLOCKED = true;
+
 function envValue(name: string): string | undefined {
   const value = process.env[name];
   return value && value.trim() ? value.trim() : undefined;
@@ -193,18 +197,22 @@ function readStripePriceId(config: PaidProductConfig): string | null {
 export function getPaidProductRuntime(slug: PaidProductSlug): PaidProductRuntime {
   const config = paidProductConfigs[slug];
   const stripePriceId = readStripePriceId(config);
-  const publicCheckoutEnabled = readAnyFlag(
+  const rawPublicCheckoutEnabled = readAnyFlag(
     [config.publicCheckoutFlag, ...config.publicCheckoutAliasFlags],
     config.defaultPublicEnabled,
   );
-  const serverCheckoutEnabled = readFlag(
+  const rawServerCheckoutEnabled = readFlag(
     config.serverCheckoutFlag,
     config.defaultServerEnabled,
   );
-  const autofulfillEnabled = readFlag(
+  const rawAutofulfillEnabled = readFlag(
     config.autofulfillFlag,
     config.defaultAutofulfillEnabled,
   );
+  const hardBlocked = slug === "voice_guide" && VOICE_GUIDE_CHECKOUT_HARD_BLOCKED;
+  const publicCheckoutEnabled = hardBlocked ? false : rawPublicCheckoutEnabled;
+  const serverCheckoutEnabled = hardBlocked ? false : rawServerCheckoutEnabled;
+  const autofulfillEnabled = hardBlocked ? false : rawAutofulfillEnabled;
 
   const missingEnvVars =
     config.requiresStripePriceId && !stripePriceId && config.stripePriceEnvVar
@@ -212,6 +220,7 @@ export function getPaidProductRuntime(slug: PaidProductSlug): PaidProductRuntime
       : [];
 
   const checkoutReady =
+    !hardBlocked &&
     publicCheckoutEnabled &&
     serverCheckoutEnabled &&
     (!config.requiresStripePriceId || Boolean(stripePriceId));

@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
   const emailReadiness = getEmailReadiness();
   const fromEmail = emailReadiness.fromEmail;
   if (emailReadiness.usingFallbackSender) {
-    console.warn("[webhook] SETTLEMAP_FROM_EMAIL not set — using onboarding@resend.dev fallback (delivers to Resend account owner only)");
+    console.warn("[webhook] SETTLEMAP_FROM_EMAIL not set — using SettleMap noreply fallback");
   }
   const supportEmail = process.env.SETTLEMAP_SUPPORT_EMAIL ?? "support@settlemap.app";
   const fulfilledAt = new Date().toISOString();

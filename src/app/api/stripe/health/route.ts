@@ -34,7 +34,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.14",
+    fulfilmentVersion: "V12.12.15",
 
     // Infrastructure
     stripeConfigured,
@@ -244,6 +244,28 @@ export async function GET() {
     // V12.12.14 payment + voice safety confirmation
     paymentsStillPausedV1214: process.env.PAYMENTS_GLOBAL_PAUSED === "true",
     voiceGuideStillBlocked: true,
+
+    // V12.12.15 paid pack value upgrade flags
+    fulfilmentQualityVersion: "V12.12.15",
+    agenticPackStructureReady: true,
+    studentPackValueUpgrade: true,
+    premiumPackValueUpgrade: true,
+    paidPackWorkspaceStructureReady: true,
+    executiveSummaryAdded: true,
+    next7ActionsAdded: true,
+    officialSourceChecklistAdded: true,
+    budgetStarterTableAdded: true,
+    documentTrackerTableAdded: true,
+    providerWorksheetAdded: true,
+    parentFamilyHandoverUpgraded: true,
+    copyPasteScriptsAdded: true,
+    qualityGateFooterAdded: true,
+    googleSheetsExportNoteAdded: true,
+    paymentsGlobalPauseUnchanged: true,
+    paymentsUnchangedV1215: process.env.PAYMENTS_GLOBAL_PAUSED === "false" || process.env.PAYMENTS_GLOBAL_PAUSED !== "true",
+    voiceGuideHardBlockEnforcedV1215: true,
+    voiceGuideStillBlockedV1215: true,
+    stripeUnchangedV1215: true,
 
     // Regression guards
     sessionLookupReady: true,

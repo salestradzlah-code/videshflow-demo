@@ -63,8 +63,8 @@ export function getEmailReadiness() {
   const emailSenderWarningCleared = resendVerifiedSenderConfigured;
 
   // The from-email value to use when sending (safe for all routes)
-  // Falls back to onboarding@resend.dev only when no custom sender is configured
-  const fromEmail = fromEmailConfigured ? rawFromEmail : "onboarding@resend.dev";
+  // Falls back to the verified SettleMap sender when no custom sender is configured.
+  const fromEmail = fromEmailConfigured ? rawFromEmail : "SettleMap <noreply@settlemap.app>";
   const usingFallbackSender = !fromEmailConfigured;
 
   return {

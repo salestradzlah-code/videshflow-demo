@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
   // V12.12.14: Log sender readiness from central helper
   if (emailReadiness.usingFallbackSender) {
-    console.warn("[refund-request] SETTLEMAP_FROM_EMAIL not set — using onboarding@resend.dev fallback");
+    console.warn("[refund-request] SETTLEMAP_FROM_EMAIL not set — using SettleMap noreply fallback");
   } else if (!emailReadiness.resendVerifiedSenderConfigured) {
     console.warn("[refund-request] SETTLEMAP_FROM_EMAIL is set but domain not verified. If send fails, verify domain in Resend dashboard.");
   } else {
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
       "[refund-request] Email send failed:", errName,
       "— from:", fromEmail,
       "— to:", supportEmail,
-      "— If validation_error: SETTLEMAP_FROM_EMAIL domain is not verified in Resend. Remove env var or verify domain."
+      "— If validation_error: SETTLEMAP_FROM_EMAIL domain is not verified in Resend. Verify the settlemap.app sender domain."
     );
     return NextResponse.json(
       {
