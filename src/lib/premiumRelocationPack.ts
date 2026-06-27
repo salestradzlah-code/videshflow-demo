@@ -47,6 +47,9 @@ export interface PremiumRelocationPack {
   providerWorksheet: PackTableSection;
   copyPasteScripts: PackSection;
   qualityGateFooter: PackSection;
+  // V12.12.17 — banking/tax checklist + dedicated family handover
+  bankingTaxChecklist: PackSection;
+  familyHandover: PackSection | null;
   // Original sections
   routeSnapshot: PackSection;
   detailedChecklist: PackSection;
@@ -58,6 +61,29 @@ export interface PremiumRelocationPack {
   researchLinks: PackSection;
   officialSourceReminder: PackSection;
   safetyBoundaryNote: string;
+}
+
+// ── V12.12.17 — Banking and tax planning checklist ────────────────────────────
+
+function getBankingTaxChecklist(moveReason: string): PackSection {
+  const corporateNote =
+    moveReason.toLowerCase().includes("corporate") || moveReason.toLowerCase().includes("job") || moveReason.toLowerCase().includes("work")
+      ? "A work-related move can trigger tax residency rules in both your origin and destination country in the same tax year — this is common and not a sign of a problem, but it must be checked."
+      : "Even a non-work move can change your tax residency status depending on how many days you spend in each country — check both countries' residency rules.";
+
+  return {
+    title: "Banking and tax planning checklist",
+    items: [
+      "OPEN A LOCAL ACCOUNT EARLY: Most banks require proof of address or an employment/admission letter — ask what is accepted before you travel so you are not stuck using a travel card for weeks.",
+      "KEEP YOUR ORIGIN ACCOUNT ACTIVE: Many banking OTPs and verifications still route to your origin number and account for the first few months — do not close it on departure.",
+      "COMPARE INTERNATIONAL TRANSFER OPTIONS: Compare Wise, Revolut, your bank's wire transfer, and a local FX broker for your specific currency pair before moving a large sum.",
+      corporateNote,
+      "CHECK DOUBLE-TAX AGREEMENT STATUS: Check whether your origin and destination country have a double taxation agreement — this affects whether the same income is taxed twice.",
+      "TRACK YOUR DAYS IN EACH COUNTRY: Tax residency in most countries is based on day-count thresholds (commonly around 183 days, but this varies). Keep a simple log of travel dates.",
+      "FILE BOTH-COUNTRY OBLIGATIONS ON TIME: If you may owe tax filings in both countries, note both deadlines now — penalties for late filing apply even if no tax is ultimately owed.",
+      "QUALIFIED ADVISER REMINDER: This checklist is planning support only. SettleMap does not provide tax or financial advice. Before making any tax residency, filing, or cross-border banking decision, consult a qualified tax adviser or accountant licensed in the relevant country.",
+    ],
+  };
 }
 
 // ─── Route helpers ────────────────────────────────────────────────────────────
@@ -321,7 +347,7 @@ function getPremiumQualityGateFooter(): PackSection {
       "NO SENSITIVE DOCUMENT UPLOAD: SettleMap does not require or accept passport numbers, visa numbers, bank account details, medical records, or ID document uploads at any point.",
       "DO NOT SEND SENSITIVE DATA: Do not send passport numbers, visa numbers, bank details, medical details, or ID documents to SettleMap.",
       "SUPPORT: Questions about your pack or the SettleMap service — email support@settlemap.app. We respond within 2 business days.",
-      "PACK VERSION: V12.12.16 — Private Pilot Polish",
+      "PACK VERSION: V12.12.17 — Paid Email Content Completeness",
     ],
   };
 }
@@ -558,7 +584,8 @@ export function generatePremiumRelocationPack(meta: PremiumPackMetadata): Premiu
   };
 
   const personaModules: PackSection[] = [];
-  const moduleOrder: ModuleKey[] = ["family", "couple", "solo", "corporate", "returning", "pet", "student"];
+  const moduleOrder: ModuleKey[] = ["couple", "solo", "corporate", "returning", "pet", "student"];
+  const familyHandover: PackSection | null = modules.has("family") ? PERSONA_MODULES.family : null;
   for (const key of moduleOrder) {
     if (modules.has(key)) personaModules.push(PERSONA_MODULES[key]);
   }
@@ -630,6 +657,8 @@ export function generatePremiumRelocationPack(meta: PremiumPackMetadata): Premiu
     providerWorksheet: getPremiumProviderWorksheet(),
     copyPasteScripts: getPremiumCopyPasteScripts(origin, destination),
     qualityGateFooter: getPremiumQualityGateFooter(),
+    bankingTaxChecklist: getBankingTaxChecklist(moveReason),
+    familyHandover,
     routeSnapshot,
     detailedChecklist,
     budgetTemplate,
@@ -725,9 +754,10 @@ export function buildPremiumPackEmail(
       ${modules ? `<p style="color:#3f3f46;font-size:14px;margin:4px 0;"><strong>Add-on modules:</strong> ${modules}</p>` : ""}
     </div>`;
 
-  const mainSections = [
-    pack.routeSnapshot,
-    pack.detailedChecklist,
+  // Appendix: supplementary legacy content — kept available, moved out of the
+  // way of the 20 mandated sections so worksheets and the new banking/tax
+  // checklist are never buried.
+  const appendixSections = [
     pack.budgetTemplate,
     pack.documentTracker,
     pack.firstWeekPlan,
@@ -736,9 +766,8 @@ export function buildPremiumPackEmail(
     pack.researchLinks,
     pack.officialSourceReminder,
   ];
-
-  const coreSectionsHtml = mainSections.map((s) => sectionToHtml(s, accent)).join("");
-  const coreSectionsText = mainSections.map(sectionToText).join("\n\n");
+  const appendixHtml = appendixSections.map((s) => sectionToHtml(s, accent)).join("");
+  const appendixText = appendixSections.map(sectionToText).join("\n\n");
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -767,13 +796,18 @@ export function buildPremiumPackEmail(
         ${sectionToHtml(pack.afterReceiving, accent)}
       </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
-        ${coreSectionsHtml}
+        ${sectionToHtml(pack.routeSnapshot, accent)}
+      </div>
+      <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.detailedChecklist, accent)}
       </div>
       <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
+        <p style="color:${accent};font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px 0;">Your worksheets — copy these into Google Sheets or Excel</p>
         ${tableToHtml(pack.budgetStarterTable, accent)}
-      </div>
-      <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
         ${tableToHtml(pack.documentTrackerTable, accent)}
+      </div>
+      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.bankingTaxChecklist, "#9a3412")}
       </div>
       <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
         ${tableToHtml(pack.providerWorksheet, accent)}
@@ -787,13 +821,26 @@ export function buildPremiumPackEmail(
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.copyPasteScripts, accent)}
       </div>
+      ${
+        pack.familyHandover
+          ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.familyHandover, "#166534")}
+      </div>`
+          : ""
+      }
       <div style="margin:24px 0;">
         <p style="color:#3f3f46;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px 0;">Build your route plan</p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app" style="color:#7c3aed;font-weight:600;">settlemap.app</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/#route-selector" style="color:#7c3aed;">Route planner</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/countries" style="color:#7c3aed;">Route Library</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/services" style="color:#7c3aed;">Services Directory</a></p>
-        <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/pilot-feedback" style="color:#7c3aed;">Pilot feedback</a></p>
+      </div>
+      <div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:16px 20px;margin:20px 0;">
+        <p style="color:#5b21b6;font-size:14px;margin:0;">Tell us what's missing or what worked: <a href="https://settlemap.app/pilot-feedback" style="color:#7c3aed;font-weight:600;">settlemap.app/pilot-feedback</a></p>
+      </div>
+      <div style="background:#fafafa;border:1px dashed #d4d4d8;border-radius:8px;padding:18px 20px;margin:20px 0;">
+        <p style="color:#71717a;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0;">Appendix — extra planning notes</p>
+        ${appendixHtml}
       </div>
       <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0;">
         ${sectionToHtml(pack.qualityGateFooter, "#92400e")}
@@ -804,7 +851,6 @@ export function buildPremiumPackEmail(
         </p>
       </div>
       <hr style="border:none;border-top:1px solid #e4e4e7;margin:24px 0;" />
-      <p style="color:#71717a;font-size:12px;line-height:1.6;">${pack.safetyBoundaryNote}</p>
       <p style="color:#3f3f46;font-size:14px;margin:16px 0 0 0;">Regards,<br><strong>SettleMap Team</strong><br>
         <a href="mailto:support@settlemap.app" style="color:#7c3aed;">support@settlemap.app</a></p>
     </div>
@@ -829,11 +875,16 @@ export function buildPremiumPackEmail(
     "",
     sectionToText(pack.afterReceiving),
     "",
-    coreSectionsText,
+    sectionToText(pack.routeSnapshot),
     "",
+    sectionToText(pack.detailedChecklist),
+    "",
+    "YOUR WORKSHEETS — copy these into Google Sheets or Excel:",
     tableToText(pack.budgetStarterTable),
     "",
     tableToText(pack.documentTrackerTable),
+    "",
+    sectionToText(pack.bankingTaxChecklist),
     "",
     tableToText(pack.providerWorksheet),
     "",
@@ -843,22 +894,26 @@ export function buildPremiumPackEmail(
     "",
     sectionToText(pack.copyPasteScripts),
     "",
-    sectionToText(pack.qualityGateFooter),
-    "",
+    pack.familyHandover ? sectionToText(pack.familyHandover) : "",
+    pack.familyHandover ? "" : "",
     "BUILD YOUR ROUTE PLAN:",
     "https://settlemap.app",
     "https://settlemap.app/#route-selector",
     "https://settlemap.app/countries",
     "https://settlemap.app/services",
-    "https://settlemap.app/pilot-feedback",
+    "",
+    "PILOT FEEDBACK: https://settlemap.app/pilot-feedback",
+    "",
+    "APPENDIX — extra planning notes:",
+    appendixText,
+    "",
+    sectionToText(pack.qualityGateFooter),
     "",
     "Do not send: passport numbers, visa numbers, bank details, medical details or ID documents.",
     "",
-    pack.safetyBoundaryNote,
-    "",
     "Regards, SettleMap Team | support@settlemap.app",
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== "")
     .join("\n");
 
   return { subject: "Your SettleMap Premium Relocation Pack is ready", html, text };

@@ -323,7 +323,7 @@ function getQualityGateFooter(): PackSection {
       "NO SENSITIVE DOCUMENT UPLOAD: SettleMap does not require or accept passport numbers, visa numbers, bank account details, medical records, or ID document uploads at any point.",
       "DO NOT SEND SENSITIVE DATA: Do not send passport numbers, visa numbers, bank details, medical details, or ID documents to SettleMap.",
       "SUPPORT: Questions about your pack or the SettleMap service — email support@settlemap.app. We respond within 2 business days.",
-      "PACK VERSION: V12.12.16 — Private Pilot Polish",
+      "PACK VERSION: V12.12.17 — Paid Email Content Completeness",
     ],
   };
 }
@@ -661,9 +661,9 @@ export function buildPackEmail(
       ${concerns ? `<p style="color:#3f3f46;font-size:14px;margin:4px 0;"><strong>Main concerns:</strong> ${concerns}</p>` : ""}
     </div>`;
 
-  const coreSectionsHtml = [
-    pack.ninetyDayPlan,
-    pack.firstSevenDays,
+  // Appendix: supplementary legacy content, kept available but moved out of the
+  // way of the 19 mandated sections so the promised worksheets are never buried.
+  const appendixSections = [
     ...pack.concernSections.filter(
       (s) =>
         s.title !== pack.firstSevenDays.title &&
@@ -672,9 +672,9 @@ export function buildPackEmail(
     ),
     pack.researchLinksSection,
     pack.officialSourceReminder,
-  ]
-    .map(sectionToHtml)
-    .join("");
+  ];
+  const appendixHtml = appendixSections.map(sectionToHtml).join("");
+  const appendixText = appendixSections.map(sectionToText).join("\n\n");
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -703,22 +703,22 @@ export function buildPackEmail(
         ${sectionToHtml(pack.afterReceiving)}
       </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
-        ${coreSectionsHtml}
+        ${sectionToHtml(pack.ninetyDayPlan)}
       </div>
       <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
-        ${tableToHtml(pack.budgetStarterTable, accent)}
-      </div>
-      <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
-        ${tableToHtml(pack.documentTrackerTable, accent)}
-      </div>
-      <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
-        ${tableToHtml(pack.providerWorksheet, accent)}
+        ${sectionToHtml(pack.firstSevenDays)}
       </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.officialSourceChecklist)}
       </div>
       <div style="background:#eff6ff;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.routeResearchPrompts)}
+      </div>
+      <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
+        <p style="color:${accent};font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px 0;">Your worksheets — copy these into Google Sheets or Excel</p>
+        ${tableToHtml(pack.budgetStarterTable, accent)}
+        ${tableToHtml(pack.documentTrackerTable, accent)}
+        ${tableToHtml(pack.providerWorksheet, accent)}
       </div>
       <div style="background:#f0fdf4;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.enhancedParentHandover)}
@@ -732,7 +732,13 @@ export function buildPackEmail(
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/#route-planner" style="color:#059669;">Route planner</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/countries" style="color:#059669;">Route Library</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/services" style="color:#059669;">Services Directory</a></p>
-        <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/pilot-feedback" style="color:#059669;">Pilot feedback</a></p>
+      </div>
+      <div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:16px 20px;margin:20px 0;">
+        <p style="color:#166534;font-size:14px;margin:0;">Tell us what's missing or what worked: <a href="https://settlemap.app/pilot-feedback" style="color:#059669;font-weight:600;">settlemap.app/pilot-feedback</a></p>
+      </div>
+      <div style="background:#fafafa;border:1px dashed #d4d4d8;border-radius:8px;padding:18px 20px;margin:20px 0;">
+        <p style="color:#71717a;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0;">Appendix — extra planning notes</p>
+        ${appendixHtml}
       </div>
       <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0;">
         ${sectionToHtml(pack.qualityGateFooter)}
@@ -743,28 +749,12 @@ export function buildPackEmail(
         </p>
       </div>
       <hr style="border:none;border-top:1px solid #e4e4e7;margin:24px 0;" />
-      <p style="color:#71717a;font-size:12px;line-height:1.6;">${pack.safetyBoundaryNote}</p>
       <p style="color:#3f3f46;font-size:14px;margin:16px 0 0 0;">Regards,<br><strong>SettleMap Team</strong><br>
         <a href="mailto:support@settlemap.app" style="color:#059669;">support@settlemap.app</a></p>
     </div>
   </div>
 </body>
 </html>`;
-
-  const coreSectionsText = [
-    pack.ninetyDayPlan,
-    pack.firstSevenDays,
-    ...pack.concernSections.filter(
-      (s) =>
-        s.title !== pack.firstSevenDays.title &&
-        s.title !== pack.ninetyDayPlan.title &&
-        s.title !== pack.researchLinksSection.title,
-    ),
-    pack.researchLinksSection,
-    pack.officialSourceReminder,
-  ]
-    .map(sectionToText)
-    .join("\n\n");
 
   const text = [
     greeting,
@@ -783,34 +773,39 @@ export function buildPackEmail(
     "",
     sectionToText(pack.afterReceiving),
     "",
-    coreSectionsText,
+    sectionToText(pack.ninetyDayPlan),
     "",
+    sectionToText(pack.firstSevenDays),
+    "",
+    sectionToText(pack.officialSourceChecklist),
+    "",
+    sectionToText(pack.routeResearchPrompts),
+    "",
+    "YOUR WORKSHEETS — copy these into Google Sheets or Excel:",
     tableToText(pack.budgetStarterTable),
     "",
     tableToText(pack.documentTrackerTable),
     "",
     tableToText(pack.providerWorksheet),
     "",
-    sectionToText(pack.officialSourceChecklist),
-    "",
-    sectionToText(pack.routeResearchPrompts),
-    "",
     sectionToText(pack.enhancedParentHandover),
     "",
     sectionToText(pack.copyPasteScripts),
-    "",
-    sectionToText(pack.qualityGateFooter),
     "",
     "BUILD YOUR ROUTE PLAN:",
     "https://settlemap.app",
     "https://settlemap.app/#route-planner",
     "https://settlemap.app/countries",
     "https://settlemap.app/services",
-    "https://settlemap.app/pilot-feedback",
+    "",
+    "PILOT FEEDBACK: https://settlemap.app/pilot-feedback",
+    "",
+    "APPENDIX — extra planning notes:",
+    appendixText,
+    "",
+    sectionToText(pack.qualityGateFooter),
     "",
     "Do not send: passport numbers, visa numbers, bank details, medical details or ID documents.",
-    "",
-    pack.safetyBoundaryNote,
     "",
     "Regards, SettleMap Team | support@settlemap.app",
   ]
