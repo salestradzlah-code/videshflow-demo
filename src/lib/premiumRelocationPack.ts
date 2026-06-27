@@ -37,6 +37,8 @@ export interface PremiumRelocationPack {
   effectiveRoute: string;
   // V12.12.15 — agentic structure sections
   executiveSummary: PackSection;
+  whyUseful: PackSection;
+  afterReceiving: PackSection;
   next7Actions: PackSection;
   officialSourceChecklist: PackSection;
   routeResearchPrompts: PackSection;
@@ -63,20 +65,20 @@ export interface PremiumRelocationPack {
 function routeContext(origin: string, destination: string): string {
   const d = destination.toLowerCase();
   if (d.includes("uk") || d.includes("united kingdom") || d.includes("britain"))
-    return `${origin} to UK — check your visa category (Skilled Worker, Family, Student, etc.), BRP or eVisa collection, NHS surcharge, and UKVI processing timeline. Refer to UK Visas and Immigration (UKVI) official site and UKCISA for guidance.`;
+    return `For a move from ${origin} to the UK, check your visa category (Skilled Worker, Family, Student, etc.), BRP or eVisa collection, NHS surcharge, and UKVI processing timeline. Refer to UK Visas and Immigration (UKVI) official site and UKCISA for guidance.`;
   if (d.includes("australia"))
-    return `${origin} to Australia — check your visa subclass, CoE if applicable, OSHC or OVHC health insurance, and state/territory arrival requirements. Refer to the Australian Department of Home Affairs for official guidance.`;
+    return `For a move from ${origin} to Australia, check your visa subclass, CoE if applicable, OSHC or OVHC health insurance, and state/territory arrival requirements. Refer to the Australian Department of Home Affairs for official guidance.`;
   if (d.includes("canada"))
-    return `${origin} to Canada — check your permit or visa type, Express Entry or LMIA where relevant, provincial health coverage waiting period, and settlement services. Refer to IRCC (Immigration, Refugees and Citizenship Canada) for official guidance.`;
+    return `For a move from ${origin} to Canada, check your permit or visa type, Express Entry or LMIA where relevant, provincial health coverage waiting period, and settlement services. Refer to IRCC (Immigration, Refugees and Citizenship Canada) for official guidance.`;
   if (d.includes("germany") || d.includes("eu") || d.includes("europe"))
-    return `${origin} to Germany / EU — check APS assessment where relevant, blocked account (Sperrkonto) if applicable, Anmeldung city registration, residence permit appointment timelines, and health insurance requirements. Refer to your German consulate or relevant EU country's official immigration authority.`;
+    return `For a move from ${origin} to Germany / the EU, check APS assessment where relevant, blocked account (Sperrkonto) if applicable, Anmeldung city registration, residence permit appointment timelines, and health insurance requirements. Refer to your German consulate or relevant EU country's official immigration authority.`;
   if (d.includes("singapore"))
-    return `${origin} to Singapore — check IPA/pass type (EP, SP, DP, LTVP, student pass), MOM requirements, accommodation near your workplace, banking setup, and SIM. Refer to ICA Singapore and MOM Singapore for official guidance.`;
+    return `For a move from ${origin} to Singapore, check IPA/pass type (EP, SP, DP, LTVP, student pass), MOM requirements, accommodation near your workplace, banking setup, and SIM. Refer to ICA Singapore and MOM Singapore for official guidance.`;
   if ((d.includes("us") || d.includes("united states") || d.includes("usa")) && !d.includes("australia"))
-    return `${origin} to US — check your visa category (H-1B, L-1, F-1, spouse visa, etc.), SEVIS if applicable, Social Security Number eligibility, state tax residency rules, and local setup requirements. Refer to USCIS and your institution or employer's HR for official guidance.`;
+    return `For a move from ${origin} to the US, check your visa category (H-1B, L-1, F-1, spouse visa, etc.), SEVIS if applicable, Social Security Number eligibility, state tax residency rules, and local setup requirements. Refer to USCIS and your institution or employer's HR for official guidance.`;
   if (d.includes("new zealand"))
-    return `${origin} to New Zealand — check your visa type, Accredited Employer Work Visa (AEWV) if employer-sponsored, health insurance, and settlement services. Refer to Immigration New Zealand for official guidance.`;
-  return `${origin} to ${destination} — check entry and residency requirements with your destination country's official immigration authority. Verify health insurance requirements, local registration obligations, and tax residency implications. Always confirm requirements on official government portals before acting.`;
+    return `For a move from ${origin} to New Zealand, check your visa type, Accredited Employer Work Visa (AEWV) if employer-sponsored, health insurance, and settlement services. Refer to Immigration New Zealand for official guidance.`;
+  return `For a move from ${origin} to ${destination}, check entry and residency requirements with your destination country's official immigration authority. Verify health insurance requirements, local registration obligations, and tax residency implications. Always confirm requirements on official government portals before acting.`;
 }
 
 function assessRiskLevel(origin: string, destination: string, whoIsMoving: string, moveReason: string): string {
@@ -96,7 +98,7 @@ function assessRiskLevel(origin: string, destination: string, whoIsMoving: strin
   if (m.includes("corporate") || m.includes("transfer")) factors.push("corporate transfer may trigger tax residency obligations in both countries — consult a qualified tax adviser");
 
   const factorText = factors.length > 0 ? " Specific factors: " + factors.join("; ") + "." : "";
-  return `${complexity} — Allow 10–16 weeks for visa, housing, and setup depending on route.${factorText}`;
+  return `${complexity} — Check the current official processing timeline before booking irreversible travel.${factorText}`;
 }
 
 // ─── V12.12.15 section generators ─────────────────────────────────────────────
@@ -120,6 +122,34 @@ function generateExecutiveSummary(
       "Top 5 things to verify officially: (1) Visa / permit conditions and permitted activities — official immigration authority of your destination (2) Mandatory local registration deadlines and documents (3) Health insurance requirements for your visa type — check whether employer or institution provides coverage (4) Tax residency implications in both origin and destination countries — consult a qualified tax adviser (5) Bank account requirements for your specific visa or residency status",
       "Top 5 things to do this week: (1) Check the official visa processing timeline for your category (2) Research at least 2 housing options in your destination neighbourhood (3) Confirm your origin SIM will stay active for 6+ months (4) Build a 90-day budget estimate with a named emergency buffer (5) Prepare your document checklist and scan originals to a secure cloud folder",
       `Planning complexity: ${assessRiskLevel(origin, destination, whoIsMoving, moveReason)}`,
+    ],
+  };
+}
+
+function getWhyThisPackIsUseful(): PackSection {
+  return {
+    title: "Why this pack is useful",
+    items: [
+      "It turns your move into a practical action plan.",
+      "It separates planning guidance from official-source verification.",
+      "It gives worksheets you can copy into Google Sheets or Excel.",
+      "It gives provider questions and scripts so you do not start from a blank page.",
+      "It helps families, students, and solo movers align on documents, money, and emergency contacts.",
+    ],
+  };
+}
+
+function getAfterReceivingChecklist(): PackSection {
+  return {
+    title: "What to do after receiving this pack",
+    items: [
+      "Save this email.",
+      "Copy the budget worksheet into Google Sheets or Excel.",
+      "Complete the document tracker.",
+      "Verify official requirements.",
+      "Send 2 to 3 provider questions using the scripts.",
+      "Share the family handover or relevant persona section if applicable.",
+      "Send feedback using the pilot feedback link: https://settlemap.app/pilot-feedback",
     ],
   };
 }
@@ -265,18 +295,18 @@ function getPremiumProviderWorksheet(): PackTableSection {
   };
 }
 
-function getPremiumCopyPasteScripts(origin: string, destination: string): PackSection {
+function getPremiumCopyPasteScripts(_origin: string, _destination: string): PackSection {
   return {
     title: "Copy-paste scripts — ready to use",
     items: [
-      `HOUSING ENQUIRY (email or agent): "Hi, I am relocating from ${origin} to ${destination} in [month] and looking for a [flat/house] in [area] for [number of people]. Could you confirm: (1) Deposit amount and return conditions (2) What is included in the rent — utilities, internet, parking? (3) Minimum notice period (4) Whether there is a guarantor requirement for [visa type] holders. Thank you."`,
-      `MOVER / SHIPPING QUOTE (email): "I am moving from ${origin} to ${destination} in [month]. Estimated volume: [X boxes / cubic metres / number of rooms]. Could you provide a quote covering: (1) Packing service if available (2) Door-to-door transit time (3) Insurance included in the quote (4) Customs clearance assistance and any items you cannot ship. I will compare 2–3 quotes before deciding. Thank you."`,
+      `HOUSING ENQUIRY (email or agent): "Hi, I am moving from [origin] to [destination] in [month] and looking for a [flat/house] in [area] for [number of people]. Could you confirm: (1) Deposit amount and return conditions (2) What is included in the rent — utilities, internet, parking? (3) Minimum notice period (4) Whether there is a guarantor requirement for [visa type] holders. Thank you."`,
+      `MOVER / SHIPPING QUOTE (email): "I am moving from [origin] to [destination] in [month]. Estimated volume: [X boxes / cubic metres / number of rooms]. Could you provide a quote covering: (1) Packing service if available (2) Door-to-door transit time (3) Insurance included in the quote (4) Customs clearance assistance and any items you cannot ship. I will compare 2–3 quotes before deciding. Thank you."`,
       `BANK ENQUIRY (email or branch prep): "I am relocating to [city] in [month] on a [visa/permit type]. Could you let me know: (1) What documents are required to open an account for my status (2) Whether there is a no-fee account for new arrivals or international residents (3) Whether I can start the application online before arrival (4) How long account opening takes. Thank you."`,
-      `SIM / eSIM ENQUIRY: "I am arriving in [city] in [month]. Could you confirm: (1) Whether a prepaid SIM is available without a local bank account (2) Data allowance and monthly cost (3) International calls to ${origin} — included or add-on? (4) Whether an eSIM can be activated before arrival. Thank you."`,
-      `INSURANCE ENQUIRY (email): "I am relocating to ${destination} in [month] with [family details if applicable]. Could you confirm: (1) What is covered and excluded from the health plan (2) Whether pre-existing conditions are covered (3) Whether dependants are included (4) The claims process and reimbursement timeline (5) Whether there is a waiting period before coverage starts. Thank you."`,
-      `CORPORATE HR — RELOCATION PACKAGE (internal email): "I am confirming the details of my relocation support for my transfer from ${origin} to ${destination}. Could you confirm in writing: (1) The total allowance and what is covered vs what requires pre-approval (2) The reimbursement process and submission deadline (3) Whether temporary accommodation is arranged or self-managed (4) The local HR contact at the destination office. Thank you."`,
+      `SIM / eSIM ENQUIRY: "I am arriving in [city] in [month]. Could you confirm: (1) Whether a prepaid SIM is available without a local bank account (2) Data allowance and monthly cost (3) International calls to [origin country] — included or add-on? (4) Whether an eSIM can be activated before arrival. Thank you."`,
+      `INSURANCE ENQUIRY (email): "I am moving from [origin] to [destination] in [month] with [family details if applicable]. Could you confirm: (1) What is covered and excluded from the health plan (2) Whether pre-existing conditions are covered (3) Whether dependants are included (4) The claims process and reimbursement timeline (5) Whether there is a waiting period before coverage starts. Thank you."`,
+      `CORPORATE HR — RELOCATION PACKAGE (internal email): "I am confirming the details of my relocation support for my move from [origin] to [destination]. Could you confirm in writing: (1) The total allowance and what is covered vs what requires pre-approval (2) The reimbursement process and submission deadline (3) Whether temporary accommodation is arranged or self-managed (4) The local HR contact at the destination office. Thank you."`,
       `SCHOOL / CHILDCARE ENQUIRY (if applicable): "I am relocating to [city] in [month] with a child aged [age]. Could you let me know: (1) Whether there are enrolment vacancies (2) The enrolment deadline and required documents (3) Language of instruction and any language support for international students (4) Registration fees and term cost. Thank you."`,
-      `PET RELOCATION ENQUIRY (if applicable): "I am relocating from ${origin} to ${destination} in [month] with a [dog/cat/other]. I need support with: import permit application, quarantine arrangements if required, and airline cargo booking. Could you confirm the process, timeline, and all-in estimated cost? I will only use IATA-certified agents. Thank you."`,
+      `PET RELOCATION ENQUIRY (if applicable): "I am moving from [origin] to [destination] in [month] with a [dog/cat/other]. I need support with: import permit application, quarantine arrangements if required, and airline cargo booking. Could you confirm the process, timeline, and all-in estimated cost? I will only use IATA-certified agents. Thank you."`,
       "SCRIPT POLICY: These are neutral research templates only. SettleMap does not recommend or endorse specific providers. Verify credentials, pricing, licensing, and suitability independently before engaging any provider.",
     ],
   };
@@ -289,9 +319,9 @@ function getPremiumQualityGateFooter(): PackSection {
       "PLANNING SUPPORT ONLY: SettleMap is a planning and research tool. It does not provide immigration, legal, tax, financial, property, insurance, medical, school admission, or government advice.",
       "VERIFY OFFICIAL SOURCES: All requirements, deadlines, and costs must be verified directly on official government, employer, institution, or provider websites before you act on them.",
       "NO SENSITIVE DOCUMENT UPLOAD: SettleMap does not require or accept passport numbers, visa numbers, bank account details, medical records, or ID document uploads at any point.",
-      "NO PERSONAL DATA NEEDED: Your planning pack is generated from your route, timing, and module preferences only. No sensitive personal information was required or stored.",
+      "DO NOT SEND SENSITIVE DATA: Do not send passport numbers, visa numbers, bank details, medical details, or ID documents to SettleMap.",
       "SUPPORT: Questions about your pack or the SettleMap service — email support@settlemap.app. We respond within 2 business days.",
-      "PACK VERSION: V12.12.15 — Structured Relocation Workspace",
+      "PACK VERSION: V12.12.16 — Private Pilot Polish",
     ],
   };
 }
@@ -590,6 +620,8 @@ export function generatePremiumRelocationPack(meta: PremiumPackMetadata): Premiu
   return {
     effectiveRoute,
     executiveSummary: generateExecutiveSummary(origin, destination, whoIsMoving, moveReason, timing, effectiveRoute),
+    whyUseful: getWhyThisPackIsUseful(),
+    afterReceiving: getAfterReceivingChecklist(),
     next7Actions: generateNext7Actions(origin, destination, moveReason),
     officialSourceChecklist: getOfficialSourceChecklist(origin, destination),
     routeResearchPrompts: getPremiumRouteResearchPrompts(origin, destination, moveReason),
@@ -722,11 +754,17 @@ export function buildPremiumPackEmail(
       <p style="color:#18181b;font-size:16px;line-height:1.6;">${greeting}</p>
       <p style="color:#3f3f46;font-size:15px;line-height:1.7;">Thank you for joining SettleMap. Your <strong>Premium Relocation Pack</strong> is ready. Payment confirmed by Stripe.</p>
       ${moveDetails}
+      <div style="background:#faf5ff;border:1px solid #ddd6fe;border-radius:8px;padding:18px 20px;margin:20px 0;">
+        ${sectionToHtml(pack.whyUseful, accent)}
+      </div>
       <div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.executiveSummary, accent)}
       </div>
       <div style="background:#faf5ff;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.next7Actions, accent)}
+      </div>
+      <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.afterReceiving, accent)}
       </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${coreSectionsHtml}
@@ -755,6 +793,7 @@ export function buildPremiumPackEmail(
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/#route-selector" style="color:#7c3aed;">Route planner</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/countries" style="color:#7c3aed;">Route Library</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/services" style="color:#7c3aed;">Services Directory</a></p>
+        <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/pilot-feedback" style="color:#7c3aed;">Pilot feedback</a></p>
       </div>
       <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0;">
         ${sectionToHtml(pack.qualityGateFooter, "#92400e")}
@@ -766,7 +805,7 @@ export function buildPremiumPackEmail(
       </div>
       <hr style="border:none;border-top:1px solid #e4e4e7;margin:24px 0;" />
       <p style="color:#71717a;font-size:12px;line-height:1.6;">${pack.safetyBoundaryNote}</p>
-      <p style="color:#3f3f46;font-size:14px;margin:16px 0 0 0;">Regards,<br><strong>Ash</strong><br>SettleMap<br>
+      <p style="color:#3f3f46;font-size:14px;margin:16px 0 0 0;">Regards,<br><strong>SettleMap Team</strong><br>
         <a href="mailto:support@settlemap.app" style="color:#7c3aed;">support@settlemap.app</a></p>
     </div>
   </div>
@@ -782,9 +821,13 @@ export function buildPremiumPackEmail(
     timingMonth ? `Planned timing: ${timingMonth}` : "",
     modules ? `Modules: ${modules}` : "",
     "",
+    sectionToText(pack.whyUseful),
+    "",
     sectionToText(pack.executiveSummary),
     "",
     sectionToText(pack.next7Actions),
+    "",
+    sectionToText(pack.afterReceiving),
     "",
     coreSectionsText,
     "",
@@ -807,12 +850,13 @@ export function buildPremiumPackEmail(
     "https://settlemap.app/#route-selector",
     "https://settlemap.app/countries",
     "https://settlemap.app/services",
+    "https://settlemap.app/pilot-feedback",
     "",
     "Do not send: passport numbers, visa numbers, bank details, medical details or ID documents.",
     "",
     pack.safetyBoundaryNote,
     "",
-    "Regards, Ash -- SettleMap | support@settlemap.app",
+    "Regards, SettleMap Team | support@settlemap.app",
   ]
     .filter((l) => l !== undefined)
     .join("\n");

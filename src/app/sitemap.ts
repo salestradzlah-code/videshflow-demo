@@ -18,6 +18,7 @@ const staticRoutes = [
   "/get-help",
   "/home-setup",
   "/partner-with-us",
+  "/pilot-feedback",
   "/pricing",
   "/privacy",
   "/reference-links",

@@ -196,6 +196,12 @@ function VoiceGuideView({ data }: { data: SessionData }) {
           <RefreshCw className="mr-2 h-4 w-4" />
           Need a refund review?
         </Link>
+        <Link
+          href="/pilot-feedback"
+          className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 transition-all hover:border-zinc-400"
+        >
+          Send pilot feedback
+        </Link>
       </div>
     </div>
   );
@@ -248,6 +254,8 @@ function PremiumPackView({ data }: { data: SessionData }) {
   });
 
   const allSections: PackSection[] = [
+    pack.whyUseful,
+    pack.afterReceiving,
     pack.routeSnapshot,
     pack.detailedChecklist,
     pack.budgetTemplate,
@@ -392,6 +400,12 @@ function PremiumPackView({ data }: { data: SessionData }) {
           <RefreshCw className="mr-2 h-4 w-4" />
           Need a refund review?
         </Link>
+        <Link
+          href="/pilot-feedback"
+          className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 transition-all hover:border-zinc-400"
+        >
+          Send pilot feedback
+        </Link>
       </div>
 
       <div className="mt-5 flex items-start gap-2 rounded-xl border border-zinc-200 bg-white p-4 text-xs text-zinc-500">
@@ -416,6 +430,8 @@ function PaidPackView({ data }: { data: SessionData }) {
   });
 
   const allSections: PackSection[] = [
+    pack.whyUseful,
+    pack.afterReceiving,
     pack.ninetyDayPlan,
     pack.firstSevenDays,
     ...pack.concernSections.filter(
@@ -564,6 +580,12 @@ function PaidPackView({ data }: { data: SessionData }) {
         >
           <RefreshCw className="mr-2 h-4 w-4" />
           Need a refund review?
+        </Link>
+        <Link
+          href="/pilot-feedback"
+          className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 transition-all hover:border-zinc-400"
+        >
+          Send pilot feedback
         </Link>
       </div>
 

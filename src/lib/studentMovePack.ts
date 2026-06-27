@@ -36,6 +36,8 @@ export interface StudentMovePack {
   routeSummary: string;
   // V12.12.15 — agentic structure sections
   executiveSummary: PackSection;
+  whyUseful: PackSection;
+  afterReceiving: PackSection;
   next7Actions: PackSection;
   officialSourceChecklist: PackSection;
   routeResearchPrompts: PackSection;
@@ -68,31 +70,31 @@ function resolveRoute(meta: PackMetadata): string {
 function routeContext(route: string): string {
   const r = route.toLowerCase();
   // IMPORTANT: check "australia" BEFORE "us" — "australia" contains "us" as a substring.
-  if (r.includes("australia")) return "India to Australia — check your CoE, student visa (subclass 500), OSHC health insurance, and university arrival reporting requirements. Refer to the Australian Department of Home Affairs and your institution's international student office for official guidance.";
-  if (r.includes("canada")) return "India to Canada — check your LOA, study permit, PAL/SDS requirements where relevant, and GIC if required by your institution. Check provincial health coverage requirements. Refer to IRCC (Immigration, Refugees and Citizenship Canada) and your institution for official guidance.";
-  if (r.includes("uk")) return "India to UK — check your CAS, student visa, BRP/eVisa collection, NHS surcharge, and UKVI visa timeline. Refer to UKCISA and the UK Visas and Immigration (UKVI) official site for official guidance.";
-  if (r.includes("germany") || r.includes("eu")) return "India to Germany / EU — check APS assessment where relevant, blocked account (Sperrkonto), health insurance, Anmeldung city registration, and residence permit appointment timelines. Refer to your German consulate and institution's international office for official guidance.";
-  if (r.includes("singapore")) return "India to Singapore — check IPA/student pass requirements, accommodation near your institution, local SIM setup, bank and payment account requirements, and campus reporting dates. Refer to ICA Singapore and your institution for official guidance.";
+  if (r.includes("australia")) return "For a student move from India to Australia, check your CoE, student visa (subclass 500), OSHC health insurance, and university arrival reporting requirements. Refer to the Australian Department of Home Affairs and your institution's international student office for official guidance.";
+  if (r.includes("canada")) return "For a student move from India to Canada, check your LOA, study permit, PAL/SDS requirements where relevant, and GIC if required by your institution. Check provincial health coverage requirements. Refer to IRCC (Immigration, Refugees and Citizenship Canada) and your institution for official guidance.";
+  if (r.includes("uk")) return "For a student move from India to the UK, check your CAS, student visa, BRP/eVisa collection, NHS surcharge, and UKVI visa timeline. Refer to UKCISA and the UK Visas and Immigration (UKVI) official site for official guidance.";
+  if (r.includes("germany") || r.includes("eu")) return "For a student move from India to Germany / the EU, check APS assessment where relevant, blocked account (Sperrkonto), health insurance, Anmeldung city registration, and residence permit appointment timelines. Refer to your German consulate and institution's international office for official guidance.";
+  if (r.includes("singapore")) return "For a student move from India to Singapore, check IPA/student pass requirements, accommodation near your institution, local SIM setup, bank and payment account requirements, and campus reporting dates. Refer to ICA Singapore and your institution for official guidance.";
   // Word-boundary check for US
-  if (/\bus\b/.test(r) || r.includes("united states") || r.includes("usa")) return "India to US — check your I-20, SEVIS fee payment, F-1 visa interview requirements, and earliest entry date rules. Refer to your DSO, the US Embassy, and the official SEVIS site for official guidance.";
+  if (/\bus\b/.test(r) || r.includes("united states") || r.includes("usa")) return "For a student move from India to the US, check your I-20, SEVIS fee payment, F-1 visa interview requirements, and earliest entry date rules. Refer to your DSO, the US Embassy, and the official SEVIS site for official guidance.";
   return "Check your destination country's official immigration and student entry requirements, university arrival guidance, housing rules, health coverage requirements, and local registration requirements.";
 }
 
 function assessRiskLevel(route: string): string {
   const r = route.toLowerCase();
   if (r.includes("germany") || r.includes("eu"))
-    return "Medium-High — Germany / EU route involves APS assessment (for Indian degrees in some fields), blocked account (Sperrkonto), health insurance proof, Anmeldung city registration, and residence permit timeline. Allow 12–16 weeks minimum lead time.";
+    return "Medium-High — Germany / EU route involves APS assessment (for Indian degrees in some fields), blocked account (Sperrkonto), health insurance proof, Anmeldung city registration, and residence permit timeline. Check the current official processing timeline before booking irreversible travel.";
   if (r.includes("australia"))
-    return "Medium — Australia student route requires CoE, student visa (subclass 500), OSHC health insurance, and university arrival reporting obligations. Allow 10–14 weeks.";
+    return "Medium — Australia student route requires CoE, student visa (subclass 500), OSHC health insurance, and university arrival reporting obligations. Check the current official processing timeline before booking irreversible travel.";
   if (r.includes("canada"))
-    return "Medium — Canada study permit may require GIC, LOA, PAL/SDS depending on institution, plus provincial health coverage waiting periods. Allow 10–14 weeks.";
+    return "Medium — Canada study permit may require GIC, LOA, PAL/SDS depending on institution, plus provincial health coverage waiting periods. Check the current official processing timeline before booking irreversible travel.";
   if (r.includes("uk"))
-    return "Low-Medium — UK student visa route is well-documented via UKVI. CAS from university required, plus BRP or eVisa, NHS surcharge payment. Allow 8–12 weeks.";
+    return "Low-Medium — UK student visa route is well-documented via UKVI. CAS from university required, plus BRP or eVisa, NHS surcharge payment. Check the current official processing timeline before booking irreversible travel.";
   if (/\bus\b/.test(r) || r.includes("united states") || r.includes("usa"))
-    return "Low-Medium — US F-1 route requires I-20, SEVIS fee, F-1 visa interview, and earliest entry date compliance. Allow 8–12 weeks.";
+    return "Low-Medium — US F-1 route requires I-20, SEVIS fee, F-1 visa interview, and earliest entry date compliance. Check the current official processing timeline before booking irreversible travel.";
   if (r.includes("singapore"))
-    return "Low — Singapore student pass (ICA) route is typically streamlined. Confirm IPA letter and campus reporting date with your institution. Allow 6–10 weeks.";
-  return "Low-Medium — Allow at least 8–12 weeks for official steps. Verify requirements with your destination's official immigration authority before acting.";
+    return "Low — Singapore student pass (ICA) route is typically streamlined. Confirm IPA letter and campus reporting date with your institution. Check the current official processing timeline before booking irreversible travel.";
+  return "Low-Medium — Check the current official processing timeline before booking irreversible travel. Verify requirements with your destination's official immigration authority before acting.";
 }
 
 // ─── V12.12.15 section generators ─────────────────────────────────────────────
@@ -110,6 +112,34 @@ function generateExecutiveSummary(meta: PackMetadata, route: string): PackSectio
       "Top 5 things to verify officially: (1) Student visa conditions and processing timeline — official immigration authority of your destination (2) University enrollment and arrival reporting requirements — your institution's international student office (3) Health insurance requirements for your specific visa type (4) Local registration deadlines where applicable (5) Bank account opening requirements for your visa category",
       "Top 5 things to do this week: (1) Check the official visa processing timeline for your route (2) Email your university international student office for an arrival guide (3) Shortlist at least 2 accommodation options (4) Confirm your India SIM will stay active for 6+ months (5) Draft a 60-day budget estimate",
       `Planning complexity: ${assessRiskLevel(route)}`,
+    ],
+  };
+}
+
+function getWhyThisPackIsUseful(): PackSection {
+  return {
+    title: "Why this pack is useful",
+    items: [
+      "It turns your move into a practical action plan.",
+      "It separates planning guidance from official-source verification.",
+      "It gives worksheets you can copy into Google Sheets or Excel.",
+      "It gives provider questions and scripts so you do not start from a blank page.",
+      "It helps students and families align on documents, money, and emergency contacts.",
+    ],
+  };
+}
+
+function getAfterReceivingChecklist(): PackSection {
+  return {
+    title: "What to do after receiving this pack",
+    items: [
+      "Save this email.",
+      "Copy the budget worksheet into Google Sheets or Excel.",
+      "Complete the document tracker.",
+      "Verify official requirements.",
+      "Send 2 to 3 provider questions using the scripts.",
+      "Share the parent and student handover section if relevant.",
+      "Send feedback using the pilot feedback link: https://settlemap.app/pilot-feedback",
     ],
   };
 }
@@ -269,14 +299,12 @@ function getEnhancedParentHandover(route: string, departure: string): PackSectio
   };
 }
 
-function getCopyPasteScripts(route: string): PackSection {
-  // route used for destination context in scripts
-  const _route = route;
+function getCopyPasteScripts(_route: string): PackSection {
   return {
     title: "Copy-paste scripts — ready to use",
     items: [
       `UNIVERSITY INTERNATIONAL OFFICE (email): Subject: Arriving student — arrival guidance request | Body: "Dear International Student Office, I am an incoming student arriving in [month] for [programme name]. I would like to confirm: (1) Mandatory arrival reporting date and process (2) Where and when to collect my student ID (3) Orientation schedule and whether I need to register in advance (4) Documents to bring on my first day. Thank you — [Your name], [Student ID if known]"`,
-      `ACCOMMODATION PROVIDER (email or WhatsApp): "Hi, I am planning to move to ${_route} in [month] and I am interested in a [flat/room] in [area]. Could you confirm: (1) The deposit amount and refund conditions (2) What is included in the rent — utilities, internet, laundry? (3) The minimum notice period to end the tenancy (4) Whether there is a guarantor requirement for international students. Thank you."`,
+      `ACCOMMODATION PROVIDER (email or WhatsApp): "Hi, I am moving from [origin] to [destination] in [month] and I am interested in a [flat/room] in [area]. Could you confirm: (1) The deposit amount and refund conditions (2) What is included in the rent — utilities, internet, laundry? (3) The minimum notice period to end the tenancy (4) Whether there is a guarantor requirement for international students. Thank you."`,
       `BANK (branch visit prep or email): "I am relocating to [city] in [month] as an international student on a [visa type] visa. Could you let me know: (1) Documents required to open a student account (2) Whether there is a fee-free student account option (3) Whether I can start the application online before arrival (4) How long the account opening process takes. Thank you."`,
       `SIM PROVIDER (enquiry): "I am arriving in [city] in [month] and need a SIM or eSIM. Could you confirm: (1) Whether a prepaid SIM is available without a local bank account (2) Data allowance and monthly cost (3) International calls to India — included or add-on? (4) Whether an eSIM can be ordered before arrival to activate on landing. Thank you."`,
       `INSURANCE PROVIDER (email): "I am relocating to [destination] as an international student in [month]. Could you confirm: (1) What is covered and excluded from the health plan (2) Whether pre-existing conditions are covered (3) The claims process and typical reimbursement timeline (4) Whether the plan satisfies the health insurance requirement for a [visa type] student visa. Thank you."`,
@@ -293,9 +321,9 @@ function getQualityGateFooter(): PackSection {
       "PLANNING SUPPORT ONLY: SettleMap is a planning and research tool. It does not provide immigration, legal, tax, financial, property, insurance, medical, school admission, or government advice.",
       "VERIFY OFFICIAL SOURCES: All requirements, deadlines, and costs must be verified directly on official government, institution, or provider websites before you act on them.",
       "NO SENSITIVE DOCUMENT UPLOAD: SettleMap does not require or accept passport numbers, visa numbers, bank account details, medical records, or ID document uploads at any point.",
-      "NO PERSONAL DATA NEEDED: Your planning pack is generated from your route and timing preferences only. No sensitive personal information was required or stored.",
+      "DO NOT SEND SENSITIVE DATA: Do not send passport numbers, visa numbers, bank details, medical details, or ID documents to SettleMap.",
       "SUPPORT: Questions about your pack or the SettleMap service — email support@settlemap.app. We respond within 2 business days.",
-      "PACK VERSION: V12.12.15 — Structured Relocation Workspace",
+      "PACK VERSION: V12.12.16 — Private Pilot Polish",
     ],
   };
 }
@@ -505,6 +533,8 @@ export function generateStudentMovePack(meta: PackMetadata): StudentMovePack {
 
     // V12.12.15 new sections
     executiveSummary: generateExecutiveSummary(meta, route),
+    whyUseful: getWhyThisPackIsUseful(),
+    afterReceiving: getAfterReceivingChecklist(),
     next7Actions: generateNext7Actions(route),
     officialSourceChecklist: getOfficialSourceChecklist(route),
     routeResearchPrompts: getRouteResearchPrompts(route),
@@ -660,11 +690,17 @@ export function buildPackEmail(
       <p style="color:#18181b;font-size:16px;line-height:1.6;">${greeting}</p>
       <p style="color:#3f3f46;font-size:15px;line-height:1.7;">Thank you for joining SettleMap early access. Your <strong>Student Move Pack</strong> is ready. Payment confirmed by Stripe.</p>
       ${moveDetails}
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:18px 20px;margin:20px 0;">
+        ${sectionToHtml(pack.whyUseful)}
+      </div>
       <div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.executiveSummary)}
       </div>
       <div style="background:#f0fdf4;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.next7Actions)}
+      </div>
+      <div style="background:#ffffff;border:1px solid #d1fae5;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.afterReceiving)}
       </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${coreSectionsHtml}
@@ -696,6 +732,7 @@ export function buildPackEmail(
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/#route-planner" style="color:#059669;">Route planner</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/countries" style="color:#059669;">Route Library</a></p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/services" style="color:#059669;">Services Directory</a></p>
+        <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app/pilot-feedback" style="color:#059669;">Pilot feedback</a></p>
       </div>
       <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0;">
         ${sectionToHtml(pack.qualityGateFooter)}
@@ -707,7 +744,7 @@ export function buildPackEmail(
       </div>
       <hr style="border:none;border-top:1px solid #e4e4e7;margin:24px 0;" />
       <p style="color:#71717a;font-size:12px;line-height:1.6;">${pack.safetyBoundaryNote}</p>
-      <p style="color:#3f3f46;font-size:14px;margin:16px 0 0 0;">Regards,<br><strong>Ash</strong><br>SettleMap<br>
+      <p style="color:#3f3f46;font-size:14px;margin:16px 0 0 0;">Regards,<br><strong>SettleMap Team</strong><br>
         <a href="mailto:support@settlemap.app" style="color:#059669;">support@settlemap.app</a></p>
     </div>
   </div>
@@ -738,9 +775,13 @@ export function buildPackEmail(
     departureMonth ? `Expected departure: ${departureMonth}` : "",
     concerns ? `Main concerns: ${concerns}` : "",
     "",
+    sectionToText(pack.whyUseful),
+    "",
     sectionToText(pack.executiveSummary),
     "",
     sectionToText(pack.next7Actions),
+    "",
+    sectionToText(pack.afterReceiving),
     "",
     coreSectionsText,
     "",
@@ -765,12 +806,13 @@ export function buildPackEmail(
     "https://settlemap.app/#route-planner",
     "https://settlemap.app/countries",
     "https://settlemap.app/services",
+    "https://settlemap.app/pilot-feedback",
     "",
     "Do not send: passport numbers, visa numbers, bank details, medical details or ID documents.",
     "",
     pack.safetyBoundaryNote,
     "",
-    "Regards, Ash -- SettleMap | support@settlemap.app",
+    "Regards, SettleMap Team | support@settlemap.app",
   ]
     .filter((l) => l !== undefined)
     .join("\n");

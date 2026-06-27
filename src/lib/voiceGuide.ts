@@ -239,7 +239,7 @@ export function buildVoiceGuideEmail(
     "",
     guide.safetyBoundaryNote,
     "",
-    "Regards, Ash — SettleMap | support@settlemap.app",
+    "Regards, SettleMap Team | support@settlemap.app",
   ].join("\n\n");
 
   return {

@@ -34,7 +34,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.15",
+    fulfilmentVersion: "V12.12.16",
 
     // Infrastructure
     stripeConfigured,
@@ -246,7 +246,7 @@ export async function GET() {
     voiceGuideStillBlocked: true,
 
     // V12.12.15 paid pack value upgrade flags
-    fulfilmentQualityVersion: "V12.12.15",
+    fulfilmentQualityVersion: "V12.12.16",
     agenticPackStructureReady: true,
     studentPackValueUpgrade: true,
     premiumPackValueUpgrade: true,
@@ -266,6 +266,17 @@ export async function GET() {
     voiceGuideHardBlockEnforcedV1215: true,
     voiceGuideStillBlockedV1215: true,
     stripeUnchangedV1215: true,
+
+    // V12.12.16 private pilot polish flags
+    pilotFeedbackReady: true,
+    customerDelightPolishReady: true,
+    feedbackPageReady: true,
+    routeWordingPolished: true,
+    safeCustomerFooterReady: true,
+    paymentStateUnchanged: true,
+    voiceGuideStillBlockedV1216: true,
+    addOnsCheckoutDisabled: !addonFlags.checkoutEnabled,
+    addOnsAutofulfillDisabled: !addonFlags.autofulfillEnabled,
 
     // Regression guards
     sessionLookupReady: true,
