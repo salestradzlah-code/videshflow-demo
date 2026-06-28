@@ -7,6 +7,23 @@ import {
   RESEARCH_LINKS_BOUNDARY_COPY,
   getResearchLinkChecklistItems,
 } from "@/data/researchLinksRegistry";
+import {
+  budgetRows,
+  documentRows,
+  getBudgetCsvBlock,
+  getDocumentTrackerCsvBlock,
+  getNext7ActionsTrackerCsvBlock,
+  getNext7ActionsTrackerTable,
+  getOfficialSourceResearchPromptItems,
+  getPrivatePilotCtaItems,
+  getProgressTrackerTable,
+  getProviderComparisonCsvBlock,
+  getRiskRegisterCsvBlock,
+  getRiskRegisterTable,
+  getWorkspaceAssetsItems,
+  providerRows,
+  type WorkspaceCsvBlock,
+} from "@/lib/paidWorkspaceAssets";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
@@ -38,14 +55,24 @@ export interface StudentMovePack {
   executiveSummary: PackSection;
   whyUseful: PackSection;
   afterReceiving: PackSection;
+  workspaceAssets: PackSection;
+  budgetCsvBlock: WorkspaceCsvBlock;
+  documentTrackerCsvBlock: WorkspaceCsvBlock;
+  providerComparisonCsvBlock: WorkspaceCsvBlock;
+  riskRegisterCsvBlock: WorkspaceCsvBlock;
+  next7ActionsTrackerCsvBlock: WorkspaceCsvBlock;
   next7Actions: PackSection;
   officialSourceChecklist: PackSection;
   routeResearchPrompts: PackSection;
   budgetStarterTable: PackTableSection;
   documentTrackerTable: PackTableSection;
   providerWorksheet: PackTableSection;
+  riskRegisterTable: PackTableSection;
+  next7ActionsTrackerTable: PackTableSection;
+  progressTrackerTable: PackTableSection;
   enhancedParentHandover: PackSection;
   copyPasteScripts: PackSection;
+  privatePilotCtas: PackSection;
   qualityGateFooter: PackSection;
   // Original sections
   ninetyDayPlan: PackSection;
@@ -144,6 +171,20 @@ function getAfterReceivingChecklist(): PackSection {
   };
 }
 
+function getWorkspaceAssetsSection(): PackSection {
+  return {
+    title: "Workspace assets",
+    items: getWorkspaceAssetsItems(),
+  };
+}
+
+function getPrivatePilotCtas(): PackSection {
+  return {
+    title: "Private pilot update support",
+    items: getPrivatePilotCtaItems(),
+  };
+}
+
 function generateNext7Actions(route: string): PackSection {
   const r = route.toLowerCase();
   const visaAuth = r.includes("uk")
@@ -205,36 +246,16 @@ function getOfficialSourceChecklist(route: string): PackSection {
 
 function getRouteResearchPrompts(route: string): PackSection {
   return {
-    title: "Route research links and search prompts",
-    items: [
-      `Official immigration prompt: search "${route} student visa official government" and open only government or official immigration pages first.`,
-      `University prompt: search "${route} international student arrival checklist official" and compare it with your own university's international student office page.`,
-      `Housing prompt: search "${route} student accommodation official university housing" before using private platforms. Start with university-approved lists where available.`,
-      `Banking prompt: search "${route} student bank account documents official bank" and write down the exact documents each bank asks for.`,
-      `Healthcare prompt: search "${route} student health insurance official university" and verify whether cover is mandatory before arrival.`,
-      "SettleMap reference links: https://settlemap.app/reference-links — use this as a starting map, not as a substitute for official sources.",
-      "Provider research prompt: compare at least two providers for housing, SIM, banking, insurance, and moving/shipping. SettleMap does not recommend or endorse specific providers.",
-    ],
+    title: "Route-specific official-source research prompts",
+    items: getOfficialSourceResearchPromptItems(route, route),
   };
 }
 
 function getBudgetStarterTable(): PackTableSection {
   return {
-    title: "Budget starter worksheet — fill in as you research",
+    title: "Budget starter worksheet",
     headers: ["Category", "Estimate", "Actual", "Notes", "Verification needed"],
-    rows: [
-      ["Visa / permit fees", "", "", "", "Official immigration authority"],
-      ["Flights", "", "", "", "Airline / booking platform"],
-      ["Temporary stay (arrival 1–2 wks)", "", "", "", "University housing / booking platform"],
-      ["Security deposit", "", "", "", "Ask housing provider"],
-      ["First month rent", "", "", "", "Ask housing provider"],
-      ["SIM / internet (monthly)", "", "", "", "Local telecom website"],
-      ["Transport (monthly pass)", "", "", "", "Local transport authority"],
-      ["Food / essentials (monthly)", "", "", "", "Students at your destination"],
-      ["Health insurance (if not included)", "", "", "", "Institution / insurance provider"],
-      ["Setup costs (bedding, kitchen, adaptor)", "", "", "", "Local supermarket / Amazon at destination"],
-      ["Emergency buffer — do not spend", "", "", "8–12 weeks of living costs minimum", "Your own calculation"],
-    ],
+    rows: budgetRows,
     note: "Fill in Estimate and Actual columns as you research. Copy into Google Sheets or Excel to track real spending.",
   };
 }
@@ -243,16 +264,7 @@ function getDocumentTrackerTable(): PackTableSection {
   return {
     title: "Document tracker",
     headers: ["Document", "Needed for", "Owner", "Status", "Where to verify", "Notes"],
-    rows: [
-      ["Passport", "All entry, banking, registration", "You", "", "Passport authority", "Valid 6+ months beyond stay"],
-      ["Student visa / entry document", "Entry, university, bank", "You", "", "Official immigration authority", "Check permitted activities"],
-      ["Admission / offer letter", "Entry, banking, housing", "You", "", "Your institution", "Carry original — not scan only"],
-      ["Accommodation confirmation", "Arrival, registration", "You", "", "Housing provider", "Check-in date + landlord contact"],
-      ["Vaccination record", "Health centre registration", "You", "", "Your GP / doctor", "Especially for ongoing conditions"],
-      ["Doctor letter (if on medication)", "Customs, pharmacy", "You + Doctor", "", "Your GP", "List medications by generic name"],
-      ["Emergency contacts page", "Safety", "You + Family", "", "N/A — you create this", "Print A4, carry in hand luggage"],
-      ["Travel insurance (if applicable)", "Health, trip issues", "You", "", "Insurance provider", "Check coverage dates and exclusions"],
-    ],
+    rows: documentRows,
     note: "Add rows for route-specific documents (GIC letter for Canada, blocked account for Germany, CoE for Australia, etc.).",
   };
 }
@@ -261,16 +273,7 @@ function getProviderWorksheet(): PackTableSection {
   return {
     title: "Provider comparison worksheet",
     headers: ["Category", "Question to ask", "Answer", "Cost", "Risk note", "Decision"],
-    rows: [
-      ["Housing", "Deposit amount and return conditions?", "", "", "Avoid if terms are unclear", ""],
-      ["Housing", "Guarantor required for international student?", "", "", "May need higher deposit instead", ""],
-      ["Bank", "Docs needed to open student account?", "", "", "Bring all required docs to appointment", ""],
-      ["Bank", "Can I open the account online before arrival?", "", "", "Pre-registration saves arrival-day time", ""],
-      ["SIM", "Prepaid SIM without local bank account?", "", "", "Prepaid is safest in first month", ""],
-      ["SIM", "International calls to India included?", "", "", "Check per-minute rates if not included", ""],
-      ["Mover / shipping", "What is included in the quote?", "", "", "Get 2–3 quotes minimum", ""],
-      ["Insurance", "What is excluded from health cover?", "", "", "Read policy document, not just the summary", ""],
-    ],
+    rows: providerRows,
     note: "SettleMap does not recommend or endorse any specific provider. Verify credentials and suitability directly before engaging.",
   };
 }
@@ -288,6 +291,12 @@ function getEnhancedParentHandover(route: string, departure: string): PackSectio
   return {
     title: "Parent and student handover",
     items: [
+      "WHAT PARENTS OWN: Emergency contact copy, backup money-transfer plan, one secure copy of critical documents, and the weekly check-in rhythm.",
+      "WHAT STUDENT OWNS: Visa/entry verification, university arrival steps, accommodation confirmation, local SIM setup, banking setup, and first-week registration tasks.",
+      "WHAT TO VERIFY OFFICIALLY: Visa conditions and timelines, university arrival reporting, health insurance requirements, housing deposit rules, bank account documents, and local emergency numbers.",
+      "WHAT NOT TO PANIC ABOUT: Short silences during travel or orientation, minor first-week spending overruns, homesickness in weeks 1-3, or a slow local bank appointment if the student has backup payment access.",
+      "WHAT TO ESCALATE IMMEDIATELY: No contact for 5+ days without warning, lost passport or visa document, medical emergency, unsafe housing, urgent money access problem, or missed official reporting deadline.",
+      "WEEKLY CHECK-IN TEMPLATE: What changed this week? What is blocked? What official source did you verify? What costs were higher than expected? What is the next action before our next call?",
       `EMERGENCY CONTACTS TO SHARE BEFORE DEPARTURE: (1) Student's new local SIM number — once confirmed at destination (2) Student's accommodation address — once checked in (3) Campus security or residence front desk number (4) Indian consulate or high commission in ${consularSearch} (5) A trusted local contact if available in the destination city`,
       `WEEKLY CHECK-IN PLAN: Agree before departure on a fixed day and time for a video or WhatsApp call — recommend Sunday evening at the destination's local time. If a call is missed: text first, then call. If no contact for 48+ hours in the first week, use a backup (campus security or accommodation front desk). First planned check-in: within 24 hours of landing on ${departure}.`,
       "MONEY TRANSFER PLAN: Agree on the monthly transfer amount, method (Wise / Revolut / bank wire), and transfer date each month. Transfer a few days early to allow for processing times. Both the student and parents should know how to initiate an emergency transfer independently without needing to call each other first.",
@@ -321,9 +330,12 @@ function getQualityGateFooter(): PackSection {
       "PLANNING SUPPORT ONLY: SettleMap is a planning and research tool. It does not provide immigration, legal, tax, financial, property, insurance, medical, school admission, or government advice.",
       "VERIFY OFFICIAL SOURCES: All requirements, deadlines, and costs must be verified directly on official government, institution, or provider websites before you act on them.",
       "NO SENSITIVE DOCUMENT UPLOAD: SettleMap does not require or accept passport numbers, visa numbers, bank account details, medical records, or ID document uploads at any point.",
+      "NO GUARANTEES: SettleMap does not guarantee visa, admission, housing, banking, insurance, medical, provider, travel, or relocation outcomes.",
+      "NO PROVIDER ENDORSEMENT: Provider questions and comparison worksheets are research tools only. SettleMap does not recommend, rank, verify, or endorse specific providers.",
+      "SEEK QUALIFIED PROFESSIONAL ADVICE WHERE NEEDED: Consult qualified professionals for immigration, legal, tax, financial, property, insurance, medical, school/admission, or other regulated decisions.",
       "DO NOT SEND SENSITIVE DATA: Do not send passport numbers, visa numbers, bank details, medical details, or ID documents to SettleMap.",
       "SUPPORT: Questions about your pack or the SettleMap service — email support@settlemap.app. We respond within 2 business days.",
-      "PACK VERSION: V12.12.17 — Paid Email Content Completeness",
+      "PACK VERSION: V12.13 — Paid Pack Workspace Upgrade",
     ],
   };
 }
@@ -535,14 +547,24 @@ export function generateStudentMovePack(meta: PackMetadata): StudentMovePack {
     executiveSummary: generateExecutiveSummary(meta, route),
     whyUseful: getWhyThisPackIsUseful(),
     afterReceiving: getAfterReceivingChecklist(),
+    workspaceAssets: getWorkspaceAssetsSection(),
+    budgetCsvBlock: getBudgetCsvBlock(),
+    documentTrackerCsvBlock: getDocumentTrackerCsvBlock(),
+    providerComparisonCsvBlock: getProviderComparisonCsvBlock(),
+    riskRegisterCsvBlock: getRiskRegisterCsvBlock(),
+    next7ActionsTrackerCsvBlock: getNext7ActionsTrackerCsvBlock(),
     next7Actions: generateNext7Actions(route),
     officialSourceChecklist: getOfficialSourceChecklist(route),
     routeResearchPrompts: getRouteResearchPrompts(route),
     budgetStarterTable: getBudgetStarterTable(),
     documentTrackerTable: getDocumentTrackerTable(),
     providerWorksheet: getProviderWorksheet(),
+    riskRegisterTable: getRiskRegisterTable(),
+    next7ActionsTrackerTable: getNext7ActionsTrackerTable(),
+    progressTrackerTable: getProgressTrackerTable(),
     enhancedParentHandover: getEnhancedParentHandover(route, departure),
     copyPasteScripts: getCopyPasteScripts(route),
+    privatePilotCtas: getPrivatePilotCtas(),
     qualityGateFooter: getQualityGateFooter(),
 
     // Original sections
@@ -644,6 +666,19 @@ function tableToText(table: PackTableSection): string {
   return lines.join("\n");
 }
 
+function csvBlockToHtml(block: WorkspaceCsvBlock, accentColor: string): string {
+  return `
+    <div style="margin:18px 0;">
+      <p style="color:${accentColor};font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0;">${block.title}</p>
+      ${block.note ? `<p style="color:#71717a;font-size:12px;margin:0 0 8px 0;">${block.note}</p>` : ""}
+      <pre style="white-space:pre;overflow-x:auto;background:#18181b;color:#f4f4f5;border-radius:8px;padding:14px;font-size:11px;line-height:1.55;margin:0;">${block.csv}</pre>
+    </div>`;
+}
+
+function csvBlockToText(block: WorkspaceCsvBlock): string {
+  return `${block.title.toUpperCase()}\n${block.csv}`;
+}
+
 export function buildPackEmail(
   pack: StudentMovePack,
   buyerName: string | null,
@@ -702,6 +737,14 @@ export function buildPackEmail(
       <div style="background:#ffffff;border:1px solid #d1fae5;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.afterReceiving)}
       </div>
+      <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.workspaceAssets)}
+        ${csvBlockToHtml(pack.budgetCsvBlock, accent)}
+        ${csvBlockToHtml(pack.documentTrackerCsvBlock, accent)}
+        ${csvBlockToHtml(pack.providerComparisonCsvBlock, accent)}
+        ${csvBlockToHtml(pack.riskRegisterCsvBlock, accent)}
+        ${csvBlockToHtml(pack.next7ActionsTrackerCsvBlock, accent)}
+      </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.ninetyDayPlan)}
       </div>
@@ -719,6 +762,9 @@ export function buildPackEmail(
         ${tableToHtml(pack.budgetStarterTable, accent)}
         ${tableToHtml(pack.documentTrackerTable, accent)}
         ${tableToHtml(pack.providerWorksheet, accent)}
+        ${tableToHtml(pack.riskRegisterTable, accent)}
+        ${tableToHtml(pack.next7ActionsTrackerTable, accent)}
+        ${tableToHtml(pack.progressTrackerTable, accent)}
       </div>
       <div style="background:#f0fdf4;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.enhancedParentHandover)}
@@ -735,6 +781,9 @@ export function buildPackEmail(
       </div>
       <div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:16px 20px;margin:20px 0;">
         <p style="color:#166534;font-size:14px;margin:0;">Tell us what's missing or what worked: <a href="https://settlemap.app/pilot-feedback" style="color:#059669;font-weight:600;">settlemap.app/pilot-feedback</a></p>
+      </div>
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:18px 20px;margin:20px 0;">
+        ${sectionToHtml(pack.privatePilotCtas)}
       </div>
       <div style="background:#fafafa;border:1px dashed #d4d4d8;border-radius:8px;padding:18px 20px;margin:20px 0;">
         <p style="color:#71717a;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0;">Appendix — extra planning notes</p>
@@ -773,6 +822,18 @@ export function buildPackEmail(
     "",
     sectionToText(pack.afterReceiving),
     "",
+    sectionToText(pack.workspaceAssets),
+    "",
+    csvBlockToText(pack.budgetCsvBlock),
+    "",
+    csvBlockToText(pack.documentTrackerCsvBlock),
+    "",
+    csvBlockToText(pack.providerComparisonCsvBlock),
+    "",
+    csvBlockToText(pack.riskRegisterCsvBlock),
+    "",
+    csvBlockToText(pack.next7ActionsTrackerCsvBlock),
+    "",
     sectionToText(pack.ninetyDayPlan),
     "",
     sectionToText(pack.firstSevenDays),
@@ -788,6 +849,12 @@ export function buildPackEmail(
     "",
     tableToText(pack.providerWorksheet),
     "",
+    tableToText(pack.riskRegisterTable),
+    "",
+    tableToText(pack.next7ActionsTrackerTable),
+    "",
+    tableToText(pack.progressTrackerTable),
+    "",
     sectionToText(pack.enhancedParentHandover),
     "",
     sectionToText(pack.copyPasteScripts),
@@ -799,6 +866,8 @@ export function buildPackEmail(
     "https://settlemap.app/services",
     "",
     "PILOT FEEDBACK: https://settlemap.app/pilot-feedback",
+    "",
+    sectionToText(pack.privatePilotCtas),
     "",
     "APPENDIX — extra planning notes:",
     appendixText,

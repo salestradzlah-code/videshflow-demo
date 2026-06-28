@@ -7,6 +7,23 @@ import {
   RESEARCH_LINKS_BOUNDARY_COPY,
   getResearchLinkChecklistItems,
 } from "@/data/researchLinksRegistry";
+import {
+  budgetRows,
+  documentRows,
+  getBudgetCsvBlock,
+  getDocumentTrackerCsvBlock,
+  getNext7ActionsTrackerCsvBlock,
+  getNext7ActionsTrackerTable,
+  getOfficialSourceResearchPromptItems,
+  getPrivatePilotCtaItems,
+  getProgressTrackerTable,
+  getProviderComparisonCsvBlock,
+  getRiskRegisterCsvBlock,
+  getRiskRegisterTable,
+  getWorkspaceAssetsItems,
+  providerRows,
+  type WorkspaceCsvBlock,
+} from "@/lib/paidWorkspaceAssets";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
@@ -39,17 +56,31 @@ export interface PremiumRelocationPack {
   executiveSummary: PackSection;
   whyUseful: PackSection;
   afterReceiving: PackSection;
+  workspaceAssets: PackSection;
+  budgetCsvBlock: WorkspaceCsvBlock;
+  documentTrackerCsvBlock: WorkspaceCsvBlock;
+  providerComparisonCsvBlock: WorkspaceCsvBlock;
+  riskRegisterCsvBlock: WorkspaceCsvBlock;
+  next7ActionsTrackerCsvBlock: WorkspaceCsvBlock;
   next7Actions: PackSection;
   officialSourceChecklist: PackSection;
   routeResearchPrompts: PackSection;
   budgetStarterTable: PackTableSection;
   documentTrackerTable: PackTableSection;
   providerWorksheet: PackTableSection;
+  riskRegisterTable: PackTableSection;
+  next7ActionsTrackerTable: PackTableSection;
+  progressTrackerTable: PackTableSection;
   copyPasteScripts: PackSection;
+  privatePilotCtas: PackSection;
   qualityGateFooter: PackSection;
   // V12.12.17 — banking/tax checklist + dedicated family handover
   bankingTaxChecklist: PackSection;
   familyHandover: PackSection | null;
+  transitionMilestones: PackSection;
+  familyDependentActionSplit: PackSection | null;
+  employerCorporateTransferChecklist: PackSection | null;
+  housingSettlingProviderComparison: PackSection;
   // Original sections
   routeSnapshot: PackSection;
   detailedChecklist: PackSection;
@@ -81,7 +112,7 @@ function getBankingTaxChecklist(moveReason: string): PackSection {
       "CHECK DOUBLE-TAX AGREEMENT STATUS: Check whether your origin and destination country have a double taxation agreement — this affects whether the same income is taxed twice.",
       "TRACK YOUR DAYS IN EACH COUNTRY: Tax residency in most countries is based on day-count thresholds (commonly around 183 days, but this varies). Keep a simple log of travel dates.",
       "FILE BOTH-COUNTRY OBLIGATIONS ON TIME: If you may owe tax filings in both countries, note both deadlines now — penalties for late filing apply even if no tax is ultimately owed.",
-      "QUALIFIED ADVISER REMINDER: This checklist is planning support only. SettleMap does not provide tax or financial advice. Before making any tax residency, filing, or cross-border banking decision, consult a qualified tax adviser or accountant licensed in the relevant country.",
+      "QUALIFIED ADVISER REMINDER: This is a planning reminder only. Consult a qualified financial or tax adviser where needed. SettleMap does not provide financial or tax advice.",
     ],
   };
 }
@@ -180,6 +211,73 @@ function getAfterReceivingChecklist(): PackSection {
   };
 }
 
+function getWorkspaceAssetsSection(): PackSection {
+  return {
+    title: "Workspace assets",
+    items: getWorkspaceAssetsItems(),
+  };
+}
+
+function getPrivatePilotCtas(): PackSection {
+  return {
+    title: "Private pilot update support",
+    items: getPrivatePilotCtaItems(),
+  };
+}
+
+function getTransitionMilestones(): PackSection {
+  return {
+    title: "30/60/90-day transition milestones",
+    items: [
+      "First 30 days: Confirm local registration, SIM, bank account path, health cover access, temporary-to-permanent housing plan, and emergency contacts.",
+      "First 60 days: Stabilise rent, transport, banking transfers, healthcare registration, school or dependent setup if applicable, and monthly budget tracking.",
+      "First 90 days: Review visa/permit renewal timeline, tax-residency exposure, provider contracts, insurance cover, and whether the move plan needs a private-pilot update.",
+      "Milestone rule: Do not treat a milestone as complete until the official requirement or provider term has been verified directly.",
+    ],
+  };
+}
+
+function getFamilyDependentActionSplit(whoIsMoving: string, modules: Set<ModuleKey>): PackSection | null {
+  const familyMove = modules.has("family") || /family|child|children|depend/i.test(whoIsMoving);
+  if (!familyMove) return null;
+  return {
+    title: "Family / dependent action split",
+    items: [
+      "Primary mover owns visa/permit, employer/institution confirmation, housing shortlist, banking setup, and budget ownership.",
+      "Partner/dependent adult owns dependent-rights verification, healthcare registration, personal documents, and backup payment access.",
+      "Parent/guardian owns school or childcare document checks, vaccination records, emergency contacts, and first-week family routine.",
+      "Shared family check: verify dependent work/study rights, healthcare cover start date, school admission requirements, and local emergency contacts on official sources.",
+    ],
+  };
+}
+
+function getEmployerCorporateTransferChecklist(moveReason: string, modules: Set<ModuleKey>): PackSection | null {
+  const corporateMove = modules.has("corporate") || /corporate|transfer|employer|job|work/i.test(moveReason);
+  if (!corporateMove) return null;
+  return {
+    title: "Employer / corporate transfer checklist",
+    items: [
+      "Get written confirmation of relocation allowance, temporary accommodation, flight support, shipping support, and reimbursement deadlines.",
+      "Confirm who owns visa or permit filing, expected processing timeline, start-date restrictions, and whether work can begin before all approvals are issued.",
+      "Ask HR for destination payroll date, local benefits start date, health insurance start date, and emergency HR contact.",
+      "Keep all relocation receipts. Some costs may be reimbursable or relevant for tax records, but SettleMap does not provide tax advice.",
+      "This is planning support only. Consult HR, immigration counsel, or a qualified tax adviser where needed.",
+    ],
+  };
+}
+
+function getHousingSettlingProviderComparison(): PackSection {
+  return {
+    title: "Housing / settling-in provider comparison",
+    items: [
+      "Compare housing, utilities, internet, SIM, banking, insurance, healthcare, mover/shipping, and school or childcare providers using the worksheet.",
+      "Ask each provider for written terms, cancellation rules, setup timeline, fees, and what documents they require from a new arrival.",
+      "Avoid providers that cannot explain deposit return rules, contract lock-in periods, insurance exclusions, or service start dates clearly.",
+      "SettleMap does not recommend, verify, rank, or endorse any provider. Treat every provider as a research option to verify independently.",
+    ],
+  };
+}
+
 function generateNext7Actions(origin: string, destination: string, moveReason: string): PackSection {
   const d = destination.toLowerCase();
   const visaAuth = d.includes("uk")
@@ -243,40 +341,16 @@ function getOfficialSourceChecklist(origin: string, destination: string): PackSe
 
 function getPremiumRouteResearchPrompts(origin: string, destination: string, moveReason: string): PackSection {
   return {
-    title: "Route research links and search prompts",
-    items: [
-      `Official immigration prompt: search "${destination} ${moveReason} visa permit official government" and open only government or official immigration pages first.`,
-      `Employer / institution prompt: search "${destination} relocation arrival checklist official ${moveReason}" and compare findings with your employer, HR, or institution in writing.`,
-      `Housing prompt: search "${destination} rental deposit rules official tenancy guidance" before contacting private agents or platforms.`,
-      `Banking prompt: search "${destination} bank account documents for new residents official bank" and note exact documents needed for your visa or permit type.`,
-      `Healthcare prompt: search "${destination} health insurance new residents official" and verify start dates, waiting periods, and exclusions directly with official or provider sources.`,
-      `Consulate prompt: search "${origin} consulate ${destination} official" and save the nearest mission contact before departure.`,
-      "SettleMap reference links: https://settlemap.app/reference-links — use this as a starting map, not as a substitute for official sources.",
-      "Provider research prompt: compare at least two providers for housing, moving/shipping, SIM, banking, insurance, school/childcare, and pet relocation where relevant. SettleMap does not recommend or endorse specific providers.",
-    ],
+    title: "Route-specific official-source research prompts",
+    items: getOfficialSourceResearchPromptItems(`${origin} to ${destination}`, destination),
   };
 }
 
 function getPremiumBudgetTable(): PackTableSection {
   return {
-    title: "Budget starter worksheet — fill in as you research",
+    title: "Budget starter worksheet",
     headers: ["Category", "Estimate", "Actual", "Notes", "Verification needed"],
-    rows: [
-      ["Visa / permit fees", "", "", "", "Official immigration authority"],
-      ["Flights (all travellers)", "", "", "", "Airline / booking platform"],
-      ["Temporary stay (arrival 2–4 wks)", "", "", "", "Booking platform / company housing"],
-      ["Security deposit (1–2 months rent)", "", "", "", "Ask housing provider"],
-      ["First month rent", "", "", "", "Ask housing provider"],
-      ["Moving / shipping", "", "", "", "Get 2–3 quotes minimum"],
-      ["SIM / internet (monthly)", "", "", "", "Local telecom website"],
-      ["Transport (monthly passes)", "", "", "", "Local transport authority"],
-      ["Food / essentials (monthly)", "", "", "", "Expat forums for your destination city"],
-      ["Health insurance (if not employer-provided)", "", "", "", "Insurance provider / institution"],
-      ["School / childcare (if applicable)", "", "", "", "School directly"],
-      ["Pet relocation costs (if applicable)", "", "", "", "Vet + IATA-certified agent"],
-      ["Setup costs (furniture, bedding, kitchen)", "", "", "", "Local supermarket / marketplace"],
-      ["Emergency buffer — do not spend", "", "", "8–12 weeks of living costs minimum", "Your own calculation"],
-    ],
+    rows: budgetRows,
     note: "Fill in Estimate and Actual columns as you research. Copy into Google Sheets or Excel to track real spending against budget.",
   };
 }
@@ -285,18 +359,7 @@ function getPremiumDocumentTracker(): PackTableSection {
   return {
     title: "Document tracker",
     headers: ["Document", "Needed for", "Owner", "Status", "Where to verify", "Notes"],
-    rows: [
-      ["Passport (all travellers)", "All entry, banking, registration", "Each person", "", "Passport authority", "Valid 6+ months beyond stay for all"],
-      ["Visa / permit document", "Entry, employer, bank, housing", "You", "", "Official immigration authority", "Check conditions and expiry"],
-      ["Work or admission letter", "Entry, banking, housing, registration", "You", "", "Employer / institution", "Carry original — not scan only"],
-      ["Accommodation confirmation", "Arrival, registration", "You", "", "Housing provider", "Check-in date + landlord contact"],
-      ["Medical records / vaccination cards", "Healthcare, school enrolment", "All family", "", "Your GP / doctor", "For children: school may require proof"],
-      ["Doctor letter (if on medication)", "Customs, pharmacy", "Affected person + Doctor", "", "Your GP", "List medications by generic name"],
-      ["School records (children)", "School enrolment", "Parent + child", "", "Previous school", "Transcripts, certificates, assessments"],
-      ["Pet documents (if applicable)", "Customs, quarantine, airline", "You", "", "Vet + official vet authority", "Microchip cert, vaccination, import permit"],
-      ["Emergency contacts page", "Safety", "All family", "", "N/A — you create this", "Print A4, carry in hand luggage"],
-      ["Relocation package letter (corporate)", "Reimbursement claims", "You", "", "HR in writing", "Keep original with receipts"],
-    ],
+    rows: documentRows,
     note: "Add rows for route-specific documents (GIC / LOA for Canada, blocked account for Germany, CoE for Australia, SEVIS for US, etc.).",
   };
 }
@@ -305,18 +368,7 @@ function getPremiumProviderWorksheet(): PackTableSection {
   return {
     title: "Provider comparison worksheet",
     headers: ["Category", "Question to ask", "Answer", "Cost", "Risk note", "Decision"],
-    rows: [
-      ["Housing", "Deposit, return conditions, and notice period?", "", "", "Avoid if deposit terms are unclear", ""],
-      ["Housing", "Guarantor required for visa holder / non-citizen?", "", "", "May require company letter or higher deposit", ""],
-      ["Mover / shipping", "What is included in the quote?", "", "", "Get 2–3 quotes — check insurance coverage", ""],
-      ["Mover / shipping", "What items are restricted or prohibited?", "", "", "Check against customs rules for destination", ""],
-      ["Bank", "Account eligibility for my visa or permit type?", "", "", "Bring all required docs to appointment", ""],
-      ["Bank", "Can I open online before arrival?", "", "", "Pre-registration saves arrival-day time", ""],
-      ["SIM", "Prepaid SIM without local bank account?", "", "", "Prepaid is safest in first 1–2 months", ""],
-      ["Insurance", "What is excluded from health cover?", "", "", "Read policy document — not just sales summary", ""],
-      ["School / childcare", "Enrolment vacancies for my child's age?", "", "", "Check deadlines and required documents", ""],
-      ["Pet agent (if applicable)", "IATA-certified and licensed for my route?", "", "", "Only use IATA-certified agents for pets", ""],
-    ],
+    rows: providerRows,
     note: "SettleMap does not recommend or endorse any specific provider. Verify credentials, licensing, and suitability directly before engaging.",
   };
 }
@@ -345,9 +397,12 @@ function getPremiumQualityGateFooter(): PackSection {
       "PLANNING SUPPORT ONLY: SettleMap is a planning and research tool. It does not provide immigration, legal, tax, financial, property, insurance, medical, school admission, or government advice.",
       "VERIFY OFFICIAL SOURCES: All requirements, deadlines, and costs must be verified directly on official government, employer, institution, or provider websites before you act on them.",
       "NO SENSITIVE DOCUMENT UPLOAD: SettleMap does not require or accept passport numbers, visa numbers, bank account details, medical records, or ID document uploads at any point.",
+      "NO GUARANTEES: SettleMap does not guarantee visa, admission, housing, banking, insurance, medical, provider, travel, employment, or relocation outcomes.",
+      "NO PROVIDER ENDORSEMENT: Provider questions and comparison worksheets are research tools only. SettleMap does not recommend, rank, verify, or endorse specific providers.",
+      "SEEK QUALIFIED PROFESSIONAL ADVICE WHERE NEEDED: Consult qualified professionals for immigration, legal, tax, financial, property, insurance, medical, school/admission, or other regulated decisions.",
       "DO NOT SEND SENSITIVE DATA: Do not send passport numbers, visa numbers, bank details, medical details, or ID documents to SettleMap.",
       "SUPPORT: Questions about your pack or the SettleMap service — email support@settlemap.app. We respond within 2 business days.",
-      "PACK VERSION: V12.12.17 — Paid Email Content Completeness",
+      "PACK VERSION: V12.13 — Paid Pack Workspace Upgrade",
     ],
   };
 }
@@ -649,16 +704,30 @@ export function generatePremiumRelocationPack(meta: PremiumPackMetadata): Premiu
     executiveSummary: generateExecutiveSummary(origin, destination, whoIsMoving, moveReason, timing, effectiveRoute),
     whyUseful: getWhyThisPackIsUseful(),
     afterReceiving: getAfterReceivingChecklist(),
+    workspaceAssets: getWorkspaceAssetsSection(),
+    budgetCsvBlock: getBudgetCsvBlock(),
+    documentTrackerCsvBlock: getDocumentTrackerCsvBlock(),
+    providerComparisonCsvBlock: getProviderComparisonCsvBlock(),
+    riskRegisterCsvBlock: getRiskRegisterCsvBlock(),
+    next7ActionsTrackerCsvBlock: getNext7ActionsTrackerCsvBlock(),
     next7Actions: generateNext7Actions(origin, destination, moveReason),
     officialSourceChecklist: getOfficialSourceChecklist(origin, destination),
     routeResearchPrompts: getPremiumRouteResearchPrompts(origin, destination, moveReason),
     budgetStarterTable: getPremiumBudgetTable(),
     documentTrackerTable: getPremiumDocumentTracker(),
     providerWorksheet: getPremiumProviderWorksheet(),
+    riskRegisterTable: getRiskRegisterTable(),
+    next7ActionsTrackerTable: getNext7ActionsTrackerTable(),
+    progressTrackerTable: getProgressTrackerTable(),
     copyPasteScripts: getPremiumCopyPasteScripts(origin, destination),
+    privatePilotCtas: getPrivatePilotCtas(),
     qualityGateFooter: getPremiumQualityGateFooter(),
     bankingTaxChecklist: getBankingTaxChecklist(moveReason),
     familyHandover,
+    transitionMilestones: getTransitionMilestones(),
+    familyDependentActionSplit: getFamilyDependentActionSplit(whoIsMoving, modules),
+    employerCorporateTransferChecklist: getEmployerCorporateTransferChecklist(moveReason, modules),
+    housingSettlingProviderComparison: getHousingSettlingProviderComparison(),
     routeSnapshot,
     detailedChecklist,
     budgetTemplate,
@@ -737,6 +806,19 @@ function tableToText(table: PackTableSection): string {
   return lines.join("\n");
 }
 
+function csvBlockToHtml(block: WorkspaceCsvBlock, accentColor: string): string {
+  return `
+    <div style="margin:18px 0;">
+      <p style="color:${accentColor};font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0;">${block.title}</p>
+      ${block.note ? `<p style="color:#71717a;font-size:12px;margin:0 0 8px 0;">${block.note}</p>` : ""}
+      <pre style="white-space:pre;overflow-x:auto;background:#18181b;color:#f4f4f5;border-radius:8px;padding:14px;font-size:11px;line-height:1.55;margin:0;">${block.csv}</pre>
+    </div>`;
+}
+
+function csvBlockToText(block: WorkspaceCsvBlock): string {
+  return `${block.title.toUpperCase()}\n${block.csv}`;
+}
+
 export function buildPremiumPackEmail(
   pack: PremiumRelocationPack,
   buyerName: string | null,
@@ -795,22 +877,37 @@ export function buildPremiumPackEmail(
       <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.afterReceiving, accent)}
       </div>
+      <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.workspaceAssets, accent)}
+        ${csvBlockToHtml(pack.budgetCsvBlock, accent)}
+        ${csvBlockToHtml(pack.documentTrackerCsvBlock, accent)}
+        ${csvBlockToHtml(pack.providerComparisonCsvBlock, accent)}
+        ${csvBlockToHtml(pack.riskRegisterCsvBlock, accent)}
+        ${csvBlockToHtml(pack.next7ActionsTrackerCsvBlock, accent)}
+      </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.routeSnapshot, accent)}
       </div>
       <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.detailedChecklist, accent)}
       </div>
+      <div style="background:#faf5ff;border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.transitionMilestones, accent)}
+      </div>
       <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
         <p style="color:${accent};font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px 0;">Your worksheets — copy these into Google Sheets or Excel</p>
         ${tableToHtml(pack.budgetStarterTable, accent)}
         ${tableToHtml(pack.documentTrackerTable, accent)}
+        ${tableToHtml(pack.providerWorksheet, accent)}
+        ${tableToHtml(pack.riskRegisterTable, accent)}
+        ${tableToHtml(pack.next7ActionsTrackerTable, accent)}
+        ${tableToHtml(pack.progressTrackerTable, accent)}
       </div>
       <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.bankingTaxChecklist, "#9a3412")}
       </div>
       <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:8px;padding:20px;margin:20px 0;">
-        ${tableToHtml(pack.providerWorksheet, accent)}
+        ${sectionToHtml(pack.housingSettlingProviderComparison, accent)}
       </div>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin:20px 0;">
         ${sectionToHtml(pack.officialSourceChecklist, accent)}
@@ -828,6 +925,20 @@ export function buildPremiumPackEmail(
       </div>`
           : ""
       }
+      ${
+        pack.familyDependentActionSplit
+          ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.familyDependentActionSplit, "#166534")}
+      </div>`
+          : ""
+      }
+      ${
+        pack.employerCorporateTransferChecklist
+          ? `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:20px;margin:20px 0;">
+        ${sectionToHtml(pack.employerCorporateTransferChecklist, "#9a3412")}
+      </div>`
+          : ""
+      }
       <div style="margin:24px 0;">
         <p style="color:#3f3f46;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px 0;">Build your route plan</p>
         <p style="margin:6px 0;font-size:14px;"><a href="https://settlemap.app" style="color:#7c3aed;font-weight:600;">settlemap.app</a></p>
@@ -837,6 +948,9 @@ export function buildPremiumPackEmail(
       </div>
       <div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:16px 20px;margin:20px 0;">
         <p style="color:#5b21b6;font-size:14px;margin:0;">Tell us what's missing or what worked: <a href="https://settlemap.app/pilot-feedback" style="color:#7c3aed;font-weight:600;">settlemap.app/pilot-feedback</a></p>
+      </div>
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:18px 20px;margin:20px 0;">
+        ${sectionToHtml(pack.privatePilotCtas, accent)}
       </div>
       <div style="background:#fafafa;border:1px dashed #d4d4d8;border-radius:8px;padding:18px 20px;margin:20px 0;">
         <p style="color:#71717a;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px 0;">Appendix — extra planning notes</p>
@@ -875,18 +989,40 @@ export function buildPremiumPackEmail(
     "",
     sectionToText(pack.afterReceiving),
     "",
+    sectionToText(pack.workspaceAssets),
+    "",
+    csvBlockToText(pack.budgetCsvBlock),
+    "",
+    csvBlockToText(pack.documentTrackerCsvBlock),
+    "",
+    csvBlockToText(pack.providerComparisonCsvBlock),
+    "",
+    csvBlockToText(pack.riskRegisterCsvBlock),
+    "",
+    csvBlockToText(pack.next7ActionsTrackerCsvBlock),
+    "",
     sectionToText(pack.routeSnapshot),
     "",
     sectionToText(pack.detailedChecklist),
+    "",
+    sectionToText(pack.transitionMilestones),
     "",
     "YOUR WORKSHEETS — copy these into Google Sheets or Excel:",
     tableToText(pack.budgetStarterTable),
     "",
     tableToText(pack.documentTrackerTable),
     "",
+    tableToText(pack.providerWorksheet),
+    "",
+    tableToText(pack.riskRegisterTable),
+    "",
+    tableToText(pack.next7ActionsTrackerTable),
+    "",
+    tableToText(pack.progressTrackerTable),
+    "",
     sectionToText(pack.bankingTaxChecklist),
     "",
-    tableToText(pack.providerWorksheet),
+    sectionToText(pack.housingSettlingProviderComparison),
     "",
     sectionToText(pack.officialSourceChecklist),
     "",
@@ -896,6 +1032,10 @@ export function buildPremiumPackEmail(
     "",
     pack.familyHandover ? sectionToText(pack.familyHandover) : "",
     pack.familyHandover ? "" : "",
+    pack.familyDependentActionSplit ? sectionToText(pack.familyDependentActionSplit) : "",
+    pack.familyDependentActionSplit ? "" : "",
+    pack.employerCorporateTransferChecklist ? sectionToText(pack.employerCorporateTransferChecklist) : "",
+    pack.employerCorporateTransferChecklist ? "" : "",
     "BUILD YOUR ROUTE PLAN:",
     "https://settlemap.app",
     "https://settlemap.app/#route-selector",
@@ -903,6 +1043,8 @@ export function buildPremiumPackEmail(
     "https://settlemap.app/services",
     "",
     "PILOT FEEDBACK: https://settlemap.app/pilot-feedback",
+    "",
+    sectionToText(pack.privatePilotCtas),
     "",
     "APPENDIX — extra planning notes:",
     appendixText,

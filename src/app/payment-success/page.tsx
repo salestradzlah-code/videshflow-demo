@@ -256,15 +256,25 @@ function PremiumPackView({ data }: { data: SessionData }) {
   const allSections: PackSection[] = [
     pack.whyUseful,
     pack.afterReceiving,
+    pack.workspaceAssets,
+    pack.executiveSummary,
+    pack.next7Actions,
     pack.routeSnapshot,
     pack.detailedChecklist,
-    pack.budgetTemplate,
-    pack.documentTracker,
-    pack.firstWeekPlan,
+    pack.transitionMilestones,
+    pack.bankingTaxChecklist,
+    pack.housingSettlingProviderComparison,
+    ...(pack.familyHandover ? [pack.familyHandover] : []),
+    ...(pack.familyDependentActionSplit ? [pack.familyDependentActionSplit] : []),
+    ...(pack.employerCorporateTransferChecklist ? [pack.employerCorporateTransferChecklist] : []),
     ...pack.personaModules,
-    pack.providerScripts,
+    pack.officialSourceChecklist,
+    pack.routeResearchPrompts,
+    pack.copyPasteScripts,
+    pack.privatePilotCtas,
     pack.researchLinks,
     pack.officialSourceReminder,
+    pack.qualityGateFooter,
   ];
 
   function buildCopyText(): string {
@@ -432,8 +442,16 @@ function PaidPackView({ data }: { data: SessionData }) {
   const allSections: PackSection[] = [
     pack.whyUseful,
     pack.afterReceiving,
+    pack.workspaceAssets,
+    pack.executiveSummary,
+    pack.next7Actions,
     pack.ninetyDayPlan,
     pack.firstSevenDays,
+    pack.officialSourceChecklist,
+    pack.routeResearchPrompts,
+    pack.enhancedParentHandover,
+    pack.copyPasteScripts,
+    pack.privatePilotCtas,
     ...pack.concernSections.filter(
       (s) =>
         s.title !== pack.firstSevenDays.title &&

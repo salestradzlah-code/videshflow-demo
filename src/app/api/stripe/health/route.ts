@@ -34,7 +34,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeWebhookEndpoint: "available",
-    fulfilmentVersion: "V12.12.17",
+    fulfilmentVersion: "V12.13",
 
     // Infrastructure
     stripeConfigured,
@@ -246,7 +246,7 @@ export async function GET() {
     voiceGuideStillBlocked: true,
 
     // V12.12.15 paid pack value upgrade flags
-    fulfilmentQualityVersion: "V12.12.17",
+    fulfilmentQualityVersion: "V12.13",
     agenticPackStructureReady: true,
     studentPackValueUpgrade: true,
     premiumPackValueUpgrade: true,
@@ -283,6 +283,17 @@ export async function GET() {
     premiumWorksheetSectionsReady: true,
     paidEmailContentCompletenessReady: true,
     worksheetPromiseMatchesOutput: true,
+
+    // V12.13 paid pack workspace upgrade flags
+    paidWorkspaceAssetsReady: true,
+    copyableCsvWorksheetsReady: true,
+    progressTrackerReady: true,
+    regeneratePackCtaReady: true,
+    next7ActionsFollowupCtaReady: true,
+    promptOnlyValueGapAddressed: true,
+    voiceGuideStillBlockedV1213: true,
+    addOnsCheckoutDisabledV1213: !addonFlags.checkoutEnabled,
+    paymentStateUnchangedV1213: true,
 
     // Regression guards
     sessionLookupReady: true,
